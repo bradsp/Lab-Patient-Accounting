@@ -31,14 +31,14 @@ public partial class AccountForm : Form
     private bool _billingTabLoading = false;
     private const int _timerInterval = 650;
     private const string _notesAlertText = "** SEE NOTES **";
-    private bool _closing = false;
+    //private bool _closing = false;
     private bool _readOnly = false;
     private readonly ChargeMaintenanceUC _chargeMaintenance = new();
     private readonly InsMaintenanceUC _insPrimaryMaintenanceUC = new(InsCoverage.Primary);
     private readonly InsMaintenanceUC _insSecondaryMaintenanceUC = new(InsCoverage.Secondary);
     private readonly InsMaintenanceUC _insTertiaryMaintenanceUC = new(InsCoverage.Tertiary);
     private ContextMenuStrip _chkTabContextMenu = new();
-
+    private bool _isClosing = false;
     private System.Windows.Forms.Timer _timer;
 
     public event EventHandler<string> AccountOpenedEvent;
@@ -107,7 +107,7 @@ public partial class AccountForm : Form
         {
             Log.Instance.Error(ex, "Error setting control formatting.");
             MessageBox.Show("Unable to load Account. Contact your administrator.", "Error during load", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            _closing = true;
+            _isClosing = true;
             this.Visible = false;
             this.Close();
             return;
@@ -314,6 +314,7 @@ public partial class AccountForm : Form
     private void AccountForm_FormClosing(object sender, FormClosingEventArgs e)
     {
         Log.Instance.Debug($"Exiting - {SelectedAccount}");
+        _isClosing = true;
 
         if (_currentAccount != null && !string.IsNullOrEmpty(_currentAccount.AccountNo))
         {
@@ -327,7 +328,7 @@ public partial class AccountForm : Form
                 Log.Instance.Fatal(ex);
             }
         }
-        _closing = true;
+        _isClosing = true;
         e.Cancel = false;
     }
 
@@ -344,7 +345,7 @@ public partial class AccountForm : Form
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
 
-        if (_closing)
+        if (_isClosing)
             return;
 
         Cursor.Current = Cursors.WaitCursor;
@@ -417,6 +418,10 @@ public partial class AccountForm : Form
     /// </summary>
     private void RefreshAccountData()
     {
+        if(_isClosing)
+        {
+            return;
+        }
         LoadBanner();
         LoadSummaryTab();
         _chargeMaintenance.LoadCharges();
@@ -1709,10 +1714,15 @@ public partial class AccountForm : Form
 
     private async void AccountForm_Activated(object sender, EventArgs e)
     {
+        if(_isClosing)
+        {
+            return;
+        }
+
         Log.Instance.Trace($"Entering - {SelectedAccount}");
         if (this.Disposing)
             return;
-        if (_closing)
+        if (_isClosing)
             return;
         await LoadAccountData();
     }
@@ -1833,7 +1843,7 @@ public partial class AccountForm : Form
 
     private void AccountForm_FormClosed(object sender, FormClosedEventArgs e)
     {
-        _closing = true;
+        _isClosing = true;
     }
 
     private void notesDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)

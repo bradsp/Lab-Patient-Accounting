@@ -187,21 +187,23 @@ public partial class MainForm : Form
 
     private void ChildForm_FormClosed(object sender, FormClosedEventArgs e)
     {
-        Form frm = sender as Form;
-
-        int i = mdiTabControl.TabPages.IndexOfKey(frm.Text);
-
-        if (i >= 0)
+        if (sender is Form frm)
         {
-            mdiTabControl.TabPages.Remove(mdiTabControl.TabPages[i]);
-        }
+            int i = mdiTabControl.TabPages.IndexOfKey(frm.Text);
 
-        if (mdiTabControl.TabPages.ContainsKey("Work List"))
-        {
-            int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
-            mdiTabControl.SelectedIndex = idx;
+            if (i >= 0)
+            {
+                mdiTabControl.TabPages.Remove(mdiTabControl.TabPages[i]);
+            }
+
+            if (mdiTabControl.TabPages.ContainsKey("Work List"))
+            {
+                int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
+                mdiTabControl.SelectedIndex = idx;
+            }
         }
     }
+
 
     private void ChildForm_TextChanged(object sender, EventArgs e)
     {
@@ -803,7 +805,12 @@ public partial class MainForm : Form
     }
 
     private void ActiveMdiChild_FormClosed(object sender, FormClosedEventArgs e)
-        => ((sender as Form).Tag as TabPage).Dispose();
+    {
+        if (sender is Form form && form.Tag is TabPage tabPage)
+        {
+            tabPage.Dispose();
+        }
+    }
 
     private void clientBillsNewToolStripMenuItem_Click(object sender, EventArgs e)
     {
