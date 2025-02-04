@@ -436,22 +436,16 @@
     <value>290, 17</value>
   </metadata>
   <data name="toolStripUsernameLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 19</value>
-  </data>
-  <data name="toolStripUsernameLabel.Text" xml:space="preserve">
-    <value>toolStripUsernameLabel</value>
+    <value>4, 17</value>
   </data>
   <data name="toolStripDatabaseLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>132, 19</value>
-  </data>
-  <data name="toolStripDatabaseLabel.Text" xml:space="preserve">
-    <value>toolStripDatabaseLabel</value>
+    <value>4, 17</value>
   </data>
   <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 744</value>
+    <value>0, 746</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1024, 24</value>
+    <value>1024, 22</value>
   </data>
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -479,7 +473,7 @@
     <value>0, 24</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 720</value>
+    <value>203, 722</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -3684,6 +3678,12 @@
   <data name="&gt;&gt;badDebtMaintenanceToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;recentAccountsToolStripMenuItem.Name" xml:space="preserve">
+    <value>recentAccountsToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;recentAccountsToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;dictionariesToolStripMenuItem.Name" xml:space="preserve">
     <value>dictionariesToolStripMenuItem</value>
   </data>
@@ -3880,12 +3880,6 @@
     <value>exitToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;exitToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;recentAccountsToolStripMenuItem.Name" xml:space="preserve">
-    <value>recentAccountsToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;recentAccountsToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolStripUsernameLabel.Name" xml:space="preserve">

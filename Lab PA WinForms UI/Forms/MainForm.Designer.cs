@@ -41,6 +41,7 @@ partial class MainForm
         clientBillsNewToolStripMenuItem = new ToolStripMenuItem();
         remittancePostingToolStripMenuItem = new ToolStripMenuItem();
         badDebtMaintenanceToolStripMenuItem = new ToolStripMenuItem();
+        recentAccountsToolStripMenuItem = new ToolStripMenuItem();
         dictionariesToolStripMenuItem = new ToolStripMenuItem();
         auditReportsToolStripMenuItem = new ToolStripMenuItem();
         chargeMasterToolStripMenuItem1 = new ToolStripMenuItem();
@@ -74,7 +75,6 @@ partial class MainForm
         latestUpdatesToolStripMenuItem = new ToolStripMenuItem();
         aboutToolStripMenuItem = new ToolStripMenuItem();
         exitToolStripMenuItem = new ToolStripMenuItem();
-        recentAccountsToolStripMenuItem = new ToolStripMenuItem();
         statusStrip1 = new StatusStrip();
         toolStripUsernameLabel = new ToolStripStatusLabel();
         toolStripDatabaseLabel = new ToolStripStatusLabel();
@@ -159,6 +159,11 @@ partial class MainForm
         badDebtMaintenanceToolStripMenuItem.Name = "badDebtMaintenanceToolStripMenuItem";
         resources.ApplyResources(badDebtMaintenanceToolStripMenuItem, "badDebtMaintenanceToolStripMenuItem");
         badDebtMaintenanceToolStripMenuItem.Click += badDebtMaintenanceToolStripMenuItem_Click;
+        // 
+        // recentAccountsToolStripMenuItem
+        // 
+        recentAccountsToolStripMenuItem.Name = "recentAccountsToolStripMenuItem";
+        resources.ApplyResources(recentAccountsToolStripMenuItem, "recentAccountsToolStripMenuItem");
         // 
         // dictionariesToolStripMenuItem
         // 
@@ -347,11 +352,6 @@ partial class MainForm
         exitToolStripMenuItem.Name = "exitToolStripMenuItem";
         resources.ApplyResources(exitToolStripMenuItem, "exitToolStripMenuItem");
         exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
-        // 
-        // recentAccountsToolStripMenuItem
-        // 
-        recentAccountsToolStripMenuItem.Name = "recentAccountsToolStripMenuItem";
-        resources.ApplyResources(recentAccountsToolStripMenuItem, "recentAccountsToolStripMenuItem");
         // 
         // statusStrip1
         // 

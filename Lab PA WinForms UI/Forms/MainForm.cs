@@ -354,6 +354,8 @@ public partial class MainForm : Form
         systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
         LoadSideMenu();
         LoadRecentAccounts();
+        toolStripDatabaseLabel.Text = Program.AppEnvironment.DatabaseName;
+        toolStripUsernameLabel.Text = Program.LoggedInUser.UserName;
         this.WindowState = FormWindowState.Maximized;
         this.Focus();
     }
