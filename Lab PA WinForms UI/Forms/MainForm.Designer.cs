@@ -33,7 +33,6 @@ partial class MainForm
         billingToolStripMenuItem = new ToolStripMenuItem();
         accountToolStripMenuItem = new ToolStripMenuItem();
         worklistToolStripMenuItem = new ToolStripMenuItem();
-        duplicateAccountsToolStripMenuItem = new ToolStripMenuItem();
         accountChargeEntryToolStripMenuItem = new ToolStripMenuItem();
         batchChargeEntryToolStripMenuItem = new ToolStripMenuItem();
         batchRemittanceToolStripMenuItem = new ToolStripMenuItem();
@@ -61,7 +60,6 @@ partial class MainForm
         accountingReportsToolStripMenuItem = new ToolStripMenuItem();
         aBNReportToolStripMenuItem = new ToolStripMenuItem();
         reportingPortalToolStripMenuItem = new ToolStripMenuItem();
-        reportByInsuranceCompanyToolStripMenuItem = new ToolStripMenuItem();
         systemAdministrationToolStripMenuItem = new ToolStripMenuItem();
         userSecurityToolStripMenuItem = new ToolStripMenuItem();
         systemParametersToolStripMenuItem = new ToolStripMenuItem();
@@ -96,7 +94,7 @@ partial class MainForm
         // 
         // billingToolStripMenuItem
         // 
-        billingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { accountToolStripMenuItem, worklistToolStripMenuItem, duplicateAccountsToolStripMenuItem, accountChargeEntryToolStripMenuItem, batchChargeEntryToolStripMenuItem, batchRemittanceToolStripMenuItem, claimBatchManagementToolStripMenuItem, clientBillsNewToolStripMenuItem, remittancePostingToolStripMenuItem, badDebtMaintenanceToolStripMenuItem });
+        billingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { accountToolStripMenuItem, worklistToolStripMenuItem, accountChargeEntryToolStripMenuItem, batchChargeEntryToolStripMenuItem, batchRemittanceToolStripMenuItem, claimBatchManagementToolStripMenuItem, clientBillsNewToolStripMenuItem, remittancePostingToolStripMenuItem, badDebtMaintenanceToolStripMenuItem });
         billingToolStripMenuItem.Name = "billingToolStripMenuItem";
         resources.ApplyResources(billingToolStripMenuItem, "billingToolStripMenuItem");
         // 
@@ -111,12 +109,6 @@ partial class MainForm
         worklistToolStripMenuItem.Name = "worklistToolStripMenuItem";
         resources.ApplyResources(worklistToolStripMenuItem, "worklistToolStripMenuItem");
         worklistToolStripMenuItem.Click += worklistToolStripMenuItem_Click;
-        // 
-        // duplicateAccountsToolStripMenuItem
-        // 
-        duplicateAccountsToolStripMenuItem.Name = "duplicateAccountsToolStripMenuItem";
-        resources.ApplyResources(duplicateAccountsToolStripMenuItem, "duplicateAccountsToolStripMenuItem");
-        duplicateAccountsToolStripMenuItem.Click += duplicateAccountsToolStripMenuItem_Click;
         // 
         // accountChargeEntryToolStripMenuItem
         // 
@@ -224,7 +216,7 @@ partial class MainForm
         // 
         // reportsToolStripMenuItem
         // 
-        reportsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { codingStatsToolStripMenuItem, monthlyReportsToolStripMenuItem, paymentsToolStripMenuItem, randomDrugScreenToolStripMenuItem, addressRequisitionsToolStripMenuItem, accountingReportsToolStripMenuItem, aBNReportToolStripMenuItem, reportingPortalToolStripMenuItem, reportByInsuranceCompanyToolStripMenuItem });
+        reportsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { codingStatsToolStripMenuItem, monthlyReportsToolStripMenuItem, paymentsToolStripMenuItem, randomDrugScreenToolStripMenuItem, addressRequisitionsToolStripMenuItem, accountingReportsToolStripMenuItem, aBNReportToolStripMenuItem, reportingPortalToolStripMenuItem });
         reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
         resources.ApplyResources(reportsToolStripMenuItem, "reportsToolStripMenuItem");
         // 
@@ -269,12 +261,6 @@ partial class MainForm
         reportingPortalToolStripMenuItem.Name = "reportingPortalToolStripMenuItem";
         resources.ApplyResources(reportingPortalToolStripMenuItem, "reportingPortalToolStripMenuItem");
         reportingPortalToolStripMenuItem.Click += reportingPortalToolStripMenuItem_Click;
-        // 
-        // reportByInsuranceCompanyToolStripMenuItem
-        // 
-        reportByInsuranceCompanyToolStripMenuItem.Name = "reportByInsuranceCompanyToolStripMenuItem";
-        resources.ApplyResources(reportByInsuranceCompanyToolStripMenuItem, "reportByInsuranceCompanyToolStripMenuItem");
-        reportByInsuranceCompanyToolStripMenuItem.Click += reportByInsuranceCompanyToolStripMenuItem_Click;
         // 
         // systemAdministrationToolStripMenuItem
         // 
@@ -463,8 +449,6 @@ partial class MainForm
     private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem badDebtMaintenanceToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem duplicateAccountsToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem reportByInsuranceCompanyToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem interfaceMappingToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem clientBillsNewToolStripMenuItem;

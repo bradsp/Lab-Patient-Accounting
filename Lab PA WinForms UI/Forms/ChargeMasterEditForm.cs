@@ -1,6 +1,7 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
+using System.ComponentModel;
 using System.Data;
 
 namespace LabBilling.Forms;
@@ -18,6 +19,7 @@ public partial class ChargeMasterEditForm : Form
         _dictionaryService = new(Program.AppEnvironment);
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] 
     public string SelectedCdm { get; set; }
     public Cdm cdm;
     private readonly BindingSource _feeSched1BindingSource = new BindingSource();

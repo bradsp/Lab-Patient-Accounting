@@ -9,7 +9,7 @@ namespace LabBilling.Forms;
 public partial class PersonSearchForm : Form
 {
     List<AccountSearch> _searchResults = new();
-
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string SelectedAccount { get; set; }
 
     private readonly AccountService _accountService;

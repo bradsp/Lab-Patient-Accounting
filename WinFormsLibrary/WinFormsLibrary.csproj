@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <TargetFramework>net9.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -24,11 +24,10 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.2.0" />
-    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
-    <ProjectReference Include="..\MCL\MCL.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -38,17 +37,8 @@
     <Compile Update="FormResponse.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="RFCPrintPreview.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="ToolStripDateTimePicker.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="ToolStripMonthCalendarControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="ViewerBase.cs">
-      <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
 </Project>

@@ -1770,20 +1770,6 @@ public partial class AccountForm : Form
         }
     }
 
-    private void printEOBToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        Log.Instance.Trace($"Entering - {SelectedAccount}");
-
-        List<string> args = new();
-        args.AddRange(Helper.GetArgs());
-
-        args.Add(_currentAccount.AccountNo);
-
-        PrintEOBForm frm = new(args.ToArray());
-
-        frm.ShowDialog(this);
-    }
-
     private void clearClaimStatusButton_Click(object sender, EventArgs e)
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");

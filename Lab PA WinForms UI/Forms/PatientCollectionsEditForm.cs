@@ -3,12 +3,13 @@ using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
 using LabBilling.Core.Services;
+using System.ComponentModel;
 
 namespace LabBilling.Forms;
 
 public partial class PatientCollectionsEditForm : Form
 {
-
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string SelectedRecord { get; set; }
     private BadDebt badDebt = new BadDebt();
     private AccountService accountService;

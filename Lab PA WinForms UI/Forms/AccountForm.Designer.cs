@@ -170,7 +170,6 @@ namespace LabBilling.Forms
             clearHoldStatusToolStripMenuItem = new ToolStripMenuItem();
             swapInsurancesToolStripMenuItem = new ToolStripMenuItem();
             moveAllChargesToolStripMenuItem = new ToolStripMenuItem();
-            printEOBToolStripMenuItem = new ToolStripMenuItem();
             BannerMRNTextBox = new TextBox();
             BannerAccountTextBox = new TextBox();
             BannerSexTextBox = new TextBox();
@@ -1740,7 +1739,7 @@ namespace LabBilling.Forms
             // 
             // accountToolStripMenuItem
             // 
-            accountToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { changeDateOfServiceToolStripMenuItem, changeFinancialClassToolStripMenuItem, changeClientToolStripMenuItem, viewAuditInfoToolStripMenuItem, clearHoldStatusToolStripMenuItem, swapInsurancesToolStripMenuItem, moveAllChargesToolStripMenuItem, printEOBToolStripMenuItem });
+            accountToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { changeDateOfServiceToolStripMenuItem, changeFinancialClassToolStripMenuItem, changeClientToolStripMenuItem, viewAuditInfoToolStripMenuItem, clearHoldStatusToolStripMenuItem, swapInsurancesToolStripMenuItem, moveAllChargesToolStripMenuItem });
             accountToolStripMenuItem.Name = "accountToolStripMenuItem";
             accountToolStripMenuItem.Size = new Size(64, 20);
             accountToolStripMenuItem.Text = "Account";
@@ -1792,13 +1791,6 @@ namespace LabBilling.Forms
             moveAllChargesToolStripMenuItem.Size = new Size(196, 22);
             moveAllChargesToolStripMenuItem.Text = "Move All Charges";
             moveAllChargesToolStripMenuItem.Click += moveAllChargesToolStripMenuItem_Click;
-            // 
-            // printEOBToolStripMenuItem
-            // 
-            printEOBToolStripMenuItem.Name = "printEOBToolStripMenuItem";
-            printEOBToolStripMenuItem.Size = new Size(196, 22);
-            printEOBToolStripMenuItem.Text = "Print EOB";
-            printEOBToolStripMenuItem.Click += printEOBToolStripMenuItem_Click;
             // 
             // BannerMRNTextBox
             // 
@@ -2332,7 +2324,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.CheckBox readyToBillCheckbox;
         private System.Windows.Forms.ContextMenuStrip dxPointerMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem clearDxPointerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem printEOBToolStripMenuItem;
         private System.Windows.Forms.Button clearClaimStatusButton;
         private System.Windows.Forms.CheckBox noteAlertCheckBox;
         private System.Windows.Forms.Label bannerAlertLabel;

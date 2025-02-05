@@ -1,7 +1,6 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
-using MCL;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Drawing.Printing;

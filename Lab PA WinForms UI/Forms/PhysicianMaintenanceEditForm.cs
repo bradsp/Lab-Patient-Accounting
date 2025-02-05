@@ -1,5 +1,6 @@
 ﻿using LabBilling.Core.Models;
 using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace LabBilling.Forms;
@@ -220,7 +221,7 @@ public partial class PhysicianMaintenanceEditForm : Form
     private readonly TextBox NPITextBox = new TextBox();
     private readonly Label BillingNPILabel = new Label();
     private readonly TextBox BillingNPITextBox = new TextBox();
-
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Phy PhyModel { get; set; } = new Phy();
     private readonly BindingSource bindingSource = new BindingSource();
 

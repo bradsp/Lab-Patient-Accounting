@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
@@ -11,6 +12,7 @@ public partial class ClientMaintenanceEditForm : Form
 {
     public Client client;
     private readonly DictionaryService _dictionaryService;
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string SelectedClient { get; set; }
     private readonly BindingSource _clientDiscountBindingSource = new();
     private DataTable _clientDiscountDataTable;

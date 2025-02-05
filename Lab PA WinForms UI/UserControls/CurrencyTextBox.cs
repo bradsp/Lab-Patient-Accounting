@@ -1,4 +1,6 @@
-﻿namespace LabBilling.UserControls;
+﻿using System.ComponentModel;
+
+namespace LabBilling.UserControls;
 
 
 /// <summary>
@@ -109,6 +111,7 @@ public partial class CurrencyTextBox : TextBox
     /// <summary>
     /// property to maintain value of control
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public decimal DollarValue
     {
         get

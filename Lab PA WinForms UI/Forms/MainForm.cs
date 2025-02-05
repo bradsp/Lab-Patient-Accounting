@@ -4,7 +4,6 @@ using LabBilling.Forms;
 using LabBilling.Legacy;
 using LabBilling.Logging;
 using LabBilling.Properties;
-using LabBilling.ReportByInsuranceCompany;
 using MenuBar;
 using NLog;
 using NLog.Config;
@@ -564,7 +563,6 @@ public partial class MainForm : Form
         //administrator only menu items
         systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
 
-        duplicateAccountsToolStripMenuItem.Visible = !viewOnly;
         clientBillsNewToolStripMenuItem.Visible = !viewOnly;
 
         // Debugging output to verify visibility settings
@@ -574,7 +572,6 @@ public partial class MainForm : Form
         Debug.WriteLine($"batchChargeEntryToolStripMenuItem.Visible: {batchChargeEntryToolStripMenuItem.Visible}");
         Debug.WriteLine($"badDebtMaintenanceToolStripMenuItem.Visible: {badDebtMaintenanceToolStripMenuItem.Visible}");
         Debug.WriteLine($"systemAdministrationToolStripMenuItem.Visible: {systemAdministrationToolStripMenuItem.Visible}");
-        Debug.WriteLine($"duplicateAccountsToolStripMenuItem.Visible: {duplicateAccountsToolStripMenuItem.Visible}");
         Debug.WriteLine($"clientBillsNewToolStripMenuItem.Visible: {clientBillsNewToolStripMenuItem.Visible}");
 
     }
@@ -691,18 +688,7 @@ public partial class MainForm : Form
             NewForm(frm);
         }
     }
-
-
-    private void duplicateAccountsToolStripMenuItem_Click(object sender, EventArgs e)
-        => NewForm(new DuplicateAccountsForm(Helper.GetArgs()));
-
-    private void reportByInsuranceCompanyToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        InsuranceReportForm frm = new(Program.AppEnvironment.GetArgs());
-        frm.AccountLaunched += OnAccountLaunched;
-        NewForm(frm);
-    }
-
+     
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
     {
         Log.Instance.Trace($"Entering");

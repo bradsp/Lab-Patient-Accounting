@@ -1,6 +1,7 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace LabBilling;
@@ -17,7 +18,9 @@ public partial class Login : Form
     }
 
     public bool testEnvironment = false;
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool IsLoggedIn { get; set; }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public UserAccount LoggedInUser { get; set; }
     private string _systemUser;
     private string _systemDomain;

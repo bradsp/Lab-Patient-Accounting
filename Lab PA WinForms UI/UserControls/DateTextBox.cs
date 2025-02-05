@@ -137,6 +137,7 @@ namespace LabBilling.UserControls
         /// <summary>
         /// property to maintain value of control
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public DateTime? DateValue
         {
             get

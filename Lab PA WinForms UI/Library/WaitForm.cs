@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -6,7 +7,9 @@ namespace LabBilling.Library;
 
 public partial class WaitForm : Form
 {
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Action Worker { get; set; }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public ProgressBarStyle ProgressBarStyle
     {
         get

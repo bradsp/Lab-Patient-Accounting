@@ -27,7 +27,6 @@ public partial class BatchRemittance : Form
         Log.Instance.Trace($"Entering");
         _batchTransactionService = new(Program.AppEnvironment);
         _accountService = new(Program.AppEnvironment);
-        //List<ChkBatchDetail> chkBatchDetails = new();
         SaveBatchButton.Enabled = false;
         SubmitPaymentsButton.Enabled = false;
         LoadOpenBatches();

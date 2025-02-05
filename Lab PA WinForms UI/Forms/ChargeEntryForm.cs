@@ -2,6 +2,7 @@
 using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
+using System.ComponentModel;
 
 
 namespace LabBilling.Forms;
@@ -14,10 +15,15 @@ public partial class ChargeEntryForm : Form
     private readonly DictionaryService _dictionaryService;
 
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string SelectedCdm { get; set; }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public decimal Quantity { get; set; }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public double Amount { get; set; }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string Comment { get; set; }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string ReferenceNumber { get; set; }
 
     public ChargeEntryForm(Account currentAccount)

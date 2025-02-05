@@ -18,7 +18,7 @@ namespace LabBilling.Library
         public event SelectedValueChangedEventHandler SelectedValueChanged;
         private Color _backgroundColor = Color.White;
         private System.Windows.Forms.DataGridView resultsDataGrid;
-
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override Color BackColor
         {
             get
@@ -61,10 +61,13 @@ namespace LabBilling.Library
 
             this.Controls.Add(this.resultsDataGrid);
         }
-
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int CharacterLookupCountMin { get; set; } = 3;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int ResultBoxHeight { get; set; } = 150;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<InsCompany> Datasource { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string SelectedValue 
         { 
             get
@@ -88,6 +91,7 @@ namespace LabBilling.Library
                 skipSelectionChanged = false;
             }
         }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string DisplayValue
         {
             get
