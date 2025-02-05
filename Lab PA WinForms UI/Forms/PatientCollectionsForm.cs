@@ -15,24 +15,6 @@ public partial class PatientCollectionsForm : Form
     private static string AppName
     { get { return $"{Application.ProductName} {Application.ProductVersion}"; }  }
 
-    private PrintDocument _viewerPrintDocument;
-    [Obsolete]
-    private ReportGenerator _rgReport;
-    //[Obsolete]
-    //private readonly R_notes _rNotes = null;
-    //[Obsolete]
-    //private readonly R_ins _rIns = null;
-    //[Obsolete]
-    //private readonly R_pat _rPat = null;
-    //[Obsolete]
-    //private readonly R_chk _rChk = null;
-    //[Obsolete]
-    //private readonly CAcc _cAcc = null;
-    //[Obsolete]
-    //private readonly ERR _err = null;
-    private readonly string _strServer = null;
-    private readonly string _strDatabase = null;
-    private readonly string _strProductionEnvironment = null;
     private DataTable _dtAccounts;
     private SqlDataAdapter _sdaBadDebt;
     private Account _account;
@@ -53,18 +35,6 @@ public partial class PatientCollectionsForm : Form
         Log.Instance.Trace($"Entering");
         InitializeComponent();
 
-        _strServer = Program.AppEnvironment.ServerName;
-        _strDatabase = Program.AppEnvironment.DatabaseName;
-        _strProductionEnvironment = _strDatabase;
-
-        string[] strArgs = new string[] { _strProductionEnvironment, _strServer, _strDatabase };
-        //_err = new ERR(strArgs);
-        //_rChk = new R_chk(_strServer, _strDatabase, ref _err);
-        //_rPat = new R_pat(_strServer, _strDatabase, ref _err);
-        //_cAcc = new CAcc(_strServer, _strDatabase, ref _err);
-        //_rNotes = new R_notes(_strServer, _strDatabase, ref _err);
-        //_rIns = new R_ins(_strServer, _strDatabase, ref _err);
-
         _accountService = new(Program.AppEnvironment);
         _patientBillingService = new(Program.AppEnvironment);
         _dictionaryService = new(Program.AppEnvironment);
@@ -72,13 +42,6 @@ public partial class PatientCollectionsForm : Form
 
     private void frmBadDebt_Load(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
-        //CreateDateTimes();
-        _viewerPrintDocument = new PrintDocument();
-        _viewerPrintDocument.DefaultPageSettings.Landscape = false;
-        _rgReport = new ReportGenerator(dgvAccounts, _viewerPrintDocument, "BAD DEBT", _strDatabase);
-        _viewerPrintDocument.PrintPage += new PrintPageEventHandler(_rgReport.MyPrintDocument_PrintPage);
-
     }
 
     /// <summary>
@@ -184,10 +147,6 @@ public partial class PatientCollectionsForm : Form
         }
 
         Log.Instance.Trace($"Entering");
-        //DateTime dtFrom = ((DateTimePicker)m_dpFrom.Control).Value;
-        //DateTime dtThru = ((DateTimePicker)m_dpThru.Control).Value;
-        //dtFrom = new DateTime(dtFrom.Year, dtFrom.Month, dtFrom.Day, 0, 0, 0);
-        //dtThru = new DateTime(dtThru.Year, dtThru.Month, dtThru.Day, 23, 59, 59);
 
         _dtAccounts = new DataTable("BAD_DEBT");
         _sdaBadDebt = new SqlDataAdapter();
@@ -200,45 +159,17 @@ public partial class PatientCollectionsForm : Form
             var result = cmd.ExecuteScalar();
             DateTime dtSent = (DateTime)result;
 
-            if (false)
-            {
-                strSelectBadDebt =
-                    string.Format("select datepart(month, date_sent) as [Month], " +
-                    "datepart(year, date_sent) as [Year], account_no as [account], " +
-                    "debtor_last_name +', '+debtor_first_name as [Debtor Name], " +
-                    "convert(datetime,convert(varchar(10),service_date,101)) as [service_date] " +
-                    " ,pat.baddebt_date, balance, 0 as [SMALL BAL WRITEOFF], " +
-                    "bad_debt.rowguid " +
-                    "from bad_debt " +
-                    "inner join pat on pat.account = bad_debt.account_no " +
-                    "where date_sent between '{0}' and '{1}' " + //and pat.baddebt_date is null "+
-                    "order by service_date ",
-                    dtSent, dtSent.Date.AddHours(23).AddMinutes(59).AddSeconds(59));
-            }
-            else
-            {
-                strSelectBadDebt =
-                string.Format("select datepart(month, date_sent) as [Month], " +
-                "datepart(year, date_sent) as [Year], account_no as [account], " +
-                "debtor_last_name +', '+debtor_first_name as [Debtor Name], " +
-                "convert(datetime,convert(varchar(10),service_date,101)) as [service_date] " +
-                " ,pat.baddebt_date, balance, 0 as [SMALL BAL WRITEOFF], " +
-                "bad_debt.rowguid " +
-                "from bad_debt " +
-                "inner join pat on pat.account = bad_debt.account_no " +
-                "where date_sent is null " +
-                "order by service_date ");
-            }
-            // special case processing 
-            if (DateTime.Now < new DateTime(2015, 12, 18, 15, 15, 0))
-            {
-                strSelectBadDebt = "select datepart(month, date_sent) as [Month] , datepart(year, date_sent) as [Year] , " +
-                    "account_no as [account] , dbo.pat.pat_full_name , debtor_last_name +', '+debtor_first_name as [Debtor Name] ," +
-                    "convert(datetime,convert(varchar(10),service_date,101)) as [service_date], pat.baddebt_date  " +
-                    "from pat inner join dbo.bad_debt on bad_debt.account_no = pat.account  " +
-                    "AND bad_debt.date_entered BETWEEN  '2015-10-26 00:00:00.570' AND '2015-10-27 23:59:52.570' " +
-                    "WHERE dbo.pat.bd_list_date = '2015-12-07 00:00:00.000' AND dbo.pat.baddebt_date IS NULL order by dbo.pat.pat_full_name";
-            }
+            strSelectBadDebt =
+            string.Format("select datepart(month, date_sent) as [Month], " +
+            "datepart(year, date_sent) as [Year], account_no as [account], " +
+            "debtor_last_name +', '+debtor_first_name as [Debtor Name], " +
+            "convert(datetime,convert(varchar(10),service_date,101)) as [service_date] " +
+            " ,pat.baddebt_date, balance, 0 as [SMALL BAL WRITEOFF], " +
+            "bad_debt.rowguid " +
+            "from bad_debt " +
+            "inner join pat on pat.account = bad_debt.account_no " +
+            "where date_sent is null " +
+            "order by service_date ");
 
             SqlCommand cmdSelect = new(strSelectBadDebt, conn);
             _sdaBadDebt.SelectCommand = cmdSelect;
@@ -432,7 +363,7 @@ public partial class PatientCollectionsForm : Form
             MessageBox.Show("No records ready to print.");
             return;
         }
-        _viewerPrintDocument.Print();
+        //_viewerPrintDocument.Print();
 
     }
 
@@ -480,9 +411,6 @@ public partial class PatientCollectionsForm : Form
             }
 
             int nRec = _account.Payments.Where(x => x.IsCollectionPmt).Count();
-
-            //int nRec = _rChk.GetActiveRecords(
-            //    string.Format("account = '{0}' and bad_debt <> 0", strAccount));
 
             List<Chk> chks = _account.Payments.Where(x => x.IsCollectionPmt).ToList();
 
