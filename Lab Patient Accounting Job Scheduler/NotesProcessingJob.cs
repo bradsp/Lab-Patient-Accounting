@@ -1,13 +1,16 @@
 ﻿using LabBilling.Core.Services;
+using LabBilling.Core.UnitOfWork;
 using Quartz;
 
 namespace LabBillingJobs;
 
 public partial class JobProcessor
 {
+
     [DisallowConcurrentExecution]
     public class NotesProcessingJob : IJob
     {
+        private UnitOfWorkMain _uow = new UnitOfWorkMain(Program.AppEnvironment);
         public async Task Execute(IJobExecutionContext context)
         {
             Console.WriteLine($"Starting Notes Import. {DateTime.Now}");
@@ -31,7 +34,7 @@ public partial class JobProcessor
         public void NotesImport()
         {
             Console.WriteLine("Beginning notes import.");
-            NotesImportService notesImport = new NotesImportService(Program.AppEnvironment);
+            NotesImportService notesImport = new NotesImportService(Program.AppEnvironment, _uow);
 
             try
             {

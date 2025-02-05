@@ -1,5 +1,6 @@
 ﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
 using Microsoft.Data.SqlClient;
 
@@ -11,6 +12,8 @@ static class Program
 
     public static AppEnvironment AppEnvironment { get; set; } = new AppEnvironment();
 
+    public static UnitOfWorkMain UnitOfWork { get; set; } = new UnitOfWorkMain(AppEnvironment);
+
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
@@ -19,7 +22,7 @@ static class Program
     {
 
         bool firstInstance;
-        Mutex mutex = new Mutex(false, "Local\\" + Application.ProductName, out firstInstance);
+        Mutex mutex = new(false, "Local\\" + Application.ProductName, out firstInstance);
 
         if (!firstInstance)
         {
@@ -27,7 +30,7 @@ static class Program
             return;
         }
 
-        LoggedInUser = null;
+        //LoggedInUser = null;
         Log.Instance.Info($"Launching Lab Patient Accounting");
 
         Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);

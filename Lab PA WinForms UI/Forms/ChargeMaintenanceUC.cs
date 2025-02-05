@@ -19,7 +19,7 @@ public partial class ChargeMaintenanceUC : UserControl
         {
             InitializeComponent();
             _grouper = new(ChargesDataGrid);
-            _accountService = new(Program.AppEnvironment);
+            _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
         }
     }
 

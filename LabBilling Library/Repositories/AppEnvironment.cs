@@ -1,5 +1,4 @@
 ﻿using LabBilling.Core.Models;
-using LabBilling.Core.Services;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Drawing;
@@ -9,6 +8,7 @@ namespace LabBilling.Core.DataAccess;
 
 public class AppEnvironment : IAppEnvironment
 {
+
     public string DatabaseName { get; set; }
     public string ServerName { get; set; }
     public string LogDatabaseName { get; set; }
@@ -111,26 +111,7 @@ public class AppEnvironment : IAppEnvironment
     public string User { get; set; }
 
     private ApplicationParameters _appParms;
-    public ApplicationParameters ApplicationParameters
-    {
-        get
-        {
-            if (_appParms == null)
-            {
-                ApplicationParameters = new();
-                if (EnvironmentValid)
-                {
-                    SystemService systemService = new(this);
-                    _appParms = systemService.LoadSystemParameters();
-                }
-            }
-            return _appParms;
-        }
-        set
-        {
-            _appParms = value;
-        }
-    }
+    public ApplicationParameters ApplicationParameters { get; set; }
 
     public string LogConnectionString
     {

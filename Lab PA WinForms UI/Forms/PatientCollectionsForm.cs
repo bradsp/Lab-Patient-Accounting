@@ -35,9 +35,9 @@ public partial class PatientCollectionsForm : Form
         Log.Instance.Trace($"Entering");
         InitializeComponent();
 
-        _accountService = new(Program.AppEnvironment);
-        _patientBillingService = new(Program.AppEnvironment);
-        _dictionaryService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _patientBillingService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
     }
 
     private void frmBadDebt_Load(object sender, EventArgs e)
@@ -324,33 +324,35 @@ public partial class PatientCollectionsForm : Form
 
     private void tsbReadMCLFile_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        throw new NotImplementedException();
 
-        OpenFileDialog ofd = new()
-        {
-            InitialDirectory = @"c:\temp\",
-            Filter = "Text Files|*.txt"
-        };
+        //Log.Instance.Trace($"Entering");
 
-        if (ofd.ShowDialog() == DialogResult.Cancel)
-        {
-            return;
-        }
-        string[] alAccounts =
-            Utilities.RFCObject.GetFileContents(ofd.FileName).Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+        //OpenFileDialog ofd = new()
+        //{
+        //    InitialDirectory = @"c:\temp\",
+        //    Filter = "Text Files|*.txt"
+        //};
 
-        MessageBox.Show(string.Format("{0} accounts in file", alAccounts.GetUpperBound(0)));
-        dgvAccounts.Columns.Add("ACCOUNT", "ACCOUNT");
-        dgvAccounts.Columns.Add("PAT NAME", "PAT NAME");
-        dgvAccounts.Columns.Add("GUAR NAME", "GUAR NAME");
-        foreach (string str in alAccounts)
-        {
-            string strGuarName = string.Format("{0}, {1}", str.Substring(0, 19).Trim(), str.Substring(20, 15).Trim());
-            string strAccount = str.Substring(240, 25).Trim();
-            string strPatName = str.Substring(270, 20).Trim();
+        //if (ofd.ShowDialog() == DialogResult.Cancel)
+        //{
+        //    return;
+        //}
+        //string[] alAccounts =
+        //    Utilities.RFCObject.GetFileContents(ofd.FileName).Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
 
-            dgvAccounts.Rows.Add(new object[] { strAccount, strPatName, strGuarName });
-        }
+        //MessageBox.Show(string.Format("{0} accounts in file", alAccounts.GetUpperBound(0)));
+        //dgvAccounts.Columns.Add("ACCOUNT", "ACCOUNT");
+        //dgvAccounts.Columns.Add("PAT NAME", "PAT NAME");
+        //dgvAccounts.Columns.Add("GUAR NAME", "GUAR NAME");
+        //foreach (string str in alAccounts)
+        //{
+        //    string strGuarName = string.Format("{0}, {1}", str.Substring(0, 19).Trim(), str.Substring(20, 15).Trim());
+        //    string strAccount = str.Substring(240, 25).Trim();
+        //    string strPatName = str.Substring(270, 20).Trim();
+
+        //    dgvAccounts.Rows.Add(new object[] { strAccount, strPatName, strGuarName });
+        //}
 
     }
 

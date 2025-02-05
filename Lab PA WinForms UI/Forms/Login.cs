@@ -104,7 +104,7 @@ public partial class Login : Form
             Program.AppEnvironment.IntegratedAuthentication = Properties.Settings.Default.ProdIntegratedSecurity;
         }
 
-        _systemService = new(Program.AppEnvironment);
+        _systemService = new(Program.AppEnvironment, Program.UnitOfWork);
         if (Program.AppEnvironment.IntegratedAuthentication)
         {
 

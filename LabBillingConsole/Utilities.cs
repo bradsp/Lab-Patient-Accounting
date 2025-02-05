@@ -17,10 +17,10 @@ namespace LabBillingConsole;
 
 public sealed class Utilities : MenuBase
 {
-
+    private IUnitOfWork _uow;
     public Utilities(IAppEnvironment appEnvironment) : base(appEnvironment)
     {
-
+        _uow = new UnitOfWorkMain(_appEnvironment);
     }
 
     public override bool LaunchMenu()
@@ -115,7 +115,7 @@ public sealed class Utilities : MenuBase
 
     public void RegenerateCollectionsFile()
     {
-        PatientBillingService patientBilling = new PatientBillingService(_appEnvironment);
+        PatientBillingService patientBilling = new PatientBillingService(_appEnvironment, _uow);
 
         DateTime tDate;
 
@@ -134,7 +134,7 @@ public sealed class Utilities : MenuBase
 
     public void RegenerateClaimBatch()
     {
-        ClaimGeneratorService claimGenerator = new ClaimGeneratorService(_appEnvironment);
+        ClaimGeneratorService claimGenerator = new ClaimGeneratorService(_appEnvironment, _uow);
 
         var response = AnsiConsole.Ask<int>("Enter batch number: ");
 
@@ -146,8 +146,9 @@ public sealed class Utilities : MenuBase
 
     public void FixDrugScreenCharges()
     {
-        using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
-        AccountService accountService = new(_appEnvironment);
+
+        _uow.StartTransaction();
+        AccountService accountService = new(_appEnvironment, _uow);
 
         //get list of accounts
         var sql = Sql.Builder;
@@ -157,7 +158,7 @@ public sealed class Utilities : MenuBase
         sql.Where("mod_date >= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = new DateTime(2023, 3, 1) });
         sql.Where("credited = 0");
 
-        var charges = unitOfWork.Context.Fetch<Chrg>(sql);
+        var charges = _uow.Context.Fetch<Chrg>(sql);
         //loop through accounts
         foreach (var chrg in charges)
         {
@@ -169,13 +170,13 @@ public sealed class Utilities : MenuBase
             Console.WriteLine($"Added {chrg.AccountNo} 5869007");
 
         }
-        unitOfWork.Commit();
+        _uow.Commit();
     }
 
     public void NotesImport()
     {
         Console.WriteLine("Beginning notes import.");
-        NotesImportService notesImport = new(_appEnvironment);
+        NotesImportService notesImport = new(_appEnvironment, _uow);
         try
         {
             foreach (string filename in Directory.GetFiles(@"\\wthmclbill\shared\Billing\LIVE\claims\Notes", "*.exted"))
@@ -194,7 +195,7 @@ public sealed class Utilities : MenuBase
 
     public void ValidateAccountsJob()
     {
-        AccountService accountService = new(_appEnvironment);
+        AccountService accountService = new(_appEnvironment, _uow);
         accountService.ValidationAccountUpdated += AccountService_ValidationAccountUpdated;
         Console.WriteLine("In RunValidation() - Starting RunValidation job...");
         Console.WriteLine("Wait for process to complete, then press a key...");
@@ -220,7 +221,7 @@ public sealed class Utilities : MenuBase
     }
     public void ProcessInterfaceMessages()
     {
-        HL7ProcessorService hL7Processor = new(_appEnvironment);
+        HL7ProcessorService hL7Processor = new(_appEnvironment, _uow);
         hL7Processor.ProcessMessages();
         Console.WriteLine("Messages processed.");
     }
@@ -264,7 +265,7 @@ public sealed class Utilities : MenuBase
 
     public void RunClaimsProcessing()
     {
-        ClaimGeneratorService claimGenerator = new(_appEnvironment);
+        ClaimGeneratorService claimGenerator = new(_appEnvironment, _uow);
 
         CancellationToken cancellationToken = new();
         Progress<ProgressReportModel> progressReportModel = new();

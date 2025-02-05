@@ -28,8 +28,6 @@ namespace LabBilling;
 public partial class MainForm : Form
 {
     private TableLayoutPanel _menuTable;
-    private readonly ProgressBar _claimProgress;
-    private readonly Label _claimProgressStatusLabel;
     private readonly CancellationTokenSource _cancellationToken;
     private List<UserProfile> _recentAccounts;
     private List<Account> _recentAccountsByAccount;
@@ -50,8 +48,8 @@ public partial class MainForm : Form
 
         ConfigureLogging();
 
-        _accountService = new(Program.AppEnvironment);
-        _systemService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _systemService = new(Program.AppEnvironment, Program.UnitOfWork);
 
         MainFormMenu.BackColor = Program.AppEnvironment.MenuBackgroundColor;
         MainFormMenu.ForeColor = Program.AppEnvironment.MenuTextColor;

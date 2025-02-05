@@ -22,8 +22,8 @@ public partial class NewAccountForm : Form
         _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
         _timer.Tick += new EventHandler(clientTextBox_KeyUpDone);
 
-        accountService = new(Program.AppEnvironment);
-        dictionaryService = new(Program.AppEnvironment);
+        accountService = new(Program.AppEnvironment, Program.UnitOfWork);
+        dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
     }
 
     private void AddAccount_Click(object sender, EventArgs e)

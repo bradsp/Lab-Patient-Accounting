@@ -4,16 +4,12 @@ using LabBilling.Library;
 using LabBilling.Logging;
 using System.ComponentModel;
 using System.Data;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Windows.Forms;
 using Utilities;
-using WinFormsLibrary;
 
 namespace LabBilling.Forms;
 public partial class ProcessRemittanceForm : Form
 {
-    private readonly Remittance835Service remittanceService = new(Program.AppEnvironment);
+    private readonly Remittance835Service remittanceService = new(Program.AppEnvironment, Program.UnitOfWork);
     private readonly BindingSource remittanceBindingSource = new();
     private readonly ProgressBar progressBar;
     private readonly Label progressLabel;

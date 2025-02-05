@@ -7,8 +7,8 @@ namespace LabBilling.Forms;
 
 public partial class InterfaceMapping : Form
 {
-    private readonly DictionaryService dictionaryService = new(Program.AppEnvironment);
-    private readonly HL7ProcessorService hL7ProcessorService = new(Program.AppEnvironment);
+    private readonly DictionaryService dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+    private readonly HL7ProcessorService hL7ProcessorService = new(Program.AppEnvironment, Program.UnitOfWork);
 
     public InterfaceMapping() 
     {

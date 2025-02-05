@@ -3,6 +3,7 @@ using System.Data;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.Repositories;
+using LabBilling.Logging;
 using PetaPoco;
 using PetaPoco.Providers;
 using Utilities;
@@ -11,9 +12,10 @@ namespace LabBilling.Core.UnitOfWork;
 
 public class UnitOfWorkMain : IUnitOfWork
 {
-    public PetaPoco.IDatabase Context { get; private set; }
     private readonly bool _useDispose;
     private Transaction _transaction;
+
+    public PetaPoco.IDatabase Context { get; private set; }
     public AccountAlertRepository AccountAlertRepository { get; private set; }
     public AccountLmrpErrorRepository AccountLmrpErrorRepository { get; private set; }
     public AccountLockRepository AccountLockRepository { get; private set; }
@@ -80,7 +82,7 @@ public class UnitOfWorkMain : IUnitOfWork
         _useDispose = false;
     }
 
-    public UnitOfWorkMain(IAppEnvironment appEnvironment, bool useTransaction = false)
+    public UnitOfWorkMain(IAppEnvironment appEnvironment)
     {
         Context = Initialize(appEnvironment.ConnectionString);
         AccountAlertRepository = new(appEnvironment, Context);
@@ -139,13 +141,11 @@ public class UnitOfWorkMain : IUnitOfWork
         WriteOffCodeRepository = new(appEnvironment, Context);
 
         _useDispose = true;
-        if (!useTransaction) return;
-
-        _transaction = new Transaction(Context);
     }
 
     private static IDatabase Initialize(string connectionString)
     {
+        Log.Instance.Trace("Initializing UnitOfWorkMain");
         return DatabaseConfiguration
             .Build()
             .UsingConnectionString(connectionString)
@@ -154,6 +154,12 @@ public class UnitOfWorkMain : IUnitOfWork
             .WithAutoSelect()
             .UsingDefaultMapper<MyMapper>(new MyMapper())
             .Create();
+    }
+
+    public void StartTransaction()
+    {
+        if (_transaction != null) return;
+        _transaction = new Transaction(Context);
     }
 
     public void Commit()

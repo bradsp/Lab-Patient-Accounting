@@ -10,7 +10,7 @@ namespace Utilities;
 /// <summary>
 /// Summary description for OS.
 /// </summary>
-public class OS : RFCObject
+public class OS
 {
     /// <summary>
     /// empty constructor
@@ -69,43 +69,6 @@ public class OS : RFCObject
     }
 
     /// <summary>
-    /// 07/29/2004 Rick Crone
-    /// Mod Hist:
-    /// 03/07/2007 Rick Crone
-    /// Now returns the Process. There are many interesting properties and methods.
-    /// This feature added primarly to allow the caller to check the HasExited property.
-    /// note: using System.Diagnostics;// for Process
-    /// Calling example:
-    /// <code>
-    ///  OS my_os = new OS();
-    ///    Process p;
-    ///    p = my_os.Shell("NotePad.exe", @"C\Windows", "");
-    ///    while (!p.HasExited)
-    ///    {
-    ///        //do nothing - no refresh needed here
-    ///    }
-    /// </code>
-    /// 
-    /// </summary>
-    public static Process Shell(string strFileName, string strWorkingDirectory, string strArgumants)
-    {
-        Process p = new();
-        p.StartInfo.FileName = strFileName;
-        p.StartInfo.WorkingDirectory = strWorkingDirectory;
-        p.StartInfo.Arguments = strArgumants;
-        try
-        {
-            p.Start();
-        }
-        catch (Exception ex)
-        {
-            m_strErrMsg = ex.Message;
-            p = null;
-        }
-        return (p);
-    }
-
-    /// <summary>
     /// 06/02/2005 Rick Crone
     /// </summary>
     public static string GetMachineName()
@@ -114,6 +77,7 @@ public class OS : RFCObject
         strMachineName = string.Format("{0}", Environment.MachineName);
         return strMachineName;
     }
+
     /// <summary>
     /// 06/15/2005 Rick Crone
     /// </summary>
@@ -126,12 +90,11 @@ public class OS : RFCObject
     }
 
     /// <summary>
-    /// 12/14/2006 David Kelly
+    /// Returns the name of the application
     /// </summary>
     public static string GetAppName()
     {
-        RFCObject rfc = new();
-        return rfc.propAppName;
+        return AppDomain.CurrentDomain.FriendlyName;
     }
 
     /// <summary>

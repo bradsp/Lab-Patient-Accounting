@@ -60,8 +60,8 @@ public partial class AccountForm : Form
     public AccountForm(string account) : this()
     {
         Log.Instance.Trace($"Entering - {account}");
-        _dictionaryService = new(Program.AppEnvironment);
-        _accountService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
 
         if (account != null)
             _selectedAccount = account;
@@ -1609,7 +1609,7 @@ public partial class AccountForm : Form
     private void GenerateClaimButton_Click(object sender, EventArgs e)
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
-        ClaimGeneratorService claimGenerator = new(Program.AppEnvironment);
+        ClaimGeneratorService claimGenerator = new(Program.AppEnvironment, Program.UnitOfWork);
 
         claimGenerator.CompileClaim(_currentAccount.AccountNo);
     }

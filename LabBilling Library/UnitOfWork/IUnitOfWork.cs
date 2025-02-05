@@ -10,6 +10,8 @@ namespace LabBilling.Core.UnitOfWork
         IDatabase Context { get; }
         void Commit();
         void Rollback();
+        void StartTransaction();
+
         AccountRepository AccountRepository { get; }
         AccountAlertRepository AccountAlertRepository { get; }
         PatRepository PatRepository { get; }
@@ -59,5 +61,11 @@ namespace LabBilling.Core.UnitOfWork
         ReportingRepository ReportingRepository { get; }
         CdmDetailRepository CdmDetailRepository { get; }
         AuditReportRepository AuditReportRepository { get; }
+        RemittanceRepository RemittanceRepository { get; }
+        RemittanceClaimRepository RemittanceClaimRepository { get; }
+        RemittanceClaimDetailRepository RemittanceClaimDetailRepository { get; }
+        RemittanceClaimAdjustmentRepository RemittanceClaimAdjustmentRepository { get; }
+        AccountLockRepository AccountLockRepository { get; }
+        SanctionedProviderRepository SanctionedProviderRepository { get; }
     }
 }

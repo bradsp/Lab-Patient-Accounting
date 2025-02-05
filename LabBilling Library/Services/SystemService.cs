@@ -1,6 +1,7 @@
 ﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
+using LabBilling.Logging;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -10,84 +11,51 @@ namespace LabBilling.Core.Services;
 public class SystemService
 {
     private readonly IAppEnvironment _appEnvironment;
+    private readonly IUnitOfWork _uow;
 
-    public SystemService(IAppEnvironment appEnvironment)
+    public SystemService(IAppEnvironment appEnvironment, IUnitOfWork uow)
     {
+        Log.Instance.Trace("Initializing SystemService");
         this._appEnvironment = appEnvironment;
+        _uow = uow;
+        Log.Instance.Trace("UnitOfWorkMain initialized from SystemService");
 
         //check if temp directory exists - if not create it
         if (!Directory.Exists(_appEnvironment.TempFilePath))
             Directory.CreateDirectory(_appEnvironment.TempFilePath);
     }
 
-    public ApplicationParameters LoadSystemParameters()
-    {
-        using UnitOfWorkMain uow = new(_appEnvironment);
+    public ApplicationParameters LoadSystemParameters() => _uow.SystemParametersRepository.LoadParameters();
 
-        return uow.SystemParametersRepository.LoadParameters();
-    }
-
-    public void SaveSystemParameter(SysParameter systemParameter)
-    {
-        using UnitOfWorkMain uow = new(_appEnvironment);
-
-        uow.SystemParametersRepository.Update(systemParameter, new[] { nameof(SysParameter.Value) });
-    }
+    public void SaveSystemParameter(SysParameter systemParameter) => _uow.SystemParametersRepository.Update(systemParameter, new[] { nameof(SysParameter.Value) });
 
     public UserAccount UpdateUser(UserAccount user)
     {
-        using UnitOfWorkMain uow = new(_appEnvironment);
-
-        var userAccount = uow.UserAccountRepository.Update(user);
-        uow.Commit();
+        _uow.StartTransaction();
+        var userAccount = _uow.UserAccountRepository.Update(user);
+        _uow.Commit();
         return userAccount;
     }
 
     public UserAccount AddUser(UserAccount user)
     {
-        using UnitOfWorkMain uow = new(_appEnvironment);
-
-        var retval = uow.UserAccountRepository.Add(user);
-        uow.Commit();
+        _uow.StartTransaction();
+        var retval = _uow.UserAccountRepository.Add(user);
+        _uow.Commit();
 
         return user;
     }
 
-    public IList<UserAccount> GetUsers()
-    {
-        using UnitOfWorkMain uow = new(_appEnvironment);
+    public IList<UserAccount> GetUsers() => _uow.UserAccountRepository.GetAll();
 
-        return uow.UserAccountRepository.GetAll();
-
-    }
-
-    public UserAccount GetUser(string username)
-    {
-        using UnitOfWorkMain uow = new(_appEnvironment);
-
-        return uow.UserAccountRepository.GetByUsername(username);
-    }
+    public UserAccount GetUser(string username) => _uow.UserAccountRepository.GetByUsername(username);
 
     public async Task<IList<UserAccount>> GetActiveUsersAsync() => await Task.Run(() => GetActiveUsers());
-    public IList<UserAccount> GetActiveUsers()
-    {
-        using UnitOfWorkMain uow = new(_appEnvironment);
+    public IList<UserAccount> GetActiveUsers() => _uow.UserAccountRepository.GetActiveUsers();
 
-        return uow.UserAccountRepository.GetActiveUsers();
-    }
-
-    public bool LoginCheck(string username, string password) 
-    {
-        using UnitOfWorkMain uow = new(_appEnvironment);
-
-        return uow.UserAccountRepository.LoginCheck(username, password);
-    }
+    public bool LoginCheck(string username, string password) => _uow.UserAccountRepository.LoginCheck(username, password);
 
     public async Task<IEnumerable<UserProfile>> GetRecentAccountsAsync(string username) => await Task.Run(() => GetRecentAccounts(username));
-    public IEnumerable<UserProfile> GetRecentAccounts(string username)
-    {
-        using UnitOfWorkMain uow = new(_appEnvironment);
+    public IEnumerable<UserProfile> GetRecentAccounts(string username) => _uow.UserProfileRepository.GetRecentAccount(username);
 
-        return uow.UserProfileRepository.GetRecentAccount(username);
-    }
 }

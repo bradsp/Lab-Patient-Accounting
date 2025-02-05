@@ -11,10 +11,9 @@ namespace LabBilling.Core.DataAccess;
 public sealed class InsCompanyRepository : RepositoryBase<InsCompany>
 {
 
-    private DictionaryService dictionaryService;
     public InsCompanyRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
     {
-        dictionaryService = new(appEnvironment);
+
     }
 
     public InsCompany GetByCode(string code)
@@ -27,11 +26,6 @@ public sealed class InsCompanyRepository : RepositoryBase<InsCompany>
             return new InsCompany();
         }
         var record = Context.SingleOrDefault<InsCompany>("where code = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = code });
-
-        if(record != null)
-        {
-            record.Mappings = dictionaryService.GetMappingsBySendingValue("INS_CODE", record.InsuranceCode).ToList();
-        }
 
         return record;
     }

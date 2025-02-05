@@ -181,8 +181,7 @@ public sealed class ChrgRepository : RepositoryBase<Chrg>
     {
         Log.Instance.Trace($"Entering ChrgId {chrgId}");
 
-        if (chrgId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(chrgId));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(chrgId);
 
         try
         {

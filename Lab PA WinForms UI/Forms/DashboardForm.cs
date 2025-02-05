@@ -18,7 +18,7 @@ public partial class DashboardForm : Form
     public DashboardForm()
     {
         InitializeComponent();
-        dictionaryService = new(Program.AppEnvironment);
+        dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
         announcementLayoutPanel = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,

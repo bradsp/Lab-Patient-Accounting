@@ -1,4 +1,5 @@
 ﻿using LabBilling.Core.Services;
+using LabBilling.Core.UnitOfWork;
 using Quartz;
 
 namespace LabBillingJobs;
@@ -8,6 +9,7 @@ public partial class JobProcessor
     [DisallowConcurrentExecution]
     public class AccountValidationJob : IJob
     {
+
         public async Task Execute(IJobExecutionContext context)
         {
             Console.WriteLine($"Starting Account validation. {DateTime.Now}");
@@ -32,7 +34,9 @@ public partial class JobProcessor
         {
             Console.WriteLine("In RunValidation() - Starting RunValidation job");
             _log.Info("In RunValidation() - Starting RunValidation job");
-            AccountService accountService = new(Program.AppEnvironment);
+
+            UnitOfWorkMain uow = new UnitOfWorkMain(Program.AppEnvironment);
+            AccountService accountService = new(Program.AppEnvironment, uow);
 
             accountService.ValidateUnbilledAccounts();
 
