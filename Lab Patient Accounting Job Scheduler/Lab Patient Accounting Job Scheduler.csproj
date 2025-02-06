@@ -2,14 +2,15 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0-windows7.0</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <RootNamespace>Lab_Patient_Accounting_Job_Scheduler</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
-    <AssemblyVersion>2025.0.0.0</AssemblyVersion>
-    <FileVersion>2025.0.0.0</FileVersion>
+    <AssemblyVersion>2025.2.1.1</AssemblyVersion>
+    <FileVersion>2025.2.1.1</FileVersion>
     <Platforms>x64</Platforms>
+    <Version>2025.2.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

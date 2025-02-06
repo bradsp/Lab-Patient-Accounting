@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>LabBilling.Core</RootNamespace>
     <AssemblyVersion>2025.1.21.1</AssemblyVersion>
@@ -9,7 +9,7 @@
     <Product>LabBilling Library</Product>
     <Copyright>Copyright ©  2021-2025</Copyright>
     <FileVersion>2025.1.21.1</FileVersion>
-    <InformationalVersion>2025.1.21.1</InformationalVersion>
+    <InformationalVersion>2025.2.1.1</InformationalVersion>
     <Platforms>x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

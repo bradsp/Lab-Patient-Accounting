@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>LabBilling</RootNamespace>
     <AssemblyName>LabBilling</AssemblyName>
@@ -57,13 +57,13 @@
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>2025.2.1.*</Version>
+    <Version>2025.2.1.1</Version>
     <Copyright>2023-2025</Copyright>
     <RepositoryUrl>https://github.com/bradsp/Lab-Patient-Accounting</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>2025.2.1.*</AssemblyVersion>
-    <FileVersion>2025.2.1.*</FileVersion>
+    <AssemblyVersion>2025.2.1.1</AssemblyVersion>
+    <FileVersion>2025.2.1.1</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
@@ -87,6 +87,7 @@
     <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
     <Title>Lab Patient Accounting</Title>
     <PackageProjectUrl>https://github.com/bradsp/Lab-Patient-Accounting</PackageProjectUrl>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
