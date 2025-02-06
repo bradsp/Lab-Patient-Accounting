@@ -1,12 +1,8 @@
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
-using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
+using LabBilling.Core.UnitOfWork;
 using PetaPoco;
 using PetaPoco.Providers;
-using System;
-using System.Data;
-using System.Reflection;
 
 namespace LabBilling.Core.Services;
 
@@ -14,6 +10,13 @@ public class AuthenticationService
 {
     private readonly string _connectionString;
     private IDatabase _db;
+    private IUnitOfWorkSystem _uow;
+
+    public AuthenticationService(IUnitOfWorkSystem uow)
+    {
+        _db = uow.Context;
+        _uow = uow;
+    }
 
     public AuthenticationService(string connectionString)
     {

@@ -12,6 +12,7 @@ static class Program
     public static UserAccount LoggedInUser { get; set; }
     public static AppEnvironment AppEnvironment { get; private set; }
     public static UnitOfWorkMain UnitOfWork { get; private set; }
+    public static UnitOfWorkSystem UnitOfWorkSystem { get; private set; }
 
 
     /// <summary>
@@ -76,12 +77,15 @@ static class Program
             MessageBox.Show("User not found in database. Please contact your system administrator.", "User Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
+        UnitOfWorkSystem = new(AppEnvironment);
 
         LoggedInUser = user;
         //complete AppEnvironment Initialization
         AppEnvironment.UserAccount = LoggedInUser;
         AppEnvironment.User = LoggedInUser.UserName;
-        AppEnvironment.ApplicationParameters = UnitOfWork.SystemParametersRepository.LoadParameters();
+        AppEnvironment.ApplicationParameters = UnitOfWorkSystem.SystemParametersRepository.LoadParameters();
+
+        //set up UnitOfWork for the main application
         UnitOfWork = new UnitOfWorkMain(AppEnvironment);
         //run MainForm
         Application.Run(new MainForm());
@@ -98,6 +102,10 @@ static class Program
         AppEnvironment.ServerName = testEnvironment
             ? Properties.Settings.Default.TestDbServer
             : Properties.Settings.Default.ProdDbServer;
+
+        AppEnvironment.LogDatabaseName = testEnvironment
+            ? Properties.Settings.Default.TestLogDbName
+            : Properties.Settings.Default.ProdLogDbName;
 
         AppEnvironment.IntegratedAuthentication = testEnvironment
             ? Properties.Settings.Default.TestIntegratedSecurity

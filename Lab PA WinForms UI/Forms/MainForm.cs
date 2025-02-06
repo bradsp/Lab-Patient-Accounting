@@ -49,7 +49,7 @@ public partial class MainForm : Form
         ConfigureLogging();
 
         _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
-        _systemService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _systemService = new(Program.AppEnvironment, Program.UnitOfWorkSystem);
 
         MainFormMenu.BackColor = Program.AppEnvironment.MenuBackgroundColor;
         MainFormMenu.ForeColor = Program.AppEnvironment.MenuTextColor;

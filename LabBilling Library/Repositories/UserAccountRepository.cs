@@ -9,6 +9,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class UserAccountRepository : RepositoryBase<UserAccount>
     {
+        protected override bool RequireValidEnvironment => false;
         public UserAccountRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
         }

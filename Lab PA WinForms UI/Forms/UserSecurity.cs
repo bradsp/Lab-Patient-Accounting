@@ -11,7 +11,7 @@ public partial class UserSecurity : Form
     private bool _isNewRecord = false;
     private List<UserAccount> _searchResults = new();
 
-    private readonly SystemService _systemService = new(Program.AppEnvironment, Program.UnitOfWork);
+    private readonly SystemService _systemService = new(Program.AppEnvironment, Program.UnitOfWorkSystem);
 
     public UserSecurity()
     {

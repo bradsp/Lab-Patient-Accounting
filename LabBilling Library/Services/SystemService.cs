@@ -2,23 +2,25 @@
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
+using PetaPoco;
+using PetaPoco.Providers;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace LabBilling.Core.Services;
 
 public class SystemService
 {
     private readonly IAppEnvironment _appEnvironment;
-    private readonly IUnitOfWork _uow;
+    private readonly IUnitOfWorkSystem _uow;
 
-    public SystemService(IAppEnvironment appEnvironment, IUnitOfWork uow)
+    public SystemService(IAppEnvironment appEnvironment, IUnitOfWorkSystem uow)
     {
         Log.Instance.Trace("Initializing SystemService");
         this._appEnvironment = appEnvironment;
-        _uow = uow;
-        Log.Instance.Trace("UnitOfWorkMain initialized from SystemService");
+        this._uow = uow;
 
         //check if temp directory exists - if not create it
         if (!Directory.Exists(_appEnvironment.TempFilePath))

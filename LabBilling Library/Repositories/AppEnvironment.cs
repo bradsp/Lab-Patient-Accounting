@@ -47,12 +47,7 @@ public class AppEnvironment : IAppEnvironment
     {
         get
         {
-            if (string.IsNullOrEmpty(ServerName))
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(DatabaseName))
+            if (string.IsNullOrEmpty(ServerName) || string.IsNullOrEmpty(DatabaseName))
             {
                 return false;
             }
