@@ -80,11 +80,31 @@ public class UnitOfWorkMain : IUnitOfWork
     {
         Context = context;
         _useDispose = false;
+        InitializeRepositories();
     }
 
     public UnitOfWorkMain(IAppEnvironment appEnvironment)
     {
         Context = Initialize(appEnvironment.ConnectionString);
+        InitializeRepositories(appEnvironment);
+        _useDispose = true;
+    }
+
+    private static IDatabase Initialize(string connectionString)
+    {
+        Log.Instance.Trace("Initializing UnitOfWorkMain");
+        return DatabaseConfiguration
+            .Build()
+            .UsingConnectionString(connectionString)
+            .UsingProvider<CustomSqlMsDatabaseProvider>(new CustomSqlMsDatabaseProvider())
+            .UsingCommandTimeout(180)
+            .WithAutoSelect()
+            .UsingDefaultMapper<MyMapper>(new MyMapper())
+            .Create();
+    }
+
+    private void InitializeRepositories(IAppEnvironment appEnvironment = null)
+    {
         AccountAlertRepository = new(appEnvironment, Context);
         AccountLmrpErrorRepository = new(appEnvironment, Context);
         AccountLockRepository = new(appEnvironment, Context);
@@ -133,27 +153,13 @@ public class UnitOfWorkMain : IUnitOfWork
         RemittanceClaimRepository = new(appEnvironment, Context);
         RemittanceClaimDetailRepository = new(appEnvironment, Context);
         RemittanceClaimAdjustmentRepository = new(appEnvironment, Context);
+        ReportingRepository = new(appEnvironment, Context);
         RevenueCodeRepository = new(appEnvironment, Context);
         SanctionedProviderRepository = new(appEnvironment, Context);
         SystemParametersRepository = new(appEnvironment, Context);
         UserAccountRepository = new(appEnvironment, Context);
         UserProfileRepository = new(appEnvironment, Context);
         WriteOffCodeRepository = new(appEnvironment, Context);
-
-        _useDispose = true;
-    }
-
-    private static IDatabase Initialize(string connectionString)
-    {
-        Log.Instance.Trace("Initializing UnitOfWorkMain");
-        return DatabaseConfiguration
-            .Build()
-            .UsingConnectionString(connectionString)
-            .UsingProvider<CustomSqlMsDatabaseProvider>(new CustomSqlMsDatabaseProvider())
-            .UsingCommandTimeout(180)
-            .WithAutoSelect()
-            .UsingDefaultMapper<MyMapper>(new MyMapper())
-            .Create();
     }
 
     public void StartTransaction()
@@ -200,5 +206,4 @@ public class UnitOfWorkMain : IUnitOfWork
         if (doThrowTransactionException)
             throw new DataException("Transaction was aborted");
     }
-
 }

@@ -3,16 +3,16 @@ using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
 using Microsoft.Data.SqlClient;
+using LabBilling.Core.Services;
 
 namespace LabBilling;
 
 static class Program
 {
     public static UserAccount LoggedInUser { get; set; }
+    public static AppEnvironment AppEnvironment { get; private set; }
+    public static UnitOfWorkMain UnitOfWork { get; private set; }
 
-    public static AppEnvironment AppEnvironment { get; set; } = new AppEnvironment();
-
-    public static UnitOfWorkMain UnitOfWork { get; set; } = new UnitOfWorkMain(AppEnvironment);
 
     /// <summary>
     /// The main entry point for the application.
@@ -20,7 +20,6 @@ static class Program
     [STAThread]
     static void Main(string[] args)
     {
-
         bool firstInstance;
         Mutex mutex = new(false, "Local\\" + Application.ProductName, out firstInstance);
 
@@ -30,7 +29,6 @@ static class Program
             return;
         }
 
-        //LoggedInUser = null;
         Log.Instance.Info($"Launching Lab Patient Accounting");
 
         Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
@@ -38,29 +36,76 @@ static class Program
 
         Application.ApplicationExit += new EventHandler(OnApplicationExit);
 
-
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
         bool testEnvironment = false;
 
-        if (args.Length > 0)
+        if (args.Length > 0 && args[0].Contains("TEST"))
         {
-            if (args[0].Contains("TEST"))
-            {
-                testEnvironment = true;
-            }
+            testEnvironment = true;
         }
+
         Application.SetHighDpiMode(HighDpiMode.SystemAware);
-        Login loginFrm = new(testEnvironment);
-        if (loginFrm.ShowDialog() == DialogResult.OK)
+
+        try
         {
-            Log.Instance.Info($"Login successful - connection {Helper.ConnVal}");
-            MainForm mainForm = new();
-            Application.Run(mainForm);
+            AppEnvironment = new AppEnvironment();
+            AppEnvironment.IntegratedAuthentication = true;
+            InitializeAppEnvironment(testEnvironment);
         }
-        else
+        catch (Exception ex)
         {
-            Application.Exit();
+            Log.Instance.Fatal("Failed to initialize application environment.", ex);
+            MessageBox.Show("Failed to initialize application environment. Please check the configuration and try again.", "Initialization Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        // Create AuthenticationService
+        var authenticationService = new AuthenticationService(AppEnvironment.ConnectionString);
+        //This app will default to integrated authentication.
+        //Pass the windows username to the AuthenticateIntegrated method.
+        var windowsUsername = Environment.UserName;
+        Log.Instance.Info($"Windows Username: {windowsUsername}");
+
+        // Pass the windows username to the AuthenticateIntegrated method.
+        var user = authenticationService.AuthenticateIntegrated(windowsUsername);
+        
+        if(user == null)
+        {
+            Log.Instance.Error($"User not found in database: {windowsUsername}");
+            MessageBox.Show("User not found in database. Please contact your system administrator.", "User Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        LoggedInUser = user;
+        //complete AppEnvironment Initialization
+        AppEnvironment.UserAccount = LoggedInUser;
+        AppEnvironment.User = LoggedInUser.UserName;
+        AppEnvironment.ApplicationParameters = UnitOfWork.SystemParametersRepository.LoadParameters();
+        UnitOfWork = new UnitOfWorkMain(AppEnvironment);
+        //run MainForm
+        Application.Run(new MainForm());
+
+    }
+
+    private static void InitializeAppEnvironment(bool testEnvironment)
+    {
+        // Set basic configuration relevant to the login process
+        AppEnvironment.DatabaseName = testEnvironment
+            ? Properties.Settings.Default.TestDbName
+            : Properties.Settings.Default.ProdDbName;
+
+        AppEnvironment.ServerName = testEnvironment
+            ? Properties.Settings.Default.TestDbServer
+            : Properties.Settings.Default.ProdDbServer;
+
+        AppEnvironment.IntegratedAuthentication = testEnvironment
+            ? Properties.Settings.Default.TestIntegratedSecurity
+            : Properties.Settings.Default.ProdIntegratedSecurity;
+
+        if (string.IsNullOrEmpty(AppEnvironment.ConnectionString))
+        {
+            throw new ArgumentException("Connection string is null or empty.", nameof(AppEnvironment.ConnectionString));
         }
     }
 
@@ -68,31 +113,24 @@ static class Program
     {
         Exception exc = (Exception)e.Exception;
 
-        //log the exception, display, etc
         if (exc.InnerException != null)
         {
             Log.Instance.Fatal(exc.InnerException, "Unhandled Exception");
-            if (exc.InnerException is SqlException sqlException)
+            if (exc.InnerException is SqlException sqlException1 && sqlException1.Message.Contains("Execution Timeout Expired"))
             {
-                if (sqlException.Message.Contains("Execution Timeout Expired"))
-                {
-                    Log.Instance.Fatal(sqlException, "SQL Database error.");
-                    MessageBox.Show("Execution timeout expired. Report this to your system administrator.", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    return;
-                }
-            }
-        }
-
-        if (exc is SqlException)
-        {
-            SqlException sqlException = (SqlException)exc;
-            if (sqlException.Message.Contains("Execution Timeout Expired"))
-            {
-                Log.Instance.Fatal(sqlException, "SQL Database error.");
+                Log.Instance.Fatal(sqlException1, "SQL Database error.");
                 MessageBox.Show("Execution timeout expired. Report this to your system administrator.", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
         }
+
+        if (exc is SqlException sqlException && sqlException.Message.Contains("Execution Timeout Expired"))
+        {
+            Log.Instance.Fatal(sqlException, "SQL Database error.");
+            MessageBox.Show("Execution timeout expired. Report this to your system administrator.", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            return;
+        }
+
         Log.Instance.Fatal(exc, "Unhandled Exception");
         MessageBox.Show("An unhandled exception has been encountered. Report this to your system administrator.", "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Stop);
     }
@@ -100,32 +138,25 @@ static class Program
     static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         Exception exc = (Exception)e.ExceptionObject;
-        //log the exception, display, etc
+
         if (exc.InnerException != null)
         {
             Log.Instance.Fatal(exc.InnerException, "Unhandled Exception");
-            if (exc.InnerException is SqlException)
+            if (exc.InnerException is SqlException sqlException1 && sqlException1.Message.Contains("Execution Timeout Expired"))
             {
-                SqlException sqlException = (SqlException)exc.InnerException;
-                if (sqlException.Message.Contains("Execution Timeout Expired"))
-                {
-                    Log.Instance.Fatal(sqlException, "SQL Database error.");
-                    MessageBox.Show("Execution timeout expired. Report this to your system administrator.", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    return;
-                }
-            }
-        }
-
-        if (exc is SqlException)
-        {
-            SqlException sqlException = (SqlException)exc;
-            if (sqlException.Message.Contains("Execution Timeout Expired"))
-            {
-                Log.Instance.Fatal(sqlException, "SQL Database error.");
+                Log.Instance.Fatal(sqlException1, "SQL Database error.");
                 MessageBox.Show("Execution timeout expired. Report this to your system administrator.", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
         }
+
+        if (exc is SqlException sqlException && sqlException.Message.Contains("Execution Timeout Expired"))
+        {
+            Log.Instance.Fatal(sqlException, "SQL Database error.");
+            MessageBox.Show("Execution timeout expired. Report this to your system administrator.", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            return;
+        }
+
         Log.Instance.Fatal(exc, "Unhandled Exception");
         MessageBox.Show("An unhandled exception has been encountered. Report this to your system administrator.", "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Stop);
     }

@@ -12,13 +12,11 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class ReportingRepository
     {
-        //private PetaPoco.Database dbConnection;
-        private string _connectionString;
-
-        public ReportingRepository(string connectionString)
+        readonly IAppEnvironment _appEnvironment;
+        public ReportingRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context)
         {
             Log.Instance.Trace("Entering");
-            _connectionString = connectionString;
+            _appEnvironment = appEnvironment;
         }
 
         public DataTable GetARByFinCode()
@@ -28,7 +26,7 @@ namespace LabBilling.Core.DataAccess
                     where ah.datestamp = DATEADD(Day, -1, DATEDIFF(Day, 0, GetDate())) 
                     group by fin_code";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(_appEnvironment.ConnectionString))
             {
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 SqlDataAdapter da = new SqlDataAdapter();
@@ -48,7 +46,7 @@ namespace LabBilling.Core.DataAccess
                     group by fin_code
                     order by fin_code";
 
-            using SqlConnection conn = new(_connectionString);
+            using SqlConnection conn = new(_appEnvironment.ConnectionString);
             SqlCommand cmd = new(sql, conn);
             SqlDataAdapter da = new();
             da.SelectCommand = cmd;
