@@ -3,6 +3,9 @@ using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
 using PetaPoco;
 using PetaPoco.Providers;
+using System.Text;
+using System;
+using System.Security.Cryptography;
 
 namespace LabBilling.Core.Services;
 
@@ -35,10 +38,28 @@ public class AuthenticationService
 
     public UserAccount AuthenticateIntegrated(string username)
     {
-        var sql = Sql.Builder
-                      .From("emp")
-                      .Where("name = @0", username);
-        return _db.SingleOrDefault<UserAccount>(sql);
+        var user = _uow.UserAccountRepository.GetByUsername(username);
+        return user;
+    }
+
+    public bool Authenticate(string username, string password)
+    {
+        var user = _uow.UserAccountRepository.GetByUsername(username);
+        if (user == null)
+        {
+            return false;
+        }
+
+        var encryptedPassword = EncryptPassword(password);
+        return user.Password == encryptedPassword;
+    }
+
+    private string EncryptPassword(string password)
+    {
+        using var sha256 = SHA256.Create();
+        var bytes = Encoding.UTF8.GetBytes(password);
+        var hash = sha256.ComputeHash(bytes);
+        return Convert.ToBase64String(hash);
     }
 
 }

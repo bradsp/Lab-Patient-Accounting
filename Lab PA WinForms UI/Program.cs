@@ -53,6 +53,7 @@ static class Program
             AppEnvironment = new AppEnvironment();
             AppEnvironment.IntegratedAuthentication = true;
             InitializeAppEnvironment(testEnvironment);
+            UnitOfWorkSystem = new(AppEnvironment);
         }
         catch (Exception ex)
         {
@@ -62,7 +63,7 @@ static class Program
         }
 
         // Create AuthenticationService
-        var authenticationService = new AuthenticationService(AppEnvironment.ConnectionString);
+        var authenticationService = new AuthenticationService(UnitOfWorkSystem);
         //This app will default to integrated authentication.
         //Pass the windows username to the AuthenticateIntegrated method.
         var windowsUsername = Environment.UserName;
@@ -77,7 +78,14 @@ static class Program
             MessageBox.Show("User not found in database. Please contact your system administrator.", "User Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
-        UnitOfWorkSystem = new(AppEnvironment);
+
+        if(user.Access == UserStatus.None)
+        {
+            Log.Instance.Error($"User not authorized: {windowsUsername}");
+            MessageBox.Show("User not authorized. Please contact your system administrator.", "User Not Authorized", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
 
         LoggedInUser = user;
         //complete AppEnvironment Initialization
