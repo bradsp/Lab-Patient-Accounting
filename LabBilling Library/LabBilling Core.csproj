@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>LabBilling.Core</RootNamespace>
     <AssemblyVersion>2025.1.21.1</AssemblyVersion>

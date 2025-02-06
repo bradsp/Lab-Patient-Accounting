@@ -20,7 +20,7 @@
     <PublisherName>West Tennessee Healthcare</PublisherName>
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>192</ApplicationRevision>
-    <ApplicationVersion>2025.1.22.%2a</ApplicationVersion>
+    <ApplicationVersion>2025.2.1.1</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -57,13 +57,13 @@
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <PropertyGroup>
-    <Version></Version>
+    <Version>2025.2.1.*</Version>
     <Copyright>2023-2025</Copyright>
     <RepositoryUrl>https://github.com/bradsp/Lab-Patient-Accounting</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>2025.1.22.1</AssemblyVersion>
-    <FileVersion>2025.1.22.1</FileVersion>
+    <AssemblyVersion>2025.2.1.*</AssemblyVersion>
+    <FileVersion>2025.2.1.*</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
@@ -150,7 +150,7 @@
       <Version>2.4.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects">
-      <Version>172.52.0</Version>
+      <Version>172.61.0</Version>
     </PackageReference>
     <PackageReference Include="NLog">
       <Version>5.4.0</Version>
@@ -166,6 +166,7 @@
     <PackageReference Include="PoorMansTSqlFormatterRedux" Version="1.0.3" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\..\DataGridViewGrouper\DataGridViewGrouper\DataGridViewGrouper.csproj">
