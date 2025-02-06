@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
     <OutputType>WinExe</OutputType>
@@ -20,7 +20,7 @@
     <PublisherName>West Tennessee Healthcare</PublisherName>
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>192</ApplicationRevision>
-    <ApplicationVersion>2025.2.1.1</ApplicationVersion>
+    <ApplicationVersion>2025.2.1.10</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -57,13 +57,13 @@
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>2025.2.1.1</Version>
+    <Version>2025.2.1.10</Version>
     <Copyright>2023-2025</Copyright>
     <RepositoryUrl>https://github.com/bradsp/Lab-Patient-Accounting</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>2025.2.1.1</AssemblyVersion>
-    <FileVersion>2025.2.1.1</FileVersion>
+    <AssemblyVersion>2025.2.1.10</AssemblyVersion>
+    <FileVersion>2025.2.1.10</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>

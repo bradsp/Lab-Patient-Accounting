@@ -8,7 +8,7 @@
     <Product>j4jayant.HL7.Parser</Product>
     <Copyright>Copyright ©  2013</Copyright>
     <FileVersion>2023.1.4.598</FileVersion>
-    <InformationalVersion>2025.2.1.1</InformationalVersion>
+    <InformationalVersion>2025.2.1.10</InformationalVersion>
     <Platforms>x64</Platforms>
   </PropertyGroup>
   <ItemGroup>

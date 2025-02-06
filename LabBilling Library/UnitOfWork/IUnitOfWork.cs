@@ -61,11 +61,11 @@ namespace LabBilling.Core.UnitOfWork
         ReportingRepository ReportingRepository { get; }
         CdmDetailRepository CdmDetailRepository { get; }
         AuditReportRepository AuditReportRepository { get; }
+        RemittanceClaimAdjustmentRepository RemittanceClaimAdjustmentRepository { get; }
         RemittanceRepository RemittanceRepository { get; }
         RemittanceClaimRepository RemittanceClaimRepository { get; }
         RemittanceClaimDetailRepository RemittanceClaimDetailRepository { get; }
-        RemittanceClaimAdjustmentRepository RemittanceClaimAdjustmentRepository { get; }
-        AccountLockRepository AccountLockRepository { get; }
         SanctionedProviderRepository SanctionedProviderRepository { get; }
+        AccountLockRepository AccountLockRepository { get; }
     }
 }

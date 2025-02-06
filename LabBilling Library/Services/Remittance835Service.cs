@@ -1067,9 +1067,6 @@ public sealed class Remittance835Service
                             if (adj.ClaimAdjustmentGroupCode != "CO")
                                 continue;
 
-                            if (adj.AdjustmentReasonCode != "45" && adj.AdjustmentReasonCode != "253")
-                                continue;
-
                             string comment;
 
                             switch (adj.AdjustmentReasonCode)

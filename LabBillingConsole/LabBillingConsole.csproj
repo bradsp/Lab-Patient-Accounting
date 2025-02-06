@@ -24,7 +24,7 @@
     <Product>LabBillingConsole</Product>
     <Copyright>Copyright © wth.org 2022</Copyright>
     <FileVersion>2023.1.1.524</FileVersion>
-    <InformationalVersion>2025.2.1.1</InformationalVersion>
+    <InformationalVersion>2025.2.1.10</InformationalVersion>
     <Platforms>x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
