@@ -1,27 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.ComponentModel;
 
-namespace LabBilling.Core
+namespace LabBilling.Core;
+
+public partial class LabeledTextBox : UserControl
 {
-    public partial class LabeledTextBox : UserControl
+    public LabeledTextBox()
     {
-        public LabeledTextBox()
-        {
-            InitializeComponent();
-        }
-
-        public string Label 
-        { 
-            get { return label1.Text; }
-            set { label1.Text = value; } 
-        }
-
+        InitializeComponent();
     }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public string Label
+    {
+        get { return label1.Text; }
+        set { label1.Text = value; }
+    }
+
 }

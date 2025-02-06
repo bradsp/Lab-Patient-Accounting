@@ -27,7 +27,7 @@ public partial class ClientMaintenanceForm : Form
         InitializeComponent();
         _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerDelay };
         _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
-        _dictionaryService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
     }
 
     private void Clients_Load(object sender, EventArgs e)

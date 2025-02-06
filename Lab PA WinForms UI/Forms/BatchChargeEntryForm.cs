@@ -34,9 +34,9 @@ public partial class BatchChargeEntryForm : Form
 
     public BatchChargeEntryForm()
     {
-        batchChargeService = new(Program.AppEnvironment);
-        accountService = new(Program.AppEnvironment);
-        dictionaryService = new(Program.AppEnvironment);
+        batchChargeService = new(Program.AppEnvironment, Program.UnitOfWork);
+        accountService = new(Program.AppEnvironment, Program.UnitOfWork);
+        dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
 
         InitializeComponent();
 

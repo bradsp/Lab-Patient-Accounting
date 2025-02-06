@@ -1,5 +1,6 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
+using LabBilling.Core.UnitOfWork;
 using Quartz;
 
 
@@ -7,6 +8,8 @@ namespace LabBillingJobs;
 
 public partial class JobProcessor
 {
+
+
     [DisallowConcurrentExecution]
     public class ClaimsProcessingJob : IJob
     {
@@ -31,7 +34,8 @@ public partial class JobProcessor
 
         public static void RunClaimsProcessing()
         {
-            ClaimGeneratorService claimGenerator = new(Program.AppEnvironment);
+            UnitOfWorkMain uow = new(Program.AppEnvironment);
+            ClaimGeneratorService claimGenerator = new(Program.AppEnvironment, uow);
 
             CancellationToken cancellationToken = new();
             Progress<ProgressReportModel> progressReportModel = new();

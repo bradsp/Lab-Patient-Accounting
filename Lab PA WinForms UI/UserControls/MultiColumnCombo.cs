@@ -19,7 +19,7 @@ namespace MultiColumnCombo
         {
             DrawMode = DrawMode.OwnerDrawVariable;
         }
-
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new DrawMode DrawMode
         {
             get
@@ -35,7 +35,7 @@ namespace MultiColumnCombo
                 base.DrawMode = value;
             }
         }
-
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new ComboBoxStyle DropDownStyle
         {
             get

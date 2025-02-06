@@ -14,10 +14,15 @@ namespace LabBilling.LookupForms
 {
     public partial class ProviderLookupForm : Form
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int CharacterLookupCountMin { get; set; } = 3;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<Phy> Datasource { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string InitialSearchText { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string SelectedValue { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Phy SelectedPhy { get; set; }
 
         private const int _timerInterval = 650;

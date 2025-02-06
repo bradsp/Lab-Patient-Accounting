@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -8,7 +9,7 @@ namespace LabBilling.Forms;
 public partial class ProgressForm : Form
 {
     System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
-
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Action Worker { get; set; }
     public ProgressForm(Action worker) 
     {

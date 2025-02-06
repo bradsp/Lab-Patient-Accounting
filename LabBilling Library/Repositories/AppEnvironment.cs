@@ -1,5 +1,5 @@
 ﻿using LabBilling.Core.Models;
-using LabBilling.Core.Services;
+using LabBilling.Logging;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Drawing;
@@ -33,25 +33,21 @@ public class AppEnvironment : IAppEnvironment
     public Color ButtonBackgroundColor { get; set; } = Color.LightCyan;
     public Color ButtonTextColor { get; set; } = Color.Black;
 
-    public string TempFilePath { get { return Path.GetTempPath() + @"LABPA\"; } }
+    public string TempFilePath => Path.GetTempPath() + @"LABPA\";
 
     private const bool _dbEncrypt = false;
     private const bool _dbTrustServerCert = true;
 
     public AppEnvironment()
     {
+        // Initialize any necessary properties or fields here
     }
 
     public bool EnvironmentValid
     {
         get
         {
-            if (string.IsNullOrEmpty(ServerName))
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(DatabaseName))
+            if (string.IsNullOrEmpty(ServerName) || string.IsNullOrEmpty(DatabaseName))
             {
                 return false;
             }
@@ -69,98 +65,87 @@ public class AppEnvironment : IAppEnvironment
     {
         get
         {
-            if (string.IsNullOrEmpty(ServerName))
+            if (string.IsNullOrEmpty(ServerName) || string.IsNullOrEmpty(DatabaseName))
             {
-                throw new ApplicationException("ServerName value not set.");
+                return string.Empty;
             }
 
-            if (string.IsNullOrEmpty(DatabaseName))
+            try
             {
-                throw new ApplicationException("DatabaseName value not set.");
+                SqlConnectionStringBuilder myBuilder = new()
+                {
+                    InitialCatalog = DatabaseName,
+                    DataSource = ServerName,
+                    IntegratedSecurity = IntegratedAuthentication,
+                    ApplicationName = Utilities.OS.GetAppName(),
+                    Encrypt = _dbEncrypt,
+                    TrustServerCertificate = _dbTrustServerCert,
+                    ConnectTimeout = 30
+                };
+
+                if (!IntegratedAuthentication)
+                {
+                    myBuilder.UserID = UserName;
+                    myBuilder.Password = Password;
+                }
+
+                return myBuilder.ConnectionString;
             }
-
-            SqlConnectionStringBuilder myBuilder = new()
+            catch (Exception ex)
             {
-                InitialCatalog = DatabaseName,
-                DataSource = ServerName,
-                IntegratedSecurity = IntegratedAuthentication,
-                ApplicationName = Utilities.OS.GetAppName(),
-                Encrypt = _dbEncrypt,
-                TrustServerCertificate = _dbTrustServerCert,
-                ConnectTimeout = 30
-            };
-
-            if (!IntegratedAuthentication)
-            {
-                myBuilder.UserID = UserName;
-                myBuilder.Password = Password;
+                Log.Instance.Error("Error building connection string.", ex);
+                return string.Empty;
             }
-
-            return myBuilder.ConnectionString;
         }
     }
 
-    public string ConnectionStringService
-    {
-        get
-        {
-            return ConnectionString;
-        }
-    }
+    public string ConnectionStringService => ConnectionString;
 
     public string User { get; set; }
 
     private ApplicationParameters _appParms;
-    public ApplicationParameters ApplicationParameters
-    {
-        get
-        {
-            if (_appParms == null)
-            {
-                ApplicationParameters = new();
-                if (EnvironmentValid)
-                {
-                    SystemService systemService = new(this);
-                    _appParms = systemService.LoadSystemParameters();
-                }
-            }
-            return _appParms;
-        }
-        set
-        {
-            _appParms = value;
-        }
-    }
+    public ApplicationParameters ApplicationParameters { get; set; }
 
     public string LogConnectionString
     {
         get
         {
-            SqlConnectionStringBuilder myBuilder = new()
+            if (string.IsNullOrEmpty(ServerName) || string.IsNullOrEmpty(LogDatabaseName))
             {
-                InitialCatalog = LogDatabaseName,
-                DataSource = ServerName,
-                IntegratedSecurity = IntegratedAuthentication,
-                ApplicationName = Utilities.OS.GetAppName(),
-                ConnectTimeout = 30,
-                Encrypt = _dbEncrypt,
-                TrustServerCertificate = _dbTrustServerCert,
-            };
-
-            if (!IntegratedAuthentication)
-            {
-                myBuilder.UserID = UserName;
-                myBuilder.Password = Password;
+                return string.Empty;
             }
 
-            return myBuilder.ConnectionString;
+            try
+            {
+                SqlConnectionStringBuilder myBuilder = new()
+                {
+                    InitialCatalog = LogDatabaseName,
+                    DataSource = ServerName,
+                    IntegratedSecurity = IntegratedAuthentication,
+                    ApplicationName = Utilities.OS.GetAppName(),
+                    ConnectTimeout = 30,
+                    Encrypt = _dbEncrypt,
+                    TrustServerCertificate = _dbTrustServerCert,
+                };
+
+                if (!IntegratedAuthentication)
+                {
+                    myBuilder.UserID = UserName;
+                    myBuilder.Password = Password;
+                }
+
+                return myBuilder.ConnectionString;
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error("Error building log connection string.", ex);
+                return string.Empty;
+            }
         }
     }
 
     public string[] GetArgs()
     {
-        //ConnectionString connString = Helper.ConnVal;
-
         string[] args = new string[2];
 
         args[0] = ServerName;

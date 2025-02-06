@@ -4,14 +4,13 @@ using LabBilling.Core.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Reflection;
-using LabBilling.Core.UnitOfWork;
 using LabBilling.Core.Services;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class SystemParametersRepository : RepositoryBase<SysParameter>
     {
-
+        protected override bool RequireValidEnvironment => false;
         public SystemParametersRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context) { }
         
 

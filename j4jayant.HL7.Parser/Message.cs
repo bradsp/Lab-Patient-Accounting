@@ -74,7 +74,7 @@ public class Message
         }
         catch (HL7Exception ex)
         {
-            throw ex;
+            throw;
         }
         catch (Exception ex)
         {

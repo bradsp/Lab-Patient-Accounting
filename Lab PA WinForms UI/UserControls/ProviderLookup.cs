@@ -17,6 +17,7 @@ namespace LabBilling.Library
         public delegate void SelectedValueChangedEventHandler(object source, EventArgs args);
         public event SelectedValueChangedEventHandler SelectedValueChanged;
         private Color _backgroundColor = Color.White;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override Color BackColor
         {
             get
@@ -30,10 +31,13 @@ namespace LabBilling.Library
                 searchTextBox.BackColor = value;
             }
         }
-
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int CharacterLookupCountMin { get; set; } = 3;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int ResultBoxHeight { get; set; } = 150;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<Phy> Datasource { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string SelectedValue 
         { 
             get
@@ -49,6 +53,7 @@ namespace LabBilling.Library
                 skipSelectionChanged = false;
             }
         }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string DisplayValue
         {
             get

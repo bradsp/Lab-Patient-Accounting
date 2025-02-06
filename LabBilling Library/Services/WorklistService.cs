@@ -12,10 +12,12 @@ namespace LabBilling.Core.Services;
 public class WorklistService
 {
     private readonly AppEnvironment _appEnvironment;
+    private readonly IUnitOfWork _uow;
 
-    public WorklistService(AppEnvironment appEnvironment)
+    public WorklistService(AppEnvironment appEnvironment, IUnitOfWork uow)
     {
         this._appEnvironment = appEnvironment;
+        _uow = uow;
     }
 
     public async Task<List<AccountSearch>> GetAccountsForWorklistAsync(string selectedQueue)
@@ -159,10 +161,9 @@ public class WorklistService
             default:
                 break;
         }
-        UnitOfWorkMain unitOfWork = new(_appEnvironment);
         var accounts = (List<AccountSearch>)await Task.Run(() =>
         {
-            return unitOfWork.AccountSearchRepository.GetBySearch(parameters);
+            return _uow.AccountSearchRepository.GetBySearch(parameters);
         });
 
 

@@ -9,12 +9,10 @@ namespace LabBillingService
 {
     static class Program
     {
-        //public static string ConnectionString { get; set; }
-        //public static string Server { get; set; }
-        //public static string Database { get; set; }
-        //public static string LogDatabase { get; set; }
 
         public static AppEnvironment AppEnvironment { get; set; }
+        public static UnitOfWorkMain UnitOfWork { get; set; } = new UnitOfWorkMain(AppEnvironment);
+        public static UnitOfWorkSystem UnitOfWorkSystem { get; set; } = new UnitOfWorkSystem(AppEnvironment);
 
         /// <summary>
         /// The main entry point for the application.
@@ -31,7 +29,7 @@ namespace LabBillingService
                 AppEnvironment.ServicePassword = Properties.Settings.Default.Password;
                 AppEnvironment.ServiceUsername = Properties.Settings.Default.Username;
 
-                SystemService systemService = new SystemService(AppEnvironment);
+                SystemService systemService = new SystemService(AppEnvironment, UnitOfWorkSystem);
 
                 AppEnvironment.ApplicationParameters = systemService.LoadSystemParameters();
 

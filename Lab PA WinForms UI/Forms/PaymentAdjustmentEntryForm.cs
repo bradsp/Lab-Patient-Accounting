@@ -19,7 +19,7 @@ public partial class PaymentAdjustmentEntryForm : Form
         InitializeComponent();
 
         _account = account;
-        _dictionaryService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
     }
 
     private void PaymentAdjustmentEntryForm_Load(object sender, EventArgs e)

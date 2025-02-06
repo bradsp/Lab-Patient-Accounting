@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
@@ -10,16 +11,20 @@ namespace LabBilling.Forms;
 
 public partial class CdmLookupForm : Form
 {
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public int CharacterLookupCountMin { get; set; } = 3;
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public List<Cdm> Datasource { get; set; }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string InitialSearchText { get; set; }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string SelectedValue { get; set; }
 
     private const int _timerInterval = 650;
     private bool skipSelectionChanged = false;
     private System.Windows.Forms.Timer _timer;
 
-    private readonly DictionaryService dictionaryService = new(Program.AppEnvironment);
+    private readonly DictionaryService dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
 
     public CdmLookupForm() 
     {

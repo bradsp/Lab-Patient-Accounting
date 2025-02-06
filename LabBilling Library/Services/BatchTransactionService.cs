@@ -12,11 +12,13 @@ public class BatchTransactionService
 {
     private readonly IAppEnvironment _appEnvironment;
     private readonly AccountService _accountService;
+    private IUnitOfWork _uow;
 
-    public BatchTransactionService(IAppEnvironment appEnvironment)
+    public BatchTransactionService(IAppEnvironment appEnvironment, IUnitOfWork uow)
     {
         this._appEnvironment = appEnvironment;
-        _accountService = new(appEnvironment);
+        _accountService = new(appEnvironment, uow);
+        _uow = uow;
     }
 
     /// <summary>
@@ -27,25 +29,25 @@ public class BatchTransactionService
     public ChkBatch SavePaymentBatch(ChkBatch chkBatch)
     {
         Log.Instance.Trace("Entering");
-        using UnitOfWorkMain uow = new(_appEnvironment, true);
+        _uow.StartTransaction();
 
         if (chkBatch.BatchNo > 0)
         {
-            chkBatch = uow.ChkBatchRepository.Update(chkBatch);
-            chkBatch.ChkBatchDetails.ForEach(d => uow.ChkBatchDetailRepository.Update(d));
+            chkBatch = _uow.ChkBatchRepository.Update(chkBatch);
+            chkBatch.ChkBatchDetails.ForEach(d => _uow.ChkBatchDetailRepository.Update(d));
             //save the chk details
             chkBatch.ChkBatchDetails.ForEach(x => x.Batch = chkBatch.BatchNo);
-            chkBatch.ChkBatchDetails.ForEach(x => uow.ChkBatchDetailRepository.Save(x));
-            uow.Commit();
+            chkBatch.ChkBatchDetails.ForEach(x => _uow.ChkBatchDetailRepository.Save(x));
+            _uow.Commit();
             return chkBatch;
         }
         else
         {
-            chkBatch = uow.ChkBatchRepository.Add(chkBatch);
+            chkBatch = _uow.ChkBatchRepository.Add(chkBatch);
             //save the chk details
             chkBatch.ChkBatchDetails.ForEach(x => x.Batch = chkBatch.BatchNo);
-            chkBatch.ChkBatchDetails.ForEach(x => uow.ChkBatchDetailRepository.Save(x));
-            uow.Commit();
+            chkBatch.ChkBatchDetails.ForEach(x => _uow.ChkBatchDetailRepository.Save(x));
+            _uow.Commit();
             return chkBatch;
         }
 
@@ -53,18 +55,15 @@ public class BatchTransactionService
 
     public List<ChkBatch> GetOpenPaymentBatches()
     {
-        using UnitOfWorkMain unitOfWork = new(_appEnvironment);
-        List<ChkBatch> chkBatches = unitOfWork.ChkBatchRepository.GetOpenBatches();
+        List<ChkBatch> chkBatches = _uow.ChkBatchRepository.GetOpenBatches();
 
         return chkBatches;
     }
 
     public ChkBatch GetPaymentBatchById(int batchNo)
     {
-        using UnitOfWorkMain uow = new(_appEnvironment);
-
-        var batch = uow.ChkBatchRepository.GetById(batchNo);
-        batch.ChkBatchDetails = uow.ChkBatchDetailRepository.GetByBatch(batchNo);
+        var batch = _uow.ChkBatchRepository.GetById(batchNo);
+        batch.ChkBatchDetails = _uow.ChkBatchDetailRepository.GetByBatch(batchNo);
 
         batch.ChkBatchDetails.ForEach(x =>
         {
@@ -81,14 +80,14 @@ public class BatchTransactionService
 
     public bool DeletePaymentBatch(int batchNo)
     {
-        using UnitOfWorkMain uow = new(_appEnvironment, true);
+        _uow.StartTransaction();
         var chkBatch = GetPaymentBatchById(batchNo);
 
         if (chkBatch != null || chkBatch.BatchNo <= 0)
         {
-            uow.ChkBatchRepository.Delete(chkBatch);
-            uow.ChkBatchDetailRepository.DeleteBatch(batchNo);
-            uow.Commit();
+            _uow.ChkBatchRepository.Delete(chkBatch);
+            _uow.ChkBatchDetailRepository.DeleteBatch(batchNo);
+            _uow.Commit();
             return true;
         }
 
@@ -97,7 +96,7 @@ public class BatchTransactionService
 
     public void PostBatchPayments(int batchNo)
     {
-        using ChkBatchUnitOfWork uow = new(_appEnvironment, true);
+        _uow.StartTransaction();
 
         var chkBatch = GetPaymentBatchById(batchNo);
         List<Chk> chks = new();
@@ -123,20 +122,20 @@ public class BatchTransactionService
             chks.Add(chk);
         });
 
-        uow.AddBatch(chks);
+        AddBatch(chks);
 
-        uow.ChkBatchRepository.UpdatePostedDate(batchNo, DateTime.Now);
-        uow.Commit();
+        _uow.ChkBatchRepository.UpdatePostedDate(batchNo, DateTime.Now);
+        _uow.Commit();
 
     }
 
     public void PostBatchPayments(IList<Chk> chks)
     {
-        using ChkBatchUnitOfWork uow = new(_appEnvironment, true);
+        _uow.StartTransaction();
         try
         {
-            uow.AddBatch(chks.ToList());
-            uow.Commit();
+            AddBatch(chks.ToList());
+            _uow.Commit();
         }
         catch(Exception ex) 
         {
@@ -147,29 +146,51 @@ public class BatchTransactionService
 
     public ChkBatchDetail SavePaymentBatchDetail(ChkBatchDetail detail)
     {
-        using ChkBatchUnitOfWork uow = new(_appEnvironment, true);
-        var result = uow.ChkBatchDetailRepository.Save(detail);
-        uow.Commit();
+        _uow.StartTransaction();
+        var result = _uow.ChkBatchDetailRepository.Save(detail);
+        _uow.Commit();
         return result;
     }
 
     public bool DeletePaymentBatchDetail(int detailId)
     {
-        using ChkBatchUnitOfWork uow = new(_appEnvironment, true);
+        _uow.StartTransaction();
 
-        if (uow.ChkBatchDetailRepository.Delete(detailId))
+        if (_uow.ChkBatchDetailRepository.Delete(detailId))
         {
-            uow.Commit();
+            _uow.Commit();
             return true;
         }
 
         return false;
     }
 
+    public bool AddBatch(List<Chk> chks)
+    {
+        Log.Instance.Trace("Entering");
+
+        _uow.StartTransaction();
+        try
+        {
+            // Some transactional DB work
+            foreach (Chk chk in chks)
+            {
+                _uow.ChkRepository.Add(chk);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Instance.Fatal(e, $"Exception adding chk record");
+            throw new ApplicationException("Exception encountered posting batch. Records have been rolled back.", e);
+        }
+
+        return true;
+
+    }
+
     public decimal GetNextBatchNumber()
     {
-        using ChkBatchUnitOfWork uow = new(_appEnvironment);
 
-        return uow.NumberRepository.GetNumber("batch");
+        return _uow.NumberRepository.GetNumber("batch");
     }
 }

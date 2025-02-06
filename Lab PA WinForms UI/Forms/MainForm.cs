@@ -4,7 +4,6 @@ using LabBilling.Forms;
 using LabBilling.Legacy;
 using LabBilling.Logging;
 using LabBilling.Properties;
-using LabBilling.ReportByInsuranceCompany;
 using MenuBar;
 using NLog;
 using NLog.Config;
@@ -29,8 +28,6 @@ namespace LabBilling;
 public partial class MainForm : Form
 {
     private TableLayoutPanel _menuTable;
-    private readonly ProgressBar _claimProgress;
-    private readonly Label _claimProgressStatusLabel;
     private readonly CancellationTokenSource _cancellationToken;
     private List<UserProfile> _recentAccounts;
     private List<Account> _recentAccountsByAccount;
@@ -51,8 +48,8 @@ public partial class MainForm : Form
 
         ConfigureLogging();
 
-        _accountService = new(Program.AppEnvironment);
-        _systemService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _systemService = new(Program.AppEnvironment, Program.UnitOfWorkSystem);
 
         MainFormMenu.BackColor = Program.AppEnvironment.MenuBackgroundColor;
         MainFormMenu.ForeColor = Program.AppEnvironment.MenuTextColor;
@@ -564,7 +561,6 @@ public partial class MainForm : Form
         //administrator only menu items
         systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
 
-        duplicateAccountsToolStripMenuItem.Visible = !viewOnly;
         clientBillsNewToolStripMenuItem.Visible = !viewOnly;
 
         // Debugging output to verify visibility settings
@@ -574,7 +570,6 @@ public partial class MainForm : Form
         Debug.WriteLine($"batchChargeEntryToolStripMenuItem.Visible: {batchChargeEntryToolStripMenuItem.Visible}");
         Debug.WriteLine($"badDebtMaintenanceToolStripMenuItem.Visible: {badDebtMaintenanceToolStripMenuItem.Visible}");
         Debug.WriteLine($"systemAdministrationToolStripMenuItem.Visible: {systemAdministrationToolStripMenuItem.Visible}");
-        Debug.WriteLine($"duplicateAccountsToolStripMenuItem.Visible: {duplicateAccountsToolStripMenuItem.Visible}");
         Debug.WriteLine($"clientBillsNewToolStripMenuItem.Visible: {clientBillsNewToolStripMenuItem.Visible}");
 
     }
@@ -691,18 +686,7 @@ public partial class MainForm : Form
             NewForm(frm);
         }
     }
-
-
-    private void duplicateAccountsToolStripMenuItem_Click(object sender, EventArgs e)
-        => NewForm(new DuplicateAccountsForm(Helper.GetArgs()));
-
-    private void reportByInsuranceCompanyToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        InsuranceReportForm frm = new(Program.AppEnvironment.GetArgs());
-        frm.AccountLaunched += OnAccountLaunched;
-        NewForm(frm);
-    }
-
+     
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
     {
         Log.Instance.Trace($"Entering");

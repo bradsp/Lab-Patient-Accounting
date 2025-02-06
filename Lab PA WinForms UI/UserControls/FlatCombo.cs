@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -9,7 +10,7 @@ namespace LabBilling.Library
         private const int WM_PAINT = 0xF;
         private int buttonWidth = SystemInformation.HorizontalScrollBarArrowWidth;
         Color borderColor = Color.Blue;
-
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color BorderColor
         {
             get { return borderColor; }

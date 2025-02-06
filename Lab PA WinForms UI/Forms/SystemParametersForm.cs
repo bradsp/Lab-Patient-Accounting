@@ -7,7 +7,7 @@ namespace LabBilling.Forms;
 
 public partial class SystemParametersForm : Form
 {
-    private readonly SystemService _systemService = new(Program.AppEnvironment);
+    private readonly SystemService _systemService = new(Program.AppEnvironment, Program.UnitOfWorkSystem);
 
     public SystemParametersForm()
     {

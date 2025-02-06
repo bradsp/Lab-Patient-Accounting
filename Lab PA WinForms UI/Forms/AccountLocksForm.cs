@@ -7,7 +7,7 @@ public partial class AccountLocksForm : Form
     private readonly AccountService _accountService;
     public AccountLocksForm()
     {
-        _accountService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
         InitializeComponent();
     }
 

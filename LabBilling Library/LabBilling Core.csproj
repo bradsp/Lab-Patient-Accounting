@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>LabBilling.Core</RootNamespace>
     <AssemblyVersion>2025.1.21.1</AssemblyVersion>
@@ -9,7 +9,7 @@
     <Product>LabBilling Library</Product>
     <Copyright>Copyright ©  2021-2025</Copyright>
     <FileVersion>2025.1.21.1</FileVersion>
-    <InformationalVersion>2025.1.21.1</InformationalVersion>
+    <InformationalVersion>2025.2.1.1</InformationalVersion>
     <Platforms>x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,7 +28,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\j4jayant.HL7.Parser\j4jayant.HL7.Parser.csproj" />
-    <ProjectReference Include="..\MCL\MCL.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -40,24 +39,25 @@
     <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
     <PackageReference Include="EdiTools" Version="1.0.6" />
     <PackageReference Include="Enums.NET" Version="5.0.0" />
-    <PackageReference Include="FastExpressionCompiler" Version="5.0.1" />
+    <PackageReference Include="FastExpressionCompiler" Version="5.0.2" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="Fonet.Standard" Version="1.0.5" />
     <PackageReference Include="MathNet.Numerics.Signed" Version="5.0.0" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
-    <PackageReference Include="NLog" Version="5.3.4" />
-    <PackageReference Include="NLog.Database" Version="5.3.4" />
-    <PackageReference Include="NLog.WindowsEventLog" Version="5.3.4" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+    <PackageReference Include="NLog" Version="5.4.0" />
+    <PackageReference Include="NLog.Database" Version="5.4.0" />
+    <PackageReference Include="NLog.WindowsEventLog" Version="5.4.0" />
     <PackageReference Include="NPOI" Version="2.7.2" />
     <PackageReference Include="PetaPoco.Compiled" Version="6.0.683" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
-    <PackageReference Include="SixLabors.Fonts" Version="2.1.0" />
+    <PackageReference Include="SixLabors.Fonts" Version="2.1.2" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.5.1" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Resources.Extensions" Version="9.0.1" />

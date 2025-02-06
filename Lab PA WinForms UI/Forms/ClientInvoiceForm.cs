@@ -36,8 +36,7 @@ public partial class ClientInvoiceForm : Form
         CleanTempFiles();
         Cursor.Current = Cursors.WaitCursor;
 
-        _clientInvoicesService = new ClientInvoicesService(Program.AppEnvironment);
-        //_dictionaryService = new(Program.AppEnvironment);
+        _clientInvoicesService = new ClientInvoicesService(Program.AppEnvironment, Program.UnitOfWork);
 
         _clientInvoicesService.InvoiceGenerated += ClientInvoices_InvoiceGenerated;
         _clientInvoicesService.InvoiceRunCompleted += ClientInvoices_InvoiceRunCompleted;

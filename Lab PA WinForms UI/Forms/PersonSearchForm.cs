@@ -9,7 +9,7 @@ namespace LabBilling.Forms;
 public partial class PersonSearchForm : Form
 {
     List<AccountSearch> _searchResults = new();
-
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string SelectedAccount { get; set; }
 
     private readonly AccountService _accountService;
@@ -21,8 +21,8 @@ public partial class PersonSearchForm : Form
         InitializeComponent();
 
         PersonAccountResults.BackgroundColor = Program.AppEnvironment.WindowBackgroundColor;
-        _accountService = new(Program.AppEnvironment);
-        _dictionaryService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
     }
 
     private void SearchButton_Click(object sender, EventArgs e)

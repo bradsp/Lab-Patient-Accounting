@@ -3,6 +3,7 @@ using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Library;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace LabBilling.Forms;
 
@@ -16,13 +17,15 @@ public partial class InsMaintenanceUC : UserControl
     private bool _allowEditing;
     private readonly System.Windows.Forms.Timer _timer;
     private const int _timerInterval = 650;
-
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Account CurrentAccount { get; set; }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Ins CurrentIns { get; set; }
     public event EventHandler<InsuranceUpdatedEventArgs> InsuranceChanged;
     public event EventHandler<AppErrorEventArgs> OnError;
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public InsCoverage Coverage { get; set; }
-
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool AllowEditing
     {
         get
@@ -44,8 +47,8 @@ public partial class InsMaintenanceUC : UserControl
         if (this.DesignMode)
             return;
 
-        _accountService = new(Program.AppEnvironment);
-        _dictionaryService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
 
         InitializeComponent();
         Coverage = coverage;

@@ -13,9 +13,11 @@ namespace LabBillingConsole;
 
 public sealed class Testing : MenuBase
 {
+    private UnitOfWorkMain uow;
+
     public Testing(IAppEnvironment appEnvironment) : base(appEnvironment)
     {
-
+        uow = new UnitOfWorkMain(appEnvironment);
     }
 
     public override bool LaunchMenu()
@@ -90,7 +92,7 @@ public sealed class Testing : MenuBase
 
     private void ImportICD10()
     {
-        DictionaryImportService dictionaryImport = new DictionaryImportService();
+        DictionaryImportService dictionaryImport = new DictionaryImportService(_appEnvironment, uow);
         dictionaryImport.RecordProcessed += OnRecordProcessed;
         dictionaryImport.ImportICD(@"C:\Users\bpowers\Downloads\icd10cm-CodesDescriptions-2024\icd10cm-order-2024.txt", "2024", _appEnvironment);
 
@@ -103,7 +105,8 @@ public sealed class Testing : MenuBase
 
     private void PopulateClaimDetailAmount()
     {
-        using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
+        using UnitOfWorkMain unitOfWork = new(_appEnvironment);
+        unitOfWork.StartTransaction();
 
         var records = unitOfWork.BillingActivityRepository.GetByRunDate(new DateTime(2023, 7, 1), new DateTime(2023, 8, 2));
         int cnt = 0;
@@ -129,7 +132,7 @@ public sealed class Testing : MenuBase
     {
         string file = @"\\wthmclbill\shared\Billing\LIVE\claims\835\MCL_MCR_10937.IMTN1.283257.20241126.092201844.ERA.835";
 
-        Remittance835Service remittance835 = new(_appEnvironment);
+        Remittance835Service remittance835 = new(_appEnvironment, uow);
 
         var result = remittance835.Load835(file);
 
@@ -153,7 +156,7 @@ public sealed class Testing : MenuBase
 
     public void TestClientInvoices()
     {
-        ClientInvoicesService clientInvoices = new(_appEnvironment);
+        ClientInvoicesService clientInvoices = new(_appEnvironment, uow);
 
         //clientInvoices.GenerateInvoice("WTCC", new DateTime(2022, 10, 31));
 

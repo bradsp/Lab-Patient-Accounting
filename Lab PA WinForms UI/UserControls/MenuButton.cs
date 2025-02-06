@@ -13,10 +13,13 @@ namespace MenuBar
         private int borderRadius = 0;
         private Color borderColor = Color.PaleVioletRed;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string Command { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string Arguments { get; set; }
 
         [Category("Menu Button Advanced")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int BorderSize
         {
             get { return borderSize; }
@@ -31,12 +34,14 @@ namespace MenuBar
             }
         }
         [Category("Menu Button Advanced")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int BorderRadius 
         {
             get { return borderRadius; }
             set { borderRadius = value; this.Invalidate(); }
         }
         [Category("Menu Button Advanced")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color BorderColor 
         {
             get { return borderColor; }
@@ -45,6 +50,7 @@ namespace MenuBar
 
 
         [Category("Menu Button Advanced")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color BackgroundColor
         {
             get { return this.BackColor; }
@@ -52,6 +58,7 @@ namespace MenuBar
         }
 
         [Category("Menu Button Advanced")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color TextColor 
         { 
             get { return this.ForeColor; }
@@ -146,6 +153,7 @@ namespace MenuBar
                 BorderRadius = this.Height;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public EventHandler ClickAssignEventHandler
         {
             set { Click += value; }

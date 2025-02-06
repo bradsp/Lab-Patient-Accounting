@@ -2,22 +2,24 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <RootNamespace>Lab_Patient_Accounting_Job_Scheduler</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
-    <AssemblyVersion>2025.0.0.0</AssemblyVersion>
-    <FileVersion>2025.0.0.0</FileVersion>
+    <AssemblyVersion>2025.2.1.1</AssemblyVersion>
+    <FileVersion>2025.2.1.1</FileVersion>
     <Platforms>x64</Platforms>
+    <Version>2025.2.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac.Extras.Quartz" Version="10.0.0" />
     <PackageReference Include="log4net" Version="3.0.3" />
     <PackageReference Include="Quartz" Version="3.13.1" />
-    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
     <PackageReference Include="Topshelf.Log4Net" Version="4.3.1-develop.253" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
@@ -9,9 +10,13 @@ namespace LabBilling.Forms;
 
 public partial class InsCompanyLookupForm : Form
 {
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public int CharacterLookupCountMin { get; set; } = 2;
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public List<InsCompany> Datasource { get; set; }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string InitialSearchText { get; set; }
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string SelectedValue { get; set; }
 
     private const int _timerInterval = 650;

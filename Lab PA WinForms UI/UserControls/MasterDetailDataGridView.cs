@@ -38,6 +38,7 @@ public class MasterDetailDataGridView : DataGridView
     /// <value>
     /// The data source for the master DataGridView.
     /// </value>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public object MasterDataSource
     {
         get => masterBindingSource.DataSource;
@@ -54,6 +55,7 @@ public class MasterDetailDataGridView : DataGridView
     /// <value>
     /// The data source for the detail DataGridView.
     /// </value>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public object DetailDataSource
     {
         get => detailBindingSource.DataSource;

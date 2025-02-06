@@ -1,5 +1,6 @@
 ﻿using System.Timers;
 using LabBilling.Core.Services;
+using LabBilling.Core.UnitOfWork;
 
 
 namespace LabBillingService
@@ -7,7 +8,7 @@ namespace LabBillingService
     public class InterfaceProcessor
     {
         private readonly System.Timers.Timer _timer;
-        
+
         public InterfaceProcessor()
         {
             _timer = new System.Timers.Timer(15000) { AutoReset = true };
@@ -39,7 +40,7 @@ namespace LabBillingService
             _timer.Stop();
             System.Console.WriteLine("Processing messages.");
 
-            HL7ProcessorService hl7Processor = new HL7ProcessorService(Program.AppEnvironment);
+            HL7ProcessorService hl7Processor = new HL7ProcessorService(Program.AppEnvironment, Program.UnitOfWork);
             hl7Processor.ProcessMessages();
 
             System.Console.WriteLine("Messages processed. Waiting on new messages.");

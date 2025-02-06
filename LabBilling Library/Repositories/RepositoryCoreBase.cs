@@ -5,6 +5,7 @@ using LabBilling.Logging;
 using System.Reflection;
 using System.ComponentModel;
 using System.Linq;
+using Microsoft.Extensions.Hosting;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -16,8 +17,10 @@ namespace LabBilling.Core.DataAccess
         protected TableInfo _tableInfo;
         protected string _tableName;
 
-        public TableInfo TableInfo { get { return _tableInfo; } }
-        public string TableName {  get { return _tableName; } }
+        public TableInfo TableInfo => _tableInfo;
+        public string TableName => _tableName;
+
+        protected virtual bool RequireValidEnvironment => true;
 
         private void DbConnection_ConnectionOpened(object sender, DbConnectionEventArgs e)
         {
@@ -32,18 +35,18 @@ namespace LabBilling.Core.DataAccess
         public RepositoryCoreBase(IAppEnvironment environment, IDatabase context)
         {
             Log.Instance.Trace("Entering");
-            if (!environment.EnvironmentValid)
-                throw new ApplicationException("AppEnvironment not valid.");
+
 
             AppEnvironment = environment;
             Context = (PetaPoco.Database)context;
-
             Initialize();
         }
 
         private void Initialize()
         {
             Log.Instance.Trace("Entering");
+            if (RequireValidEnvironment && !AppEnvironment.EnvironmentValid)
+                throw new InvalidOperationException("AppEnvironment not valid.");
             _tableInfo = GetTableInfo(typeof(TPoco));
             _tableName = _tableInfo.TableName;
         }

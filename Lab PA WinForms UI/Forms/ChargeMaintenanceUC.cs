@@ -3,6 +3,7 @@ using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
 using LabBilling.ViewModel;
+using System.ComponentModel;
 using System.Data;
 using WinFormsLibrary;
 
@@ -18,7 +19,7 @@ public partial class ChargeMaintenanceUC : UserControl
         {
             InitializeComponent();
             _grouper = new(ChargesDataGrid);
-            _accountService = new(Program.AppEnvironment);
+            _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
         }
     }
 
@@ -27,10 +28,12 @@ public partial class ChargeMaintenanceUC : UserControl
     private Subro.Controls.DataGridViewGrouper _grouper;
     private readonly AccountService _accountService;
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Account CurrentAccount { get; set; }
     public event EventHandler ChargesUpdated;
     public event EventHandler<AppErrorEventArgs> OnError;
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool AllowChargeEntry
     {
         get

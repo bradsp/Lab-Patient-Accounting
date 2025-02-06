@@ -47,10 +47,7 @@ public sealed class ClientRepository : RepositoryBase<Client>
     {
         Log.Instance.Debug($"Entering - {clientMnem}");
 
-        if (clientMnem == null)
-        {
-            throw new ArgumentNullException(nameof(clientMnem));
-        }
+        ArgumentNullException.ThrowIfNull(clientMnem);
 
         var record = Context.SingleOrDefault<Client>($"where {GetRealColumn(nameof(Client.ClientMnem))} = @0",
             new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
@@ -94,10 +91,8 @@ public sealed class ClientRepository : RepositoryBase<Client>
 
     public double Balance(string clientMnem, DateTime asOfDate)
     {
-        if (clientMnem == null)
-            throw new ArgumentNullException(nameof(clientMnem));
-        if (asOfDate > DateTime.Now)
-            throw new ArgumentOutOfRangeException(nameof(asOfDate));
+        ArgumentNullException.ThrowIfNull(clientMnem);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(asOfDate, DateTime.Now);
 
         var balance = Context.ExecuteScalar<double>("select dbo.GetAccBalByDate(@0, @1)",
             new SqlParameter() { ParameterName = "@account", SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem },
@@ -106,44 +101,7 @@ public sealed class ClientRepository : RepositoryBase<Client>
         return balance;
     }
 
-    public async Task<List<UnbilledClient>> GetUnbilledClientsAsync(DateTime thruDate, IProgress<int> progress) => await Task.Run(() => GetUnbilledClients(thruDate, progress));
-
-    public event EventHandler<ProgressEventArgs> ProgressChanged;
-
-    public List<UnbilledClient> GetUnbilledClients(DateTime thruDate, IProgress<int> progress)
-    {
-        AccountService accountService = new(AppEnvironment);
-
-        List<UnbilledClient> unbilledClients = new();
-
-        var unbilledAccounts = GetUnbilledAccounts(thruDate, progress);
-
-        var clients = GetAll(false);
-
-        int total = clients.Count;
-        int processed = 0;
-
-        clients.AsParallel().ForAll(client =>
-        {
-            UnbilledClient unbilledClient = new()
-            {
-                ClientMnem = client.ClientMnem,
-                ClientName = client.Name,
-                ClientType = client.ClientType.Description,
-                PriorBalance = accountService.GetBalance(client.ClientMnem),
-                UnbilledAccounts = unbilledAccounts.Where(x => x.ClientMnem == client.ClientMnem).ToList()
-            };
-
-            if (unbilledClient.PriorBalance != 0 || unbilledClient.UnbilledAccounts.Sum(x => x.UnbilledAmount) != 0)
-                unbilledClients.Add(unbilledClient);
-
-            progress?.Report(HelperExtensions.ComputePercentage(++processed, total));
-        });
-
-        return unbilledClients;
-    }
-
-    private List<UnbilledAccounts> GetUnbilledAccounts(DateTime thruDate, IProgress<int> progress)
+    public List<UnbilledAccounts> GetUnbilledAccounts(DateTime thruDate, IProgress<int> progress)
     {
         string chrgTableName = GetTableInfo(typeof(Chrg)).TableName;
         string accTableName = GetTableInfo(typeof(Account)).TableName;
