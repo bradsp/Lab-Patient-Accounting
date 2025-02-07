@@ -1010,7 +1010,7 @@ public sealed class Remittance835Service
 
             foreach (var claim in remittance.Claims)
             {
-                if (!claim.ClaimDetails.Any())
+                if (claim.ClaimDetails.Count == 0)
                 {
                     Chk chk = new()
                     {
@@ -1136,7 +1136,7 @@ public sealed class Remittance835Service
             {
                 remittance.PostedDate = DateTime.Now;
                 remittance.PostingUser = _appEnvironment.UserName;
-                remittance.PostingHost = Utilities.OS.GetMachineName();
+                remittance.PostingHost = Environment.MachineName;
             }
             else
             {
