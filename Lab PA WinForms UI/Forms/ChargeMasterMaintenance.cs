@@ -24,7 +24,7 @@ public partial class ChargeMasterMaintenance : Form
         InitializeComponent();
         _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
         _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
-        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     private void addCdmButton_Click(object sender, EventArgs e)

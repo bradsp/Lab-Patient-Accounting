@@ -36,7 +36,7 @@ public partial class JobProcessor
             _log.Info("In RunValidation() - Starting RunValidation job");
 
             UnitOfWorkMain uow = new UnitOfWorkMain(Program.AppEnvironment);
-            AccountService accountService = new(Program.AppEnvironment, uow);
+            AccountService accountService = new(Program.AppEnvironment);
 
             accountService.ValidateUnbilledAccounts();
 

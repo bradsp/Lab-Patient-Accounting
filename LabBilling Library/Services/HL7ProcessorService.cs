@@ -24,19 +24,17 @@ public sealed class HL7ProcessorService
     private readonly List<MessageInbound> _messagesInbound = new();
     private readonly AccountService _accountService;
     private readonly DictionaryService _dictionaryService;
-    private readonly IUnitOfWork _uow;
 
     private List<ChargeTransaction> _chargeTransactions = new();
     private readonly IAppEnvironment _appEnvironment;
 
     private const string _accountPrefix = "L";
 
-    public HL7ProcessorService(IAppEnvironment appEnvironment, IUnitOfWork uow)
+    public HL7ProcessorService(IAppEnvironment appEnvironment)
     {
         this._appEnvironment = appEnvironment;
-        _accountService = new(appEnvironment, uow);
-        _dictionaryService = new(appEnvironment, uow);
-        _uow = uow;
+        _accountService = new(appEnvironment);
+        _dictionaryService = new(appEnvironment);
     }
 
     private class ChargeTransaction
@@ -57,7 +55,11 @@ public sealed class HL7ProcessorService
         DoNotProcess
     }
 
-    public List<MessageQueueCount> GetQueueCounts() => _uow.MessagesInboundRepository.GetQueueCounts();
+    public List<MessageQueueCount> GetQueueCounts(IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.MessagesInboundRepository.GetQueueCounts();
+    }
 
 
     public static string StatusToString(Status status)
@@ -89,39 +91,44 @@ public sealed class HL7ProcessorService
         return processStatus;
     }
 
-    public List<MessageInbound> GetMessages(DateTime fromDate, DateTime thruDate) => _uow.MessagesInboundRepository.GetByDateRange(fromDate, thruDate);
+    public List<MessageInbound> GetMessages(DateTime fromDate, DateTime thruDate, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.MessagesInboundRepository.GetByDateRange(fromDate, thruDate);
+    }
 
 
-    public void ProcessMessage(int systemMessageId)
+    public void ProcessMessage(int systemMessageId, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering");
-
-        _currentMessage = _uow.MessagesInboundRepository.GetById(systemMessageId);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        _currentMessage = uow.MessagesInboundRepository.GetById(systemMessageId);
         if (_currentMessage != null)
             ProcessMessage();
     }
 
-    private void ProcessMessage()
+    private void ProcessMessage(IUnitOfWork uow = null)
     {
         Log.Instance.Debug($"Processing {_currentMessage.MessageType} for account {_currentMessage.SourceAccount}");
         Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Processing {_currentMessage.MessageType} for account {_currentMessage.SourceAccount}");
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         try
         {
-            var (status, statusText, errors) = ParseHL7(_currentMessage.HL7Message);
+            var (status, statusText, errors) = ParseHL7(_currentMessage.HL7Message, uow);
 
             _currentMessage.ProcessFlag = StatusToString(status);
             _currentMessage.ProcessStatusMsg = statusText;
             _currentMessage.Errors = errors.ToString();
 
-            _uow.MessagesInboundRepository.Update(_currentMessage, new[]
+            uow.MessagesInboundRepository.Update(_currentMessage, new[]
             {
                 nameof(MessageInbound.ProcessFlag),
                 nameof(MessageInbound.ProcessStatusMsg),
                 nameof(MessageInbound.Errors)
             });
             Console.WriteLine($"Processing {_currentMessage.MessageType} for account {_currentMessage.SourceAccount} complete.");
-            _uow.Commit();
+            uow.Commit();
         }
         catch (AccountLockException alex)
         {
@@ -130,13 +137,13 @@ public sealed class HL7ProcessorService
             _currentMessage.Errors = alex.Message + "\n" + alex.StackTrace;
             Log.Instance.Error(_currentMessage.ProcessStatusMsg, alex.Message);
             Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Account locked. Requeing");
-            _uow.MessagesInboundRepository.Update(_currentMessage, new[]
+            uow.MessagesInboundRepository.Update(_currentMessage, new[]
 {
                 nameof(MessageInbound.ProcessFlag),
                 nameof(MessageInbound.ProcessStatusMsg),
                 nameof(MessageInbound.Errors)
             });
-            _uow.Commit();
+            uow.Commit();
         }
         catch (Exception ex)
         {
@@ -145,31 +152,32 @@ public sealed class HL7ProcessorService
             _currentMessage.Errors = ex.Message + "\n" + ex.StackTrace;
             Log.Instance.Error(_currentMessage.ProcessStatusMsg, ex.Message);
             Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Exception encountered during process.");
-            _uow.MessagesInboundRepository.Update(_currentMessage, new[]
+            uow.MessagesInboundRepository.Update(_currentMessage, new[]
             {
                 nameof(MessageInbound.ProcessFlag),
                 nameof(MessageInbound.ProcessStatusMsg),
                 nameof(MessageInbound.Errors)
             });
-            _uow.Commit();
+            uow.Commit();
         }
     }
 
-    public void ProcessMessages()
+    public void ProcessMessages(IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - Querying messages to process");
-        var msgsToProcess = _uow.MessagesInboundRepository.GetUnprocessedMessages();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var msgsToProcess = uow.MessagesInboundRepository.GetUnprocessedMessages();
 
         foreach (var msg in msgsToProcess)
         {
             _currentMessage = msg;
 
-            if (!_dictionaryService.GetMappingsSendingSystemList().Contains(_currentMessage.SourceInfce))
+            if (!_dictionaryService.GetMappingsSendingSystemList(uow).Contains(_currentMessage.SourceInfce))
             {
                 _currentMessage.ProcessFlag = StatusToString(Status.Failed);
                 _currentMessage.ProcessStatusMsg = $"Interface {_currentMessage.SourceInfce} not defined";
 
-                _uow.MessagesInboundRepository.Update(_currentMessage, new[]
+                uow.MessagesInboundRepository.Update(_currentMessage, new[]
                 {
                     nameof(MessageInbound.ProcessFlag),
                     nameof(MessageInbound.ProcessStatusMsg),
@@ -183,9 +191,10 @@ public sealed class HL7ProcessorService
         }
     }
 
-    private (Status status, string statusText, StringBuilder errors) ParseHL7(string message)
+    private (Status status, string statusText, StringBuilder errors) ParseHL7(string message, IUnitOfWork uow)
     {
         Log.Instance.Debug($"Parsing message: {message}");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         _hl7Message = new j4jayant.HL7.Parser.Message(message);
         StringBuilder errors = new();
         Status processStatus;
@@ -226,7 +235,7 @@ public sealed class HL7ProcessorService
             else if (_hl7Message.MessageStructure == "DFT_P03")
             {
                 Log.Instance.Trace($"Message type: {_hl7Message.MessageStructure} - Control ID: {_hl7Message.MessageControlID}");
-                var result = ProcessDFTMessage();
+                var result = ProcessDFTMessage(uow);
                 errors = result.errors;
                 statusText = result.statusText;
                 processStatus = result.status;
@@ -235,7 +244,7 @@ public sealed class HL7ProcessorService
             else if (_hl7Message.MessageStructure == "MFN_M02")
             {
                 Log.Instance.Trace($"Message type: {_hl7Message.MessageStructure} - Control ID: {_hl7Message.MessageControlID}");
-                var result = ProcessMFNMessage();
+                var result = ProcessMFNMessage(uow);
                 errors = result.errors;
                 statusText = result.statusText;
                 processStatus = result.status;
@@ -258,9 +267,10 @@ public sealed class HL7ProcessorService
         }
     }
 
-    private (Status status, string statusText, StringBuilder errors) ProcessADTMessage()
+    private (Status status, string statusText, StringBuilder errors) ProcessADTMessage(IUnitOfWork uow = null)
     {
         Log.Instance.Trace("Entering");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         bool canFile = true;
         bool newAccount;
         StringBuilder errors = new();
@@ -295,13 +305,13 @@ public sealed class HL7ProcessorService
         }
 
         ParsePID();
-        ParsePV1();
+        ParsePV1(uow);
         ParseDG1();
-        ParseGT1();
-        ParseIN1IN2();
+        ParseGT1(uow);
+        ParseIN1IN2(uow);
 
         //perform error checking
-        _accountRecord.Client = _dictionaryService.GetClient(_accountRecord.ClientMnem);
+        _accountRecord.Client = _dictionaryService.GetClient(_accountRecord.ClientMnem, uow);
         if (_accountRecord.Client == null)
         {
             //error - invalid client
@@ -312,7 +322,7 @@ public sealed class HL7ProcessorService
 
         foreach (var ins in _accountRecord.Insurances)
         {
-            var insc = _dictionaryService.GetInsCompany(ins.InsCode);
+            var insc = _dictionaryService.GetInsCompany(ins.InsCode, uow);
             if (insc == null)
             {
                 Log.Instance.Warn($"[WARNING] Insurance code not valid {ins.InsCode}");
@@ -391,7 +401,7 @@ public sealed class HL7ProcessorService
                 bool finCodeChange = false;
                 bool clientChange = false;
 
-                _accountRecord.Fin = _dictionaryService.GetFinCode(_accountRecord.FinCode);
+                _accountRecord.Fin = _dictionaryService.GetFinCode(uow, _accountRecord.FinCode);
 
                 if (existingFinClass != _accountRecord.Fin.FinClass && !string.IsNullOrEmpty(existingFinClass))
                 {
@@ -419,7 +429,7 @@ public sealed class HL7ProcessorService
                             errors.Append($"Group Number is not a valid value: {ins.GroupNumber}");
                             ins.GroupNumber = string.Empty;
                         }
-                        _accountService.SaveInsurance(ins);
+                        _accountService.SaveInsurance(ins, uow);
                     }
 
                     statusText = $"{_accountRecord.AccountNo} updated.";
@@ -451,7 +461,7 @@ public sealed class HL7ProcessorService
                 if (canFile)
                 {
                     // add account
-                    _accountService.Add(_accountRecord);
+                    _accountService.Add(_accountRecord, uow);
                     statusText = $"{_accountRecord.AccountNo} added.";
                     _accountService.ClearAccountLock(_accountRecord);
                     return (Status.Processed, statusText, errors);
@@ -490,13 +500,14 @@ public sealed class HL7ProcessorService
         }
     }
 
-    private (Status status, string statusText, StringBuilder errors) ProcessDFTMessage()
+    private (Status status, string statusText, StringBuilder errors) ProcessDFTMessage(IUnitOfWork uow)
     {
         Log.Instance.Trace("Entering");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         bool canFile = true;
         StringBuilder errors = new();
         _chargeTransactions = new List<ChargeTransaction>();
-        _uow.StartTransaction();
+        uow.StartTransaction();
 
         //make sure account exists - if not, create it from the PID segment
         _accountRecord = _accountService.GetAccount(_accountPrefix + _currentMessage.SourceAccount);
@@ -508,12 +519,12 @@ public sealed class HL7ProcessorService
         }
 
         ParsePID();
-        ParsePV1();
+        ParsePV1(uow);
         ParseFT1();
 
         if (!accountExists)
         {
-            _accountRecord.Client = _uow.ClientRepository.GetClient(_accountRecord.ClientMnem);
+            _accountRecord.Client = uow.ClientRepository.GetClient(_accountRecord.ClientMnem);
             if (_accountRecord.Client == null)
             {
                 //error - invalid client
@@ -548,7 +559,7 @@ public sealed class HL7ProcessorService
 
             if (canFile)
             {
-                _accountRecord = _accountService.Add(_accountRecord);
+                _accountRecord = _accountService.Add(_accountRecord, uow);
             }
         }
 
@@ -564,7 +575,7 @@ public sealed class HL7ProcessorService
                         Log.Instance.Debug($"Account {_accountRecord.AccountNo} transaction date {_accountRecord.TransactionDate} does not match charge service date {transaction.ServiceDate}. Account updated.");
                         _accountRecord.TransactionDate = transaction.ServiceDate;
 
-                        _uow.AccountRepository.Update(_accountRecord, new string[] { nameof(Account.TransactionDate) });
+                        uow.AccountRepository.Update(_accountRecord, new string[] { nameof(Account.TransactionDate) });
                     }
                 }
 
@@ -576,34 +587,52 @@ public sealed class HL7ProcessorService
                     if(transaction.Qty < 0)
                     {
                         // look up existing charge to be credited
-                        var existingChrg = _uow.ChrgRepository.GetChargeByReferenceAndCdm(transaction.RefNumber, transaction.Cdm);
+                        var existingChrg = uow.ChrgRepository.GetChargeByReferenceAndCdm(transaction.RefNumber, transaction.Cdm);
 
-                        if(existingChrg.Count > 0)
+                        if(existingChrg.Count() > 0)
                         {
-                            var retValue = _accountService.CreditCharge(existingChrg[0].ChrgId, transaction.Comment);
+                            var retValue = _accountService.CreditCharge(existingChrg[0].ChrgId, transaction.Comment, uow);
                         }
                         else
                         {
-                            _accountService.AddCharge(_accountRecord, transaction.Cdm, transaction.Qty, transaction.ServiceDate, transaction.Comment, transaction.RefNumber);
+                            _accountService.AddCharge(new AddChargeParameters()
+                            {
+                                Account = _accountRecord,
+                                Cdm = transaction.Cdm,
+                                Quantity = transaction.Qty,
+                                ServiceDate = transaction.ServiceDate,
+                                Comment = transaction.Comment,
+                                RefNumber = transaction.RefNumber,
+                                Uow = uow
+                            });
                         }
                     }
                     else
                     {
-                        _accountService.AddCharge(_accountRecord, transaction.Cdm, transaction.Qty, transaction.ServiceDate, transaction.Comment, transaction.RefNumber);
+                        _accountService.AddCharge(new AddChargeParameters()
+                        {
+                            Account = _accountRecord,
+                            Cdm = transaction.Cdm,
+                            Quantity = transaction.Qty,
+                            ServiceDate = transaction.ServiceDate,
+                            Comment = transaction.Comment,
+                            RefNumber = transaction.RefNumber,
+                            Uow = uow
+                        });
                     }
                 }
                 catch (ArgumentOutOfRangeException argex)
                 {
                     errors.AppendLine($"[ERROR] {argex.ParamName} is not a valid value. CDM {transaction.Cdm}, Client {_accountRecord.ClientMnem}");
                     _accountService.ClearAccountLock(_accountRecord);
-                    _uow.Commit();
+                    uow.Commit();
                     return (Status.Failed, $"{_accountRecord.AccountNo} - charges not posted.", errors);
                 }
                 catch (CdmNotFoundException cdmex)
                 {
                     errors.AppendLine($"[WARN] {cdmex.Message} for {transaction.Cdm} on {_accountRecord.AccountNo}. Charge not posted.");
                     _accountService.ClearAccountLock(_accountRecord);
-                    _uow.Commit();
+                    uow.Commit();
                     return (Status.Failed, $"{_accountRecord.AccountNo} - charges not posted.", errors);
                 }
                 catch (InvalidClientException cliex)
@@ -611,7 +640,7 @@ public sealed class HL7ProcessorService
                     errors.AppendLine($"[ERROR] {cliex.Message} for {_accountRecord.ClientMnem} on {_accountRecord.AccountNo}. Charge not posted.");
                     _accountService.ClearAccountLock(_accountRecord);
                     Log.Instance.Error(cliex);
-                    _uow.Commit();
+                    uow.Commit();
                     return (Status.Failed, $"{_accountRecord.AccountNo} - charges not posted.", errors);
                 }
                 catch (ApplicationException apex)
@@ -619,7 +648,7 @@ public sealed class HL7ProcessorService
                     errors.AppendLine($"[ERROR] {apex.Message} for {_accountRecord.ClientMnem} on {_accountRecord.AccountNo}. Charge not posted.");
                     _accountService.ClearAccountLock(_accountRecord);
                     Log.Instance.Error(apex);
-                    _uow.Commit();
+                    uow.Commit();
                     return (Status.Failed, $"{_accountRecord.AccountNo} - charges not posted.", errors);
                 }
                 catch (Exception ex)
@@ -627,7 +656,7 @@ public sealed class HL7ProcessorService
                     errors.AppendLine($"[ERROR] {ex.Message} for {_accountRecord.ClientMnem} on {_accountRecord.AccountNo}. Charge not posted.");
                     Log.Instance.Error(ex, $"[ERROR] {ex.Message} for {_accountRecord.ClientMnem} on {_accountRecord.AccountNo}. Charge not posted.");
                     _accountService.ClearAccountLock(_accountRecord);
-                    _uow.Commit();
+                    uow.Commit();
                     return (Status.Failed, $"{_accountRecord.AccountNo} - charges not posted.", errors);
                 }
                 finally
@@ -637,22 +666,23 @@ public sealed class HL7ProcessorService
             }
             if (accountExists)
                 _accountService.ClearAccountLock(_accountRecord);
-            _uow.Commit();
+            uow.Commit();
             return (Status.Processed, $"{_accountRecord.AccountNo} - charges posted.", errors);
         }
         else
         {
             if (accountExists)
                 _accountService.ClearAccountLock(_accountRecord);
-            _uow.Commit();
+            uow.Commit();
             return (Status.Failed, "Unable to process charges. See errors.", errors);
         }
 
     }
 
-    private (Status status, string statusText, StringBuilder errors) ProcessMFNMessage()
+    private (Status status, string statusText, StringBuilder errors) ProcessMFNMessage(IUnitOfWork uow)
     {
         Log.Instance.Trace("Entering");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         //bool canFile = true;
         StringBuilder errors = new();
         string statusText = string.Empty;
@@ -667,13 +697,13 @@ public sealed class HL7ProcessorService
         //MAC = reactivate
         //MSU = suspend
 
-        Phy existingPhy = _dictionaryService.GetProvider(_phy.NpiId);
+        Phy existingPhy = _dictionaryService.GetProvider(_phy.NpiId, uow);
 
         if (existingPhy == null)
         {
             Log.Instance.Debug("Provider added");
-            _uow.PhyRepository.Add(_phy);
-            _uow.Commit();
+            uow.PhyRepository.Add(_phy);
+            uow.Commit();
             return (Status.Processed, $"Provider added.", errors);
         }
         else
@@ -691,8 +721,8 @@ public sealed class HL7ProcessorService
                 _phy.IsDeleted = false;
                 Log.Instance.Debug("Provider updated");
             }
-            _uow.PhyRepository.Update(_phy);
-            _uow.Commit();
+            uow.PhyRepository.Update(_phy);
+            uow.Commit();
             return (Status.Processed, $"Provider updated.", errors);
         }
     }
@@ -796,24 +826,25 @@ public sealed class HL7ProcessorService
 
     }
 
-    private void ParsePV1()
+    private void ParsePV1(IUnitOfWork uow)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         _accountRecord.ClientMnem = string.IsNullOrEmpty(_hl7Message.GetValue("PV1.3.1"))
             ? _hl7Message.GetValue("PV1.3.1")
-            : _uow.MappingRepository.GetMappedValue("CLIENT", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.3.1"));
+            : uow.MappingRepository.GetMappedValue("CLIENT", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.3.1"));
 
         if (string.IsNullOrEmpty(_accountRecord.ClientMnem))
         {
             _accountRecord.ClientMnem = string.IsNullOrEmpty(_hl7Message.GetValue("PV1.6.1"))
                 ? _hl7Message.GetValue("PV1.6.1")
-                : _uow.MappingRepository.GetMappedValue("CLIENT", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.6.1"));
+                : uow.MappingRepository.GetMappedValue("CLIENT", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.6.1"));
         }
 
         if (string.IsNullOrEmpty(_accountRecord.ClientMnem))
         {
             _accountRecord.ClientMnem = string.IsNullOrEmpty(_hl7Message.GetValue("PV1.3.4"))
                 ? _hl7Message.GetValue("PV1.3.4")
-                : _uow.MappingRepository.GetMappedValue("CLIENT", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.3.4"));
+                : uow.MappingRepository.GetMappedValue("CLIENT", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.3.4"));
         }
 
         string msgFin = _hl7Message.GetValue("PV1.20");
@@ -823,7 +854,7 @@ public sealed class HL7ProcessorService
         {
             _accountRecord.FinCode = string.IsNullOrEmpty(msgFin)
                 ? string.IsNullOrEmpty(_accountRecord.FinCode) ? msgFin : _accountRecord.FinCode
-                : _uow.MappingRepository.GetMappedValue("FIN_CODE", _currentMessage.SourceInfce, msgFin);
+                : uow.MappingRepository.GetMappedValue("FIN_CODE", _currentMessage.SourceInfce, msgFin);
         }
         _accountRecord.OriginalFinCode = _accountRecord.FinCode;
         _accountRecord.TransactionDate = new DateTime().ParseHL7Date(_hl7Message.GetValue("PV1.44"));
@@ -835,9 +866,9 @@ public sealed class HL7ProcessorService
 
         _accountRecord.Pat.ProviderId = string.IsNullOrEmpty(_hl7Message.GetValue("PV1.17.1"))
            ? _hl7Message.GetValue("PV1.17.1")
-           : _uow.MappingRepository.GetMappedValue("PHY_ID", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.17.1"));
+           : uow.MappingRepository.GetMappedValue("PHY_ID", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.17.1"));
 
-        _accountRecord.Pat.Physician = _uow.PhyRepository.GetByNPI(_accountRecord.Pat.ProviderId);
+        _accountRecord.Pat.Physician = uow.PhyRepository.GetByNPI(_accountRecord.Pat.ProviderId);
 
     }
 
@@ -856,8 +887,9 @@ public sealed class HL7ProcessorService
         }
     }
 
-    private void ParseGT1()
+    private void ParseGT1(IUnitOfWork uow)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         if (_hl7Message.Segments("GT1").Count > 0)
         {
             _accountRecord.Pat.GuarantorLastName = _hl7Message.GetValue("GT1.3.1");
@@ -890,13 +922,14 @@ public sealed class HL7ProcessorService
                 _accountRecord.Pat.GuarantorPrimaryPhone = _hl7Message.GetValue("GT1.6");
             }
             _accountRecord.Pat.GuarRelationToPatient = _hl7Message.GetValue("GT1.11") != string.Empty
-                ? _uow.MappingRepository.GetMappedValue("GUAR_REL", _currentMessage.SourceInfce, _hl7Message.GetValue("GT1.11"))
+                ? uow.MappingRepository.GetMappedValue("GUAR_REL", _currentMessage.SourceInfce, _hl7Message.GetValue("GT1.11"))
                 : "01";
         }
     }
 
-    private void ParseIN1IN2()
+    private void ParseIN1IN2(IUnitOfWork uow)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         var segIn1 = _hl7Message.Segments("IN1");
         var segIn2 = _hl7Message.Segments("IN2");
 
@@ -944,7 +977,7 @@ public sealed class HL7ProcessorService
 
             ins.InsCode = string.IsNullOrEmpty(in1.Fields(2).Components(1).Value)
                 ? in1.Fields(2).Components(1).Value
-                : _uow.MappingRepository.GetMappedValue("INS_CODE", _currentMessage.SourceInfce, in1.Fields(2).Components(1).Value);
+                : uow.MappingRepository.GetMappedValue("INS_CODE", _currentMessage.SourceInfce, in1.Fields(2).Components(1).Value);
             if (ins.InsCode == String.Empty)
             {
                 ins.InsCode = in1.Fields(2).Components(1).Value;
@@ -967,7 +1000,7 @@ public sealed class HL7ProcessorService
 
             ins.Relation = string.IsNullOrEmpty(in1.Fields(17).Value)
                 ? "01"
-                : _uow.MappingRepository.GetMappedValue("GUAR_REL", _currentMessage.SourceInfce, in1.Fields(17).Value);
+                : uow.MappingRepository.GetMappedValue("GUAR_REL", _currentMessage.SourceInfce, in1.Fields(17).Value);
 
             if (!string.IsNullOrEmpty(in1.Fields(18).Value))
             {
@@ -1000,7 +1033,7 @@ public sealed class HL7ProcessorService
                 {
                     ins.Relation = string.IsNullOrEmpty(in2.Fields(72).Value)
                         ? in2.Fields(72).Value
-                        : _uow.MappingRepository.GetMappedValue("GUAR_REL", _currentMessage.SourceInfce, in2.Fields(72).Value);
+                        : uow.MappingRepository.GetMappedValue("GUAR_REL", _currentMessage.SourceInfce, in2.Fields(72).Value);
                 }
             }
             if (existingInsIndex < 0)
@@ -1112,14 +1145,15 @@ public sealed class HL7ProcessorService
     }
 
 
-    public MessageInbound SetMessageDoNotProcess(int systemMessageId, string statusMessage)
+    public MessageInbound SetMessageDoNotProcess(int systemMessageId, string statusMessage, IUnitOfWork uow = null)
     {
-        var message = _uow.MessagesInboundRepository.GetById(systemMessageId);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var message = uow.MessagesInboundRepository.GetById(systemMessageId);
 
         message.ProcessFlag = StatusToString(Status.DoNotProcess);
         message.ProcessStatusMsg = statusMessage;
 
-        var result = _uow.MessagesInboundRepository.Update(message, new[]
+        var result = uow.MessagesInboundRepository.Update(message, new[]
         {
             nameof(MessageInbound.ProcessFlag),
             nameof(MessageInbound.ProcessStatusMsg)

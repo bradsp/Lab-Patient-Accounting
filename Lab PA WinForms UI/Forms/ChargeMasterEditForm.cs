@@ -16,7 +16,7 @@ public partial class ChargeMasterEditForm : Form
     {
         InitializeComponent();
 
-        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] 

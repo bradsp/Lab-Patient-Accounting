@@ -80,6 +80,10 @@ public class AppEnvironment : IAppEnvironment
                     ApplicationName = Utilities.OS.GetAppName(),
                     Encrypt = _dbEncrypt,
                     TrustServerCertificate = _dbTrustServerCert,
+                    MultipleActiveResultSets = true,
+                    MinPoolSize = 10,
+                    MaxPoolSize = 200,
+                    Pooling = true,
                     ConnectTimeout = 30
                 };
 
@@ -125,8 +129,13 @@ public class AppEnvironment : IAppEnvironment
                     ApplicationName = Utilities.OS.GetAppName(),
                     ConnectTimeout = 30,
                     Encrypt = _dbEncrypt,
+                    MultipleActiveResultSets = true,
+                    MinPoolSize = 10,
+                    MaxPoolSize = 200,
+                    Pooling = true,
                     TrustServerCertificate = _dbTrustServerCert,
                 };
+
 
                 if (!IntegratedAuthentication)
                 {

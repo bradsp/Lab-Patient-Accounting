@@ -27,7 +27,7 @@ public partial class AccountChargeEntry : Form
 
     private void BatchChargeEntry_Load(object sender, EventArgs e)
     {
-        accountService = new(Program.AppEnvironment, Program.UnitOfWork);
+        accountService = new(Program.AppEnvironment);
         charges = new List<BatchCharge>();
         chrgBindingSource = new BindingSource
         {
@@ -110,12 +110,18 @@ public partial class AccountChargeEntry : Form
     private void PostCharges_Click(object sender, EventArgs e)
     {
         //loop through rows to write charges
-        AccountService accountService = new(Program.AppEnvironment, Program.UnitOfWork);
+        AccountService accountService = new(Program.AppEnvironment);
         foreach (var charge in charges)
         {
             try
             {
-                accountService.AddCharge(charge.AccountNo, charge.CDM, charge.Qty, (DateTime)currentAccount.TransactionDate);
+                accountService.AddCharge(new AddChargeParameters()
+                {
+                    AccountNumber = charge.AccountNo,
+                    Cdm = charge.CDM,
+                    Quantity = charge.Qty,
+                    ServiceDate = (DateTime)currentAccount.TransactionDate
+                });
             }
             catch(Exception ex)
             {

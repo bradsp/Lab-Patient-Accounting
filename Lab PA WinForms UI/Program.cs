@@ -4,6 +4,7 @@ using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
 using Microsoft.Data.SqlClient;
 using LabBilling.Core.Services;
+using LabBilling.Forms;
 
 namespace LabBilling;
 
@@ -71,21 +72,78 @@ static class Program
 
         // Pass the windows username to the AuthenticateIntegrated method.
         var user = authenticationService.AuthenticateIntegrated(windowsUsername);
-        
-        if(user == null)
-        {
-            Log.Instance.Error($"User not found in database: {windowsUsername}");
-            MessageBox.Show("User not found in database. Please contact your system administrator.", "User Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return;
-        }
 
-        if(user.Access == UserStatus.None)
+        if (user.Access == UserStatus.None)
         {
             Log.Instance.Error($"User not authorized: {windowsUsername}");
             MessageBox.Show("User not authorized. Please contact your system administrator.", "User Not Authorized", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
+        if (user == null)
+        {
+            //integrated login has failed. Ask user for a username and password and attempt to authenticate.
+            Log.Instance.Info("Integrated login failed. Prompting for username and password.");
+
+            int maxAttempts = 3;
+            int attemptCount = 0;
+            bool isAuthenticated = false;
+
+            do
+            {
+                using LoginForm loginForm = new();
+                var result = loginForm.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    string username = loginForm.Username;
+                    string password = loginForm.Password;
+                    attemptCount++;
+
+                    // Authenticate the user
+                    var authResult = authenticationService.Authenticate(username, password);
+
+                    if (authResult.isAuthenticated)
+                    {
+                        // Retrieve the authenticated user account
+                        LoggedInUser = authResult.user;
+
+                        // Complete AppEnvironment initialization
+                        AppEnvironment.UserAccount = LoggedInUser;
+                        AppEnvironment.User = LoggedInUser.UserName;
+                        AppEnvironment.ApplicationParameters = UnitOfWorkSystem.SystemParametersRepository.LoadParameters();
+
+                        // Set up UnitOfWork for the main application
+                        UnitOfWork = new UnitOfWorkMain(AppEnvironment);
+
+                        isAuthenticated = true;
+                        break;
+                    }
+                    else
+                    {
+                        Log.Instance.Warn($"Authentication failed for user '{username}'. Attempt {attemptCount} of {maxAttempts}.");
+                        MessageBox.Show("Invalid username or password.", "Authentication Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    // User canceled the login form
+                    Log.Instance.Info("User canceled the login. Exiting application.");
+                    Application.Exit();
+                    return;
+                }
+            }
+            while (attemptCount < maxAttempts);
+
+            if (!isAuthenticated)
+            {
+                Log.Instance.Error("Maximum login attempts exceeded. Exiting application.");
+                MessageBox.Show("Maximum login attempts exceeded.", "Authentication Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+                return;
+            }
+
+        }
 
         LoggedInUser = user;
         //complete AppEnvironment Initialization

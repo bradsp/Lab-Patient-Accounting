@@ -21,7 +21,7 @@ public partial class PhysicianMaintenanceForm : Form
     private readonly BindingList<Phy> bindingList = new();
     private readonly BindingSource bindingSource = new();
 
-    private readonly DictionaryService dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+    private readonly DictionaryService dictionaryService = new(Program.AppEnvironment);
 
     private void PhysicianMaintenanceForm_Load(object sender, EventArgs e)
     {

@@ -9,7 +9,7 @@ namespace LabBilling.Forms;
 
 public partial class PatientCollectionsRunWizard : Form
 {
-    private PatientBillingService _patientBillingService = new(Program.AppEnvironment, Program.UnitOfWork);
+    private PatientBillingService _patientBillingService = new(Program.AppEnvironment);
     private DateTime _thruDate;
     private string _batchNo;
     private bool _errorEncountered = false;

@@ -92,7 +92,7 @@ public sealed class Testing : MenuBase
 
     private void ImportICD10()
     {
-        DictionaryImportService dictionaryImport = new DictionaryImportService(_appEnvironment, uow);
+        DictionaryImportService dictionaryImport = new(_appEnvironment);
         dictionaryImport.RecordProcessed += OnRecordProcessed;
         dictionaryImport.ImportICD(@"C:\Users\bpowers\Downloads\icd10cm-CodesDescriptions-2024\icd10cm-order-2024.txt", "2024", _appEnvironment);
 
@@ -132,7 +132,7 @@ public sealed class Testing : MenuBase
     {
         string file = @"\\wthmclbill\shared\Billing\LIVE\claims\835\MCL_MCR_10937.IMTN1.283257.20241126.092201844.ERA.835";
 
-        Remittance835Service remittance835 = new(_appEnvironment, uow);
+        Remittance835Service remittance835 = new(_appEnvironment);
 
         var result = remittance835.Load835(file);
 
@@ -156,7 +156,7 @@ public sealed class Testing : MenuBase
 
     public void TestClientInvoices()
     {
-        ClientInvoicesService clientInvoices = new(_appEnvironment, uow);
+        ClientInvoicesService clientInvoices = new(_appEnvironment);
 
         //clientInvoices.GenerateInvoice("WTCC", new DateTime(2022, 10, 31));
 

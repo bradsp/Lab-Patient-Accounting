@@ -40,7 +40,7 @@ namespace LabBillingService
             _timer.Stop();
             System.Console.WriteLine("Processing messages.");
 
-            HL7ProcessorService hl7Processor = new HL7ProcessorService(Program.AppEnvironment, Program.UnitOfWork);
+            HL7ProcessorService hl7Processor = new (Program.AppEnvironment);
             hl7Processor.ProcessMessages();
 
             System.Console.WriteLine("Messages processed. Waiting on new messages.");

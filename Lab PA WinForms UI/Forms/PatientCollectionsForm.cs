@@ -35,9 +35,9 @@ public partial class PatientCollectionsForm : Form
         Log.Instance.Trace($"Entering");
         InitializeComponent();
 
-        _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
-        _patientBillingService = new(Program.AppEnvironment, Program.UnitOfWork);
-        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _accountService = new(Program.AppEnvironment);
+        _patientBillingService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     private void frmBadDebt_Load(object sender, EventArgs e)

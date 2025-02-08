@@ -33,7 +33,7 @@ public partial class ChargeEntryForm : Form
         InitializeComponent();
         _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
         _timer.Tick += new EventHandler(cdmTextBox_KeyUpDone);
-        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     private void ChargeEntryForm_Load(object sender, EventArgs e)

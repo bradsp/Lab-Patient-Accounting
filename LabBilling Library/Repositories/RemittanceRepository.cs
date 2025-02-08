@@ -8,6 +8,7 @@ using LabBilling.Core.Models;
 using PetaPoco;
 using NLog;
 using LabBilling.Logging;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.Repositories;
 
@@ -17,9 +18,10 @@ public sealed class RemittanceRepository : RepositoryBase<RemittanceFile>
     {
     }
 
-    public List<RemittanceFile> GetRemittances(bool includePosted = false)
+    public List<RemittanceFile> GetRemittances(bool includePosted = false, IUnitOfWork uow = null)
     {
         Log.Instance.Trace("Entering");
+        uow ??= new UnitOfWorkMain(AppEnvironment.ConnectionString);
         PetaPoco.Sql sql = PetaPoco.Sql.Builder;
 
         if (includePosted)

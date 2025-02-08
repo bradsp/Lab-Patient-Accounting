@@ -20,7 +20,7 @@ public partial class HealthPlanMaintenanceForm : Form
         _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerDelay };
         _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
 
-        dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+        dictionaryService = new(Program.AppEnvironment);
     }
 
     private void HealthPlanMaintenanceForm_Load(object sender, EventArgs e)

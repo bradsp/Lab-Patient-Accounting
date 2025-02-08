@@ -20,7 +20,7 @@ public partial class AuditReportMaintenanceForm : Form
 
     private void AuditReportMaintenanceForm_Load(object sender, EventArgs e)
     {
-        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _dictionaryService = new(Program.AppEnvironment);
         //load grid
         try
         {

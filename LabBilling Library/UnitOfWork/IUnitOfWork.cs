@@ -11,6 +11,8 @@ namespace LabBilling.Core.UnitOfWork
         void Commit();
         void Rollback();
         void StartTransaction();
+        TRepository GetRepository<TRepository>(bool useNewContext = false) where TRepository : class;
+        IDatabase CreateNewContext(string connectionString);
 
         AccountRepository AccountRepository { get; }
         AccountAlertRepository AccountAlertRepository { get; }

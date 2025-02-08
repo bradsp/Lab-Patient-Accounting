@@ -11,20 +11,21 @@ namespace LabBilling.Core.Services;
 public sealed class NotesImportService
 {
     private IAppEnvironment appEnvironment;
-    private readonly IUnitOfWork _uow;
-    public NotesImportService(IAppEnvironment appEnvironment, IUnitOfWork uow)
+
+    public NotesImportService(IAppEnvironment appEnvironment)
     {
         ArgumentNullException.ThrowIfNull(appEnvironment);
         if (!appEnvironment.EnvironmentValid) throw new ArgumentException("App Environment is not valid.");
 
         this.appEnvironment = appEnvironment;
-        _uow = uow;
+
     }
-    public void ImportNotes(string fileName)
+    public void ImportNotes(string fileName, IUnitOfWork uow = null)
     {
-        using (StreamReader reader = new StreamReader(fileName))
+        uow ??= new UnitOfWorkMain(appEnvironment.ConnectionString);
+        using (StreamReader reader = new(fileName))
         {
-            _uow.StartTransaction();
+            uow.StartTransaction();
             string line;
             try
             {
@@ -43,10 +44,10 @@ public sealed class NotesImportService
                         string comment = $"{noteDate} - {fields[5]}";
                         accountNote.Comment = comment;
 
-                        _uow.AccountNoteRepository.Add(accountNote);
+                        uow.AccountNoteRepository.Add(accountNote);
                     }
                 }
-                _uow.Commit();
+                uow.Commit();
             }
             catch(Exception ex)
             {

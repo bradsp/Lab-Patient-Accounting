@@ -9,7 +9,7 @@ using Utilities;
 namespace LabBilling.Forms;
 public partial class ProcessRemittanceForm : Form
 {
-    private readonly Remittance835Service remittanceService = new(Program.AppEnvironment, Program.UnitOfWork);
+    private readonly Remittance835Service remittanceService = new(Program.AppEnvironment);
     private readonly BindingSource remittanceBindingSource = new();
     private readonly ProgressBar progressBar;
     private readonly Label progressLabel;

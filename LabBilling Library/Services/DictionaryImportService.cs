@@ -17,20 +17,20 @@ public class DictionaryImportService
 {
     public delegate void RecordProcessedHandler(object source, RecordProcessedArgs args);
     public event RecordProcessedHandler RecordProcessed;
-    private readonly IUnitOfWork _uow;
 
-    public DictionaryImportService(IAppEnvironment appEnvironment, IUnitOfWork uow)
+    public DictionaryImportService(IAppEnvironment appEnvironment)
     {
-        _uow = uow;
+
     }
 
-    public void ImportICD(string filename, string year, IAppEnvironment appEnvironment)
+    public void ImportICD(string filename, string year, IAppEnvironment appEnvironment, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(appEnvironment);
+        uow.StartTransaction();
 
-        List<IcdLines> icdLines = new List<IcdLines>();
+        List<IcdLines> icdLines = new();
 
-        if(_uow.DictDxRepository.AMAYearExists(year))
+        if(uow.DictDxRepository.AMAYearExists(year))
         {
             return;
         }
@@ -64,13 +64,13 @@ public class DictionaryImportService
                     };
 
                     //add icd to database
-                    _uow.DictDxRepository.Add(icd2);
+                    uow.DictDxRepository.Add(icd2);
                     
                     RecordProcessed?.Invoke(this, new RecordProcessedArgs() { RecordsProcessed = processed++, IcdCode = icd2.DxCode });
                 }
             }
 
-            _uow.Commit();
+            uow.Commit();
         }
         catch (Exception ex)
         {
