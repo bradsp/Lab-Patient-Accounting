@@ -50,7 +50,7 @@ public sealed class AccountRepository : RepositoryBase<Account>, IRepositoryBase
     {
         Log.Instance.Trace("Entering");
 
-        var sql = PetaPoco.Sql.Builder
+        PetaPoco.Sql sql = PetaPoco.Sql.Builder
             .Select(GetRealColumn(nameof(Account.AccountNo)))
             .From(_tableName)
             .Where($"{GetRealColumn(nameof(Account.Status))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status })

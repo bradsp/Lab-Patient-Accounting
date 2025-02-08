@@ -54,23 +54,22 @@ public sealed class Remittance835Service
 {
     private readonly IAppEnvironment _appEnvironment;
     private readonly List<string> _errors = new();
-    private readonly IUnitOfWork _uow;
 
     public List<string> Errors { get { return _errors; } }
 
-    public Remittance835Service(IAppEnvironment appEnvironment, IUnitOfWork uow)
+    public Remittance835Service(IAppEnvironment appEnvironment)
     {
         _appEnvironment = appEnvironment;
-        _uow = uow;
     }
 
-    public void UpdateRemittance(RemittanceFile remittanceFile)
+    public void UpdateRemittance(RemittanceFile remittanceFile, IUnitOfWork uow = null)
     {
         try
         {
-            _uow.StartTransaction();
-            _uow.RemittanceRepository.Update(remittanceFile);
-            _uow.Commit();
+            uow ??= new UnitOfWorkMain(_appEnvironment);
+            uow.StartTransaction();
+            uow.RemittanceRepository.Update(remittanceFile);
+            uow.Commit();
         }
         catch (Exception ex)
         {
@@ -78,23 +77,24 @@ public sealed class Remittance835Service
         }
     }
 
-    public bool DeleteRemittance(RemittanceFile remittance)
+    public bool DeleteRemittance(RemittanceFile remittance, IUnitOfWork uow = null)
     {
         try
         {
+            uow ??= new UnitOfWorkMain(_appEnvironment);
             foreach (var claim in remittance.Claims)
             {
                 foreach (var detail in claim.ClaimDetails)
                 {
                     foreach (var adj in detail.Adjustments)
                     {
-                        _uow.RemittanceClaimAdjustmentRepository.Delete(adj);
+                        uow.RemittanceClaimAdjustmentRepository.Delete(adj);
                     }
-                    _uow.RemittanceClaimDetailRepository.Delete(detail);
+                    uow.RemittanceClaimDetailRepository.Delete(detail);
                 }
-                _uow.RemittanceClaimRepository.Delete(claim);
+                uow.RemittanceClaimRepository.Delete(claim);
             }
-            _uow.RemittanceRepository.Delete(remittance);
+            uow.RemittanceRepository.Delete(remittance);
             return true;
         }
         catch (Exception ex)
@@ -104,24 +104,26 @@ public sealed class Remittance835Service
         }
     }
 
-    public RemittanceFile GetRemittanceByFileName(string filename)
+    public RemittanceFile GetRemittanceByFileName(string filename, IUnitOfWork uow = null)
     {
-        return _uow.RemittanceRepository.GetByFilename(filename);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.RemittanceRepository.GetByFilename(filename);
     }
 
-    public RemittanceData ReimportRemittance(int remittanceId)
+    public RemittanceData ReimportRemittance(int remittanceId, IUnitOfWork uow = null)
     {
         //delete existing RemittanceFile records
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         try
         {
-            var remit = GetRemittance(remittanceId);
+            var remit = GetRemittance(remittanceId, uow);
             var filename = Path.Combine(_appEnvironment.ApplicationParameters.RemitImportDirectory, "archive", remit.FileName);
-            this.DeleteRemittance(remit);
+            this.DeleteRemittance(remit, uow);
 
-            RemittanceData remittance = Load835(filename);
+            RemittanceData remittance = Load835(filename, uow);
 
-            _uow.Commit();
+            uow.Commit();
             return remittance;
         }
         catch (Exception ex)
@@ -131,8 +133,9 @@ public sealed class Remittance835Service
         }
     }
 
-    public RemittanceData Load835(string fileName)
+    public RemittanceData Load835(string fileName, IUnitOfWork uow = null)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         EdiDocument ediDocument;
         string logfile = "c:\\temp\\edi.log";
 
@@ -470,7 +473,7 @@ public sealed class Remittance835Service
             remittance.Loop2000s.Add(loop2000);
         }
 
-        StoreRemittanceData(remittance, fileName);
+        StoreRemittanceData(remittance, fileName, uow);
         return remittance;
     }
 
@@ -627,7 +630,7 @@ public sealed class Remittance835Service
 
     public string ConvertRemittanceDataToHtml(RemittanceData remittanceData)
     {
-        DictionaryService dictService = new(_appEnvironment, _uow);
+        DictionaryService dictService = new(_appEnvironment);
         Dictionary<string, string> COadjustmentCodes = [];
         Dictionary<string, string> PRadjustmentCodes = [];
 
@@ -826,11 +829,12 @@ public sealed class Remittance835Service
     }
 
 
-    public bool IsRemittancePosted(int remittanceId)
+    public bool IsRemittancePosted(int remittanceId, IUnitOfWork uow)
     {
-        var remittance = _uow.RemittanceRepository.GetByKey(remittanceId);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var remittance = uow.RemittanceRepository.GetByKey(remittanceId);
         //if there are Chk entries with the same check number, remittance has been posted.
-        var payments = _uow.ChkRepository.GetByCheckNo(remittance.TransactionTraceNumber);
+        var payments = uow.ChkRepository.GetByCheckNo(remittance.TransactionTraceNumber);
         if (payments.Count > 0)
             return true;
         else
@@ -838,10 +842,11 @@ public sealed class Remittance835Service
 
     }
 
-    private void StoreRemittanceData(RemittanceData remittanceData, string fileName)
+    private void StoreRemittanceData(RemittanceData remittanceData, string fileName, IUnitOfWork uow)
     {
         try
         {
+            uow ??= new UnitOfWorkMain(_appEnvironment);
             var remittanceFile = new RemittanceFile
             {
                 FileName = Path.GetFileName(fileName), // Set appropriate file name
@@ -911,25 +916,25 @@ public sealed class Remittance835Service
             }
 
             //Save the remittance file and related data
-            _uow.StartTransaction();
-            var remit = _uow.RemittanceRepository.Add(remittanceFile);
+            uow.StartTransaction();
+            var remit = uow.RemittanceRepository.Add(remittanceFile);
 
             foreach (var claim in remittanceFile.Claims)
             {
                 claim.RemittanceId = remit.RemittanceId;
-                var newclaim = _uow.RemittanceClaimRepository.Add(claim);
+                var newclaim = uow.RemittanceClaimRepository.Add(claim);
                 foreach (var detail in claim.ClaimDetails)
                 {
                     detail.RemittanceClaimId = newclaim.ClaimId;
-                    var newdetail = _uow.RemittanceClaimDetailRepository.Add(detail);
+                    var newdetail = uow.RemittanceClaimDetailRepository.Add(detail);
                     foreach (var adjustment in detail.Adjustments)
                     {
                         adjustment.RemittanceClaimDetailId = newdetail.Id;
-                        _uow.RemittanceClaimAdjustmentRepository.Add(adjustment);
+                        uow.RemittanceClaimAdjustmentRepository.Add(adjustment);
                     }
                 }
             }
-            _uow.Commit();
+            uow.Commit();
         }
         catch (Exception ex)
         {
@@ -939,30 +944,35 @@ public sealed class Remittance835Service
     }
 
     //add GetAllRemittancesAsync method that is a Task wrapper for GetAllRemittances
-    public async Task<List<RemittanceFile>> GetAllRemittancesAsync() => await Task.Run(() => GetAllRemittances());
+    public async Task<List<RemittanceFile>> GetAllRemittancesAsync(IUnitOfWork uow) => await Task.Run(() => GetAllRemittances(true, uow));
 
 
-    public List<RemittanceFile> GetAllRemittances(bool includePosted = true) => _uow.RemittanceRepository.GetRemittances(includePosted);
+    public List<RemittanceFile> GetAllRemittances(bool includePosted = true, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.RemittanceRepository.GetRemittances(includePosted);
+    }
 
     //add GetRemittanceAsync method that is a Task wrapper for GetRemittance
-    public async Task<RemittanceFile> GetRemittanceAsync(int remittanceId) => await Task.Run(() => GetRemittance(remittanceId));
+    public async Task<RemittanceFile> GetRemittanceAsync(int remittanceId, IUnitOfWork uow = null) => await Task.Run(() => GetRemittance(remittanceId, uow));
 
 
-    public RemittanceFile GetRemittance(int remittanceId)
+    public RemittanceFile GetRemittance(int remittanceId, IUnitOfWork uow = null)
     {
-        var remit = _uow.RemittanceRepository.GetByKey(remittanceId);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var remit = uow.RemittanceRepository.GetByKey(remittanceId);
         if (remit == null)
             return null;
 
-        remit.Claims = _uow.RemittanceClaimRepository.GetByRemitId(remittanceId).ToList();
+        remit.Claims = uow.RemittanceClaimRepository.GetByRemitId(remittanceId).ToList();
 
         foreach (var claim in remit.Claims)
         {
-            claim.ClaimDetails = _uow.RemittanceClaimDetailRepository.GetByClaimId(claim.ClaimId).ToList();
-            claim.PatientName = _uow.AccountRepository.GetByAccount(claim.AccountNo)?.PatFullName;
+            claim.ClaimDetails = uow.RemittanceClaimDetailRepository.GetByClaimId(claim.ClaimId).ToList();
+            claim.PatientName = uow.AccountRepository.GetByAccount(claim.AccountNo)?.PatFullName;
             foreach (var detail in claim.ClaimDetails)
             {
-                detail.Adjustments = _uow.RemittanceClaimAdjustmentRepository.GetByClaimDetailId(detail.Id).ToList();
+                detail.Adjustments = uow.RemittanceClaimAdjustmentRepository.GetByClaimDetailId(detail.Id).ToList();
             }
         }
 
@@ -976,17 +986,18 @@ public sealed class Remittance835Service
         public string ErrorMessage { get; set; }
     }
 
-    public async Task<OperationResult> HandleRemittanceAsync(int remittanceId, bool isPosting, IProgress<ProgressReportModel> progress)
+    public async Task<OperationResult> HandleRemittanceAsync(int remittanceId, bool isPosting, IProgress<ProgressReportModel> progress, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"{(isPosting ? "Post" : "Unpost")}RemittanceAsync called with remittanceId {remittanceId}");
-        AccountService accountService = new(_appEnvironment, _uow);
-        var remittance = this.GetRemittance(remittanceId);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        AccountService accountService = new(_appEnvironment);
+        var remittance = this.GetRemittance(remittanceId, uow);
         if (remittance == null)
         {
             return new OperationResult { Success = false, ErrorMessage = $"Remittance {remittanceId} not found" };
         }
 
-        if (isPosting && IsRemittancePosted(remittanceId))
+        if (isPosting && IsRemittancePosted(remittanceId, uow))
         {
             Log.Instance.Error($"Remittance {remittanceId} has already been posted");
             return new OperationResult { Success = false, ErrorMessage = $"Remittance {remittanceId} has already been posted" };
@@ -1003,7 +1014,7 @@ public sealed class Remittance835Service
 
         try
         {
-            _uow.StartTransaction();
+            uow.StartTransaction();
             double total_paid = 0;
             double total_contractual = 0;
             double total_patient_responsibility = 0;
@@ -1032,7 +1043,7 @@ public sealed class Remittance835Service
                     total_contractual += isPosting ? Convert.ToDouble(claim.ClaimChargeAmount) - Convert.ToDouble(claim.ClaimPaymentAmount) : -(Convert.ToDouble(claim.ClaimChargeAmount) - Convert.ToDouble(claim.ClaimPaymentAmount));
                     total_patient_responsibility += isPosting ? Convert.ToDouble(claim.PatientResponsibilityAmount) : -Convert.ToDouble(claim.PatientResponsibilityAmount);
 
-                    await _uow.ChkRepository.AddAsync(chk);
+                    await uow.ChkRepository.AddAsync(chk);
                 }
                 else
                 {
@@ -1057,7 +1068,7 @@ public sealed class Remittance835Service
                             EftDate = remittance.ProcessedDate,
                             Status = "NEW"
                         };
-                        await _uow.ChkRepository.AddAsync(chk);
+                        await uow.ChkRepository.AddAsync(chk);
 
                         foreach (var adj in detail.Adjustments)
                         {
@@ -1100,7 +1111,7 @@ public sealed class Remittance835Service
                                 EftDate = remittance.ProcessedDate,
                                 Status = "NEW"
                             };
-                            await _uow.ChkRepository.AddAsync(adjchk);
+                            await uow.ChkRepository.AddAsync(adjchk);
                         }
 
                         total_paid += isPosting ? Convert.ToDouble(detail.MonetaryAmount) : -Convert.ToDouble(detail.MonetaryAmount);
@@ -1111,11 +1122,11 @@ public sealed class Remittance835Service
 
                 if (isPosting)
                 {
-                    accountService.AddNote(claim.AccountNo, $"Remittance {remittanceId} posted for claim {claim.AccountNo} with total paid amount of {total_paid}, total contractual amount of {total_contractual}, and total patient responsibility of {total_patient_responsibility}");
+                    accountService.AddNote(claim.AccountNo, $"Remittance {remittanceId} posted for claim {claim.AccountNo} with total paid amount of {total_paid}, total contractual amount of {total_contractual}, and total patient responsibility of {total_patient_responsibility}", uow);
                 }
                 else
                 {
-                    accountService.AddNote(claim.AccountNo, $"Remittance {remittanceId} unposted for claim {claim.AccountNo} with total paid amount of {total_paid}, total contractual amount of {total_contractual}, and total patient responsibility of {total_patient_responsibility}");
+                    accountService.AddNote(claim.AccountNo, $"Remittance {remittanceId} unposted for claim {claim.AccountNo} with total paid amount of {total_paid}, total contractual amount of {total_contractual}, and total patient responsibility of {total_patient_responsibility}", uow);
                 }
 
                 total_paid = 0;
@@ -1145,8 +1156,8 @@ public sealed class Remittance835Service
                 remittance.PostingHost = null;
             }
 
-            _uow.RemittanceRepository.Update(remittance);
-            _uow.Commit();
+            uow.RemittanceRepository.Update(remittance);
+            uow.Commit();
 
             return new OperationResult { Success = true };
         }
@@ -1158,9 +1169,10 @@ public sealed class Remittance835Service
     }
 
     // New method to reimport all unposted remittances
-    public async Task<List<OperationResult>> ReimportUnpostedRemittancesAsync(IProgress<ProgressReportModel> progress = null)
+    public async Task<List<OperationResult>> ReimportUnpostedRemittancesAsync(IProgress<ProgressReportModel> progress = null, IUnitOfWork uow = null)
     {
-        var unpostedRemittances = GetAllRemittances(includePosted: false);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var unpostedRemittances = GetAllRemittances(includePosted: false, uow);
         var results = new List<OperationResult>();
         int total = unpostedRemittances.Count;
         int count = 0;
@@ -1169,7 +1181,7 @@ public sealed class Remittance835Service
         {
             try
             {
-                await Task.Run(() => ReimportRemittance(remittance.RemittanceId));
+                await Task.Run(() => ReimportRemittance(remittance.RemittanceId, uow));
                 results.Add(new OperationResult { Success = true });
 
                 Log.Instance.Info($"Successfully reimported remittance {remittance.RemittanceId}");

@@ -18,7 +18,7 @@ public partial class InterfaceMonitor : Form
     public InterfaceMonitor()
     {
         InitializeComponent();
-        _processorService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _processorService = new(Program.AppEnvironment);
         _timer = new Timer();
     }
 
@@ -136,7 +136,7 @@ public partial class InterfaceMonitor : Form
 
             if (okToProcess)
             {
-                HL7ProcessorService hL7Processor = new HL7ProcessorService(Program.AppEnvironment, Program.UnitOfWork);
+                HL7ProcessorService hL7Processor = new (Program.AppEnvironment);
                 Cursor.Current = Cursors.WaitCursor;
                 hL7Processor.ProcessMessage(msgID);
 

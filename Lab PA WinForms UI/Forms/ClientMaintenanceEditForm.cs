@@ -21,7 +21,7 @@ public partial class ClientMaintenanceEditForm : Form
     public ClientMaintenanceEditForm()
     {
         InitializeComponent();
-        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     private void btnSave_Click(object sender, EventArgs e)

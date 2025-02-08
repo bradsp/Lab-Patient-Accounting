@@ -12,16 +12,15 @@ namespace LabBilling.Core.Services;
 public class WorklistService
 {
     private readonly AppEnvironment _appEnvironment;
-    private readonly IUnitOfWork _uow;
 
-    public WorklistService(AppEnvironment appEnvironment, IUnitOfWork uow)
+    public WorklistService(AppEnvironment appEnvironment)
     {
         this._appEnvironment = appEnvironment;
-        _uow = uow;
     }
 
-    public async Task<List<AccountSearch>> GetAccountsForWorklistAsync(string selectedQueue)
+    public async Task<List<AccountSearch>> GetAccountsForWorklistAsync(string selectedQueue, IUnitOfWork uow  = null)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         DateTime thruDate = DateTime.Today.AddDays(_appEnvironment.ApplicationParameters.BillingInitialHoldDays * -1);
         (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters =
         {
@@ -163,7 +162,7 @@ public class WorklistService
         }
         var accounts = (List<AccountSearch>)await Task.Run(() =>
         {
-            return _uow.AccountSearchRepository.GetBySearch(parameters);
+            return uow.AccountSearchRepository.GetBySearch(parameters);
         });
 
 

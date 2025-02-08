@@ -19,7 +19,7 @@ public partial class ChargeMaintenanceUC : UserControl
         {
             InitializeComponent();
             _grouper = new(ChargesDataGrid);
-            _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
+            _accountService = new(Program.AppEnvironment);
         }
     }
 
@@ -350,7 +350,16 @@ public partial class ChargeMaintenanceUC : UserControl
 
         if (frm.ShowDialog() == DialogResult.OK)
         {
-            CurrentAccount = _accountService.AddCharge(CurrentAccount, frm.SelectedCdm, (int)frm.Quantity, CurrentAccount.TransactionDate, frm.Comment, frm.ReferenceNumber, frm.Amount);
+            CurrentAccount = _accountService.AddCharge(new AddChargeParameters()
+            {
+                Account = CurrentAccount,
+                Cdm = frm.SelectedCdm,
+                Quantity = (int)frm.Quantity,
+                ServiceDate = CurrentAccount.TransactionDate,
+                Comment = frm.Comment,
+                RefNumber = frm.ReferenceNumber,
+                MiscAmount = frm.Amount
+            });
             ChargesUpdated?.Invoke(this, EventArgs.Empty);
         }
     }

@@ -10,8 +10,8 @@ namespace LabBilling.Forms;
 
 public partial class WorkListForm : Form
 {
-    private readonly AccountService _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
-    private readonly WorklistService _worklist = new(Program.AppEnvironment, Program.UnitOfWork);
+    private readonly AccountService _accountService = new(Program.AppEnvironment);
+    private readonly WorklistService _worklist = new(Program.AppEnvironment);
     private readonly bool _tasksRunning = false;
     private bool _requestAbort = false;
     private readonly BindingSource _accountBindingSource = new();

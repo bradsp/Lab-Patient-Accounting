@@ -1,12 +1,8 @@
 ﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
-using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,95 +13,104 @@ namespace LabBilling.Core.Services;
 public class DictionaryService
 {
     private readonly IAppEnvironment _appEnvironment;
-    private readonly IUnitOfWork _uow;
 
-    public DictionaryService(IAppEnvironment appEnvironment, IUnitOfWork uow)
+    public DictionaryService(IAppEnvironment appEnvironment)
     {
         this._appEnvironment = appEnvironment;
-        _uow = uow;
     }
 
-    public string GetCptAmaDescription(string cptCode)
+    public string GetCptAmaDescription(string cptCode, IUnitOfWork uow = null)
     {
-        var cpt = _uow.CptAmaRepository.GetCpt(cptCode);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var cpt = uow.CptAmaRepository.GetCpt(cptCode);
 
         return cpt?.ShortDescription;
     }
 
-    public Cdm SaveCdm(Cdm cdm)
+    public Cdm SaveCdm(Cdm cdm, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         Cdm returnCdm;
 
-        if (_uow.CdmRepository.GetCdm(cdm.ChargeId, true) != null)
+        if (uow.CdmRepository.GetCdm(cdm.ChargeId, true) != null)
         {
-            returnCdm = UpdateCdm(cdm);
+            returnCdm = UpdateCdm(uow, cdm);
         }
         else
         {
-            returnCdm = AddCdm(cdm); 
+            returnCdm = AddCdm(uow, cdm);
         }
 
-        _uow.Commit();
+        uow.Commit();
         return returnCdm;
     }
 
-    public Cdm GetCdm(string cdm, bool includeDeleted = false)
+    public Cdm GetCdm(string cdm) => GetCdm(cdm, false, null);
+    public Cdm GetCdm(string cdm, IUnitOfWork uow = null) => GetCdm(cdm, false, uow);
+    public Cdm GetCdm(string cdm, bool includeDeleted, IUnitOfWork uow = null)
     {
-        var record = _uow.CdmRepository.GetCdm(cdm, includeDeleted);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var record = uow.GetRepository<CdmRepository>(true).GetCdm(cdm, includeDeleted);
         if (record != null)
         {
-            record.CdmDetails = _uow.CdmDetailRepository.GetByCdm(cdm);
+            record.CdmDetails = uow.GetRepository<CdmDetailRepository>(true).GetByCdm(cdm);
         }
 
         return record;
     }
 
-    public IList<Cdm> GetCdmByCpt(string cpt)
+    public IList<Cdm> GetCdmByCpt(string cpt, IUnitOfWork uow = null)
     {
-        var cdmDetails = _uow.CdmDetailRepository.GetByCpt(cpt);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var cdmDetails = uow.GetRepository<CdmDetailRepository>(true).GetByCpt(cpt);
         List<string> distinctCdms = cdmDetails.Select(c => c.ChargeItemId).Distinct().ToList();
 
-        var results = _uow.CdmRepository.GetCdm(distinctCdms);
-        results.ForEach(c => c.CdmDetails = _uow.CdmDetailRepository.GetByCdm(c.ChargeId));
+        var results = uow.GetRepository<CdmRepository>(true).GetCdm(distinctCdms);
+        results.ForEach(c => c.CdmDetails = uow.GetRepository<CdmDetailRepository>(true).GetByCdm(c.ChargeId));
 
         return results;
     }
 
-    public List<Cdm> GetAllCdms(bool includeDeleted = false) => _uow.CdmRepository.GetAll(includeDeleted);
-
-
-    public Cdm UpdateCdm(Cdm cdm)
+    public List<Cdm> GetAllCdms(bool includeDeleted = false, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.CdmRepository.GetAll(includeDeleted);
+    }
+
+
+    public Cdm UpdateCdm(IUnitOfWork uow, Cdm cdm)
+    {
+        uow.StartTransaction();
         //update all fee schedules as well
-        _uow.CdmDetailRepository.Delete(cdm.ChargeId);
+        uow.CdmDetailRepository.Delete(cdm.ChargeId);
 
-        cdm.CdmDetails.ForEach(cd => _uow.CdmDetailRepository.Save(cd));
+        cdm.CdmDetails.ForEach(cd => uow.CdmDetailRepository.Save(cd));
 
-        var retval = _uow.CdmRepository.Update(cdm);
+        var retval = uow.CdmRepository.Update(cdm);
 
-        _uow.Commit();
+        uow.Commit();
         return retval;
     }
 
-    public Cdm AddCdm(Cdm cdm)
+    public Cdm AddCdm(IUnitOfWork uow, Cdm cdm)
     {
-        _uow.StartTransaction();
+        uow.StartTransaction();
         //update all fee schedules as well
-        cdm.CdmDetails.ForEach(cd => _uow.CdmDetailRepository.Save(cd));
-        var retval = _uow.CdmRepository.Add(cdm);
+        cdm.CdmDetails.ForEach(cd => uow.CdmDetailRepository.Save(cd));
+        var retval = uow.CdmRepository.Add(cdm);
 
-        _uow.Commit();
+        uow.Commit();
         return retval;
     }
 
-    public InsCompany GetInsCompany(string code)
+    public InsCompany GetInsCompany(string code, IUnitOfWork uow = null)
     {
-        return _uow.InsCompanyRepository.GetByCode(code);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.InsCompanyRepository.GetByCode(code);
     }
-    
-    public InsCompany GetInsCompanyByCode(string code)
+
+    public InsCompany GetInsCompanyByCode(IUnitOfWork uow, string code)
     {
         Logging.Log.Instance.Debug($"Entering");
 
@@ -114,66 +119,69 @@ public class DictionaryService
             Log.Instance.Error("Null value passed to InsCompanyRepository GetByCode.");
             return new InsCompany();
         }
-        var record = _uow.InsCompanyRepository.GetByCode(code);
+        var record = uow.InsCompanyRepository.GetByCode(code);
 
         if (record != null)
         {
-            record.Mappings = GetMappingsBySendingValue("INS_CODE", record.InsuranceCode).ToList();
+            record.Mappings = GetMappingsBySendingValue(uow, "INS_CODE", record.InsuranceCode).ToList();
         }
 
         return record;
     }
 
-    public List<InsCompany> GetInsCompanies(bool excludeDeleted = true)
+    public List<InsCompany> GetInsCompanies(bool excludeDeleted = true, IUnitOfWork uow = null)
     {
-        return _uow.InsCompanyRepository.GetAll(excludeDeleted);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.InsCompanyRepository.GetAll(excludeDeleted);
     }
 
-    public InsCompany SaveInsCompany(InsCompany insCompany)
+    public InsCompany SaveInsCompany(InsCompany insCompany, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
-        var insc = GetInsCompany(insCompany.InsuranceCode);
+        var insc = GetInsCompany(insCompany.InsuranceCode, uow);
 
         if (insc == null)
         {
-            insc = _uow.InsCompanyRepository.Add(insCompany);
+            insc = uow.InsCompanyRepository.Add(insCompany);
         }
         else
         {
-            insc = _uow.InsCompanyRepository.Update(insCompany);
+            insc = uow.InsCompanyRepository.Update(insCompany);
         }
 
-        _uow.Commit();
+        uow.Commit();
         return insc;
 
     }
 
-    public async Task<List<Client>> GetAllClientsAsync(bool includeDeleted = false) => await Task.Run(() => GetAllClients(includeDeleted));
+    public async Task<List<Client>> GetAllClientsAsync(IUnitOfWork uow, bool includeDeleted = false) => await Task.Run(() => GetAllClients(uow, includeDeleted));
 
-    public List<Client> GetAllClients(bool includeDeleted = false)
+    public List<Client> GetAllClients(IUnitOfWork uow, bool includeDeleted = false)
     {
-        return _uow.ClientRepository.GetAll(includeDeleted);
+        return uow.ClientRepository.GetAll(includeDeleted);
     }
 
-    public Client SaveClient(Client client)
+    public Client SaveClient(Client client, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
         //bool success;
 
         if (client.Id > 0) // existing record
         {
-            _uow.ClientDiscountRepository.SaveAll(client.Discounts);
-            client = _uow.ClientRepository.Update(client);
+            uow.ClientDiscountRepository.SaveAll(client.Discounts);
+            client = uow.ClientRepository.Update(client);
         }
         else
         {
             try
             {
-                client = _uow.ClientRepository.Add(client);
+                client = uow.ClientRepository.Add(client);
                 if (client.Discounts != null)
-                    _uow.ClientDiscountRepository.SaveAll(client.Discounts);
+                    uow.ClientDiscountRepository.SaveAll(client.Discounts);
             }
             catch (Exception ex)
             {
@@ -182,45 +190,46 @@ public class DictionaryService
             }
         }
 
-        _uow.Commit();
+        uow.Commit();
         return client;
     }
 
-    public Client GetClient(string clientMnem)
+    public Client GetClient(string clientMnem, IUnitOfWork uow = null)
     {
-        var record = _uow.ClientRepository.GetClient(clientMnem);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var record = uow.ClientRepository.GetClient(clientMnem);
         if (record != null)
         {
-            record.Discounts = GetClientDiscounts(clientMnem).ToList();
-            record.Discounts?.ForEach(d => d.CdmDescription = GetCdm(d?.Cdm)?.Description);
-            record.ClientType = GetClientType(record.Type);
-            record.Mappings = GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
+            record.Discounts = GetClientDiscounts(uow, clientMnem).ToList();
+            record.Discounts?.ForEach(d => d.CdmDescription = GetCdm(d?.Cdm, uow)?.Description);
+            record.ClientType = GetClientType(record.Type, uow);
+            record.Mappings = GetMappingsBySendingValue(uow, "CLIENT", record.ClientMnem).ToList();
         }
         return record;
     }
 
-    public object AddClient(Client client)
+    public object AddClient(IUnitOfWork uow, Client client)
     {
-        _uow.StartTransaction();
+        uow.StartTransaction();
 
-        var retval = _uow.ClientRepository.Add(client);
+        var retval = uow.ClientRepository.Add(client);
 
-        var account = _uow.AccountRepository.GetByAccount(client.ClientMnem);
+        var account = uow.AccountRepository.GetByAccount(client.ClientMnem);
 
         if (account == null)
         {
-            AddClientAccount(client.ClientMnem);
+            AddClientAccount(uow, client.ClientMnem);
         }
 
-        _uow.Commit();
+        uow.Commit();
         return retval;
     }
 
-    public object AddClientAccount(string clientMnem)
+    public object AddClientAccount(IUnitOfWork uow, string clientMnem)
     {
-        var client = GetClient(clientMnem);
+        var client = GetClient(clientMnem, uow);
 
-        var account = _uow.AccountRepository.GetByAccount(client.ClientMnem);
+        var account = uow.AccountRepository.GetByAccount(client.ClientMnem);
         object retval = null;
         if (account == null)
         {
@@ -236,103 +245,158 @@ public class DictionaryService
                 MeditechAccount = client.ClientMnem
             };
 
-            retval = _uow.AccountRepository.Add(account);
+            retval = uow.AccountRepository.Add(account);
         }
 
         return retval;
 
     }
 
-    public List<GLCode> GetGLCodes() => _uow.GLCodeRepository.GetAll();
-
-
-    public List<Announcement> GetActiveAnnouncements() => _uow.AnnouncementRepository.GetActive();
-
-    public IList<Fin> GetFinancialCodes(bool includeDeleted = false)
+    public List<GLCode> GetGLCodes(IUnitOfWork uow = null)
     {
-        if (includeDeleted)
-            return _uow.FinRepository.GetAll();
-        else
-            return _uow.FinRepository.GetActive();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.GLCodeRepository.GetAll();
     }
 
-    public Fin GetFinCode(string finCode) => _uow.FinRepository.GetFin(finCode);
+
+    public List<Announcement> GetActiveAnnouncements(IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.AnnouncementRepository.GetActive();
+    }
+
+    public IList<Fin> GetFinancialCodes() => GetFinancialCodes(false, null);
+    public IList<Fin> GetFinancialCodes(bool includeDeleted = false, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        if (includeDeleted)
+            return uow.FinRepository.GetAll();
+        else
+            return uow.FinRepository.GetActive();
+    }
+
+    public Fin GetFinCode(IUnitOfWork uow, string finCode) => uow.FinRepository.GetFin(finCode);
 
 
     #region Mappings
 
-    public IEnumerable<Mapping> GetMappingsBySendingValue(string returnValueType, string sendingValue) => _uow.MappingRepository.GetMappingsBySendingValue(returnValueType, sendingValue);
+    public IEnumerable<Mapping> GetMappingsBySendingValue(IUnitOfWork uow, string returnValueType, string sendingValue) => uow.MappingRepository.GetMappingsBySendingValue(returnValueType, sendingValue);
 
-    public IList<string> GetMappingsReturnTypeList() => _uow.MappingRepository.GetReturnTypeList();
+    public IList<string> GetMappingsReturnTypeList(IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.MappingRepository.GetReturnTypeList();
+    }
 
-    public IList<string> GetMappingsSendingSystemList() => _uow.MappingRepository.GetSendingSystemList();
+    public IList<string> GetMappingsSendingSystemList(IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.MappingRepository.GetSendingSystemList();
+    }
 
-    public IList<Mapping> GetMappings(string returnType, string sendingSystem) => _uow.MappingRepository.GetMappings(returnType, sendingSystem).ToList();
+    public IList<Mapping> GetMappings(string returnType, string sendingSystem, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.MappingRepository.GetMappings(returnType, sendingSystem).ToList();
+    }
 
 
     #endregion Mappings
 
-    public IList<WriteOffCode> GetWriteOffCodes() => _uow.WriteOffCodeRepository.GetAll();
- 
+    public IList<WriteOffCode> GetWriteOffCodes(IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.WriteOffCodeRepository.GetAll();
+    }
+
 
     #region Provider (Phy)
-    public Phy GetProvider(string npi) => _uow.PhyRepository.GetByNPI(npi);
- 
-    public List<Phy> SearchProviderByName(string lastName, string firstName) => _uow.PhyRepository.GetByName(lastName, firstName);
-
-    public Phy SaveProvider(Phy phy)
+    public Phy GetProvider(string npi, IUnitOfWork uow = null)
     {
-        var retval = _uow.PhyRepository.Save(phy);
-        _uow.Commit();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.PhyRepository.GetByNPI(npi);
+    }
+
+
+    public List<Phy> SearchProviderByName(string lastName, string firstName, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.PhyRepository.GetByName(lastName, firstName);
+    }
+
+    public Phy SaveProvider(Phy phy, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var retval = uow.PhyRepository.Save(phy);
+        uow.Commit();
 
         return retval;
     }
     #endregion Provider (Phy)
 
 
-    public RevenueCode GetRevenueCode(string code) => _uow.RevenueCodeRepository.GetByCode(code);
+    public RevenueCode GetRevenueCode(IUnitOfWork uow, string code) => uow.RevenueCodeRepository.GetByCode(code);
 
-    public ClientType GetClientType(int type) => _uow.ClientTypeRepository.GetByType(type);
+    public ClientType GetClientType(int type, IUnitOfWork uow)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.ClientTypeRepository.GetByType(type);
+    }
 
-    public IList<ClientDiscount> GetClientDiscounts(string clientMnem, bool includeDeleted = false) => _uow.ClientDiscountRepository.GetByClient(clientMnem, includeDeleted);
+    public IList<ClientDiscount> GetClientDiscounts(IUnitOfWork uow, string clientMnem, bool includeDeleted = false) => uow.ClientDiscountRepository.GetByClient(clientMnem, includeDeleted);
 
-    public SanctionedProvider GetSanctionedProvider(string npi) => _uow.SanctionedProviderRepository.GetByNPI(npi);
+    public SanctionedProvider GetSanctionedProvider(IUnitOfWork uow, string npi) => uow.SanctionedProviderRepository.GetByNPI(npi);
 
 
     #region DictDx
 
-    public DictDx GetDiagnosis(string code, DateTime transactionDate) => _uow.DictDxRepository.GetByCode(code, transactionDate);
+    public DictDx GetDiagnosis(string code, DateTime transactionDate, IUnitOfWork uow = null)
+    {
+        if (uow == null)
+            uow = new UnitOfWorkMain(_appEnvironment);
 
-    public DictDx GetDiagnosis(string code, string amaYear) => _uow.DictDxRepository.GetByCode(code, amaYear);
+        return uow.DictDxRepository.GetByCode(code, transactionDate);
+    }
 
-    public IEnumerable<DictDx> GetDiagnosisCodes(string searchText, DateTime transactionDate) => _uow.DictDxRepository.Search(searchText, transactionDate);
+    public DictDx GetDiagnosis(IUnitOfWork uow, string code, string amaYear) => uow.DictDxRepository.GetByCode(code, amaYear);
+
+    public IEnumerable<DictDx> GetDiagnosisCodes(string searchText, DateTime transactionDate, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.DictDxRepository.Search(searchText, transactionDate);
+    }
 
 
     #endregion DictDx
 
     #region AuditReports
 
-    public IList<AuditReport> GetAuditReports() => _uow.AuditReportRepository.GetAll();
-
-
-    public AuditReport SaveAuditReport(AuditReport report)
+    public IList<AuditReport> GetAuditReports(IUnitOfWork uow = null)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.AuditReportRepository.GetAll();
+    }
+
+    public AuditReport SaveAuditReport(AuditReport report, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         if (report.Id > 0)
         {
-            return _uow.AuditReportRepository.Update(report);
+            return uow.AuditReportRepository.Update(report);
         }
         else
         {
-            return _uow.AuditReportRepository.Add(report);
+            return uow.AuditReportRepository.Add(report);
         }
     }
 
-    public bool DeleteAuditReport(int id)
+    public bool DeleteAuditReport(int id, IUnitOfWork uow = null)
     {
-        var record = _uow.AuditReportRepository.GetByKey(id);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var record = uow.AuditReportRepository.GetByKey(id);
         if (record != null)
         {
-            _uow.AuditReportRepository.Delete(record);
+            uow.AuditReportRepository.Delete(record);
             return true;
         }
         return false;

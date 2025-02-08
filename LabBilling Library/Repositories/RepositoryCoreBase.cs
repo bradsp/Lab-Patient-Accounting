@@ -35,7 +35,7 @@ namespace LabBilling.Core.DataAccess
         public RepositoryCoreBase(IAppEnvironment environment, IDatabase context)
         {
             Log.Instance.Trace("Entering");
-
+            ArgumentNullException.ThrowIfNull(environment, nameof(environment));
 
             AppEnvironment = environment;
             Context = (PetaPoco.Database)context;

@@ -35,7 +35,7 @@ public partial class JobProcessor
         public static void RunClaimsProcessing()
         {
             UnitOfWorkMain uow = new(Program.AppEnvironment);
-            ClaimGeneratorService claimGenerator = new(Program.AppEnvironment, uow);
+            ClaimGeneratorService claimGenerator = new(Program.AppEnvironment);
 
             CancellationToken cancellationToken = new();
             Progress<ProgressReportModel> progressReportModel = new();

@@ -42,16 +42,26 @@ public class AuthenticationService
         return user;
     }
 
-    public bool Authenticate(string username, string password)
+    public (bool isAuthenticated, UserAccount user) Authenticate(string username, string password)
     {
+        bool isAuthenticated = false;
         var user = _uow.UserAccountRepository.GetByUsername(username);
         if (user == null)
         {
-            return false;
+
         }
 
-        var encryptedPassword = EncryptPassword(password);
-        return user.Password == encryptedPassword;
+        //check that provided password matches database
+        if(user.Password == EncryptPassword(password))
+        {
+            isAuthenticated = true;
+            return (isAuthenticated, user);
+        }
+        else
+        {
+            return (isAuthenticated, null);
+        }
+
     }
 
     private string EncryptPassword(string password)

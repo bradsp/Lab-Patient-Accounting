@@ -24,18 +24,24 @@ public sealed class AccountService
     public event EventHandler<AccountEventArgs> AccountLocked;
     public event EventHandler<AccountEventArgs> AccountLockCleared;
 
-    private readonly IUnitOfWork _uow;
-
-    public AccountService(IAppEnvironment appEnvironment, IUnitOfWork uow)
+    public AccountService(IAppEnvironment appEnvironment)
     {
         this._appEnvironment = appEnvironment;
-        _dictionaryService = new(appEnvironment, uow);
-        _uow = uow;
+        _dictionaryService = new(appEnvironment);
     }
 
-    public List<Ins> GetInsByAccount(string accountNo)
+
+    /// <summary>
+    /// Retrieves a list of insurance records associated with a given account number.
+    /// </summary>
+    /// <param name="accountNo">The account number to retrieve insurance records for.</param>
+    /// <param name="uow">Optional unit of work for database transactions. If not provided, a new unit of work is created.</param>
+    /// <returns>A list of insurance records associated with the specified account number.</returns>
+    public List<Ins> GetInsByAccount(string accountNo, IUnitOfWork uow = null)
     {
-        var records = _uow.InsRepository.GetInsByAccount(accountNo);
+        Log.Instance.Trace($"Entering");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var records = uow.InsRepository.GetInsByAccount(accountNo);
 
         foreach (Ins ins in records)
         {
@@ -66,7 +72,7 @@ public sealed class AccountService
 
             if (ins.InsCode != null)
             {
-                ins.InsCompany = _dictionaryService.GetInsCompany(ins.InsCode);
+                ins.InsCompany = _dictionaryService.GetInsCompany(ins.InsCode, uow);
             }
             ins.InsCompany ??= new InsCompany();
 
@@ -80,74 +86,76 @@ public sealed class AccountService
         return records;
     }
 
-    public Ins GetInsByAccount(string accountNo, InsCoverage coverage)
+    public Ins GetInsByAccount(string accountNo, InsCoverage coverage, IUnitOfWork uow = null)
     {
-        var records = GetInsByAccount(accountNo);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var records = GetInsByAccount(accountNo, uow);
         return records.Where(x => x.Coverage == coverage).FirstOrDefault();
     }
 
-    public Pat GetPatByAccount(Account account)
+    public Pat GetPatByAccount(Account account, IUnitOfWork uow = null)
     {
-        var record = _uow.PatRepository.GetPatByAccount(account);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var record = uow.PatRepository.GetPatByAccount(account);
 
-        record.Physician = _dictionaryService.GetProvider(record.ProviderId);
+        record.Physician = _dictionaryService.GetProvider(record.ProviderId, uow);
         if (record.Physician != null)
-            record.Physician.SanctionedProvider = _dictionaryService.GetSanctionedProvider(record.Physician?.NpiId);
+            record.Physician.SanctionedProvider = _dictionaryService.GetSanctionedProvider(uow, record.Physician?.NpiId);
 
         string amaYear = FunctionRepository.GetAMAYear(account.TransactionDate);
 
         record.Diagnoses = new List<PatDiag>();
         if (record.Dx1 != null && record.Dx1 != "")
         {
-            var dictRecord = _dictionaryService.GetDiagnosis(record.Dx1, amaYear);
+            var dictRecord = _dictionaryService.GetDiagnosis(uow, record.Dx1, amaYear);
             record.Dx1Desc = dictRecord?.Description ?? "";
             record.Diagnoses.Add(new PatDiag { No = 1, Code = record.Dx1, Description = dictRecord?.Description ?? "" });
         }
         if (record.Dx2 != null && record.Dx2 != "")
         {
-            var dictRecord = _dictionaryService.GetDiagnosis(record.Dx2, amaYear);
+            var dictRecord = _dictionaryService.GetDiagnosis(uow, record.Dx2, amaYear);
             record.Dx2Desc = dictRecord?.Description ?? "";
             record.Diagnoses.Add(new PatDiag { No = 2, Code = record.Dx2, Description = dictRecord?.Description ?? "" });
         }
         if (record.Dx3 != null && record.Dx3 != "")
         {
-            var dictRecord = _dictionaryService.GetDiagnosis(record.Dx3, amaYear);
+            var dictRecord = _dictionaryService.GetDiagnosis(uow, record.Dx3, amaYear);
             record.Dx3Desc = dictRecord?.Description ?? "";
             record.Diagnoses.Add(new PatDiag { No = 3, Code = record.Dx3, Description = dictRecord?.Description ?? "" });
         }
         if (record.Dx4 != null && record.Dx4 != "")
         {
-            var dictRecord = _dictionaryService.GetDiagnosis(record.Dx4, amaYear);
+            var dictRecord = _dictionaryService.GetDiagnosis(uow, record.Dx4, amaYear);
             record.Dx4Desc = dictRecord?.Description ?? "";
             record.Diagnoses.Add(new PatDiag { No = 4, Code = record.Dx4, Description = dictRecord?.Description ?? "" });
         }
         if (record.Dx5 != null && record.Dx5 != "")
         {
-            var dictRecord = _dictionaryService.GetDiagnosis(record.Dx5, amaYear);
+            var dictRecord = _dictionaryService.GetDiagnosis(uow, record.Dx5, amaYear);
             record.Dx5Desc = dictRecord?.Description ?? "";
             record.Diagnoses.Add(new PatDiag { No = 5, Code = record.Dx5, Description = dictRecord?.Description ?? "" });
         }
         if (record.Dx6 != null && record.Dx6 != "")
         {
-            var dictRecord = _dictionaryService.GetDiagnosis(record.Dx6, amaYear);
+            var dictRecord = _dictionaryService.GetDiagnosis(uow, record.Dx6, amaYear);
             record.Dx6Desc = dictRecord?.Description ?? "";
             record.Diagnoses.Add(new PatDiag { No = 6, Code = record.Dx6, Description = dictRecord?.Description ?? "" });
         }
         if (record.Dx7 != null && record.Dx7 != "")
         {
-            var dictRecord = _dictionaryService.GetDiagnosis(record.Dx7, amaYear);
+            var dictRecord = _dictionaryService.GetDiagnosis(uow, record.Dx7, amaYear);
             record.Dx7Desc = dictRecord?.Description ?? "";
             record.Diagnoses.Add(new PatDiag { No = 7, Code = record.Dx7, Description = dictRecord?.Description ?? "" });
         }
         if (record.Dx8 != null && record.Dx8 != "")
         {
-            var dictRecord = _dictionaryService.GetDiagnosis(record.Dx8, amaYear);
+            var dictRecord = _dictionaryService.GetDiagnosis(uow, record.Dx8, amaYear);
             record.Dx8Desc = dictRecord?.Description ?? "";
             record.Diagnoses.Add(new PatDiag { No = 8, Code = record.Dx8, Description = dictRecord?.Description ?? "" });
         }
         if (record.Dx9 != null && record.Dx9 != "")
         {
-            var dictRecord = _dictionaryService.GetDiagnosis(record.Dx9, amaYear);
+            var dictRecord = _dictionaryService.GetDiagnosis(uow, record.Dx9, amaYear);
             record.Dx9Desc = dictRecord?.Description ?? "";
             record.Diagnoses.Add(new PatDiag { No = 9, Code = record.Dx9, Description = dictRecord?.Description ?? "" });
         }
@@ -155,9 +163,10 @@ public sealed class AccountService
         return record;
     }
 
-    public decimal GetNextAccountNumber()
+    public decimal GetNextAccountNumber(IUnitOfWork uow = null)
     {
-        return _uow.NumberRepository.GetNumber("account");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.NumberRepository.GetNumber("account");
     }
 
     /// <summary>
@@ -165,28 +174,27 @@ public sealed class AccountService
     /// </summary>
     /// <param name="accountNo"></param>
     /// <returns></returns>
-    public Account GetAccountMinimal(string accountNo)
+    public Account GetAccountMinimal(string accountNo, IUnitOfWork uow = null)
     {
-        var acc = _uow.AccountRepository.GetByAccount(accountNo);
+        uow ??= new UnitOfWork.UnitOfWorkMain(_appEnvironment);
+        var acc = uow.AccountRepository.GetByAccount(accountNo);
         return acc;
     }
 
-    public async Task<Account> GetAccountAsync(string account) => await Task.Run(() => GetAccount(account));
-    public async Task<Account> GetAccountAsync(string account, bool demographicsOnly = false) => await Task.Run(() => GetAccount(account, demographicsOnly));
-    public async Task<Account> GetAccountAsync(string account, bool demographicsOnly = false, bool secureLock = true) => await Task.Run(() => GetAccount(account, demographicsOnly, secureLock));
 
 
-    public (bool locksuccessful, AccountLock lockInfo) GetAccountLock(string account)
+    public (bool locksuccessful, AccountLock lockInfo) GetAccountLock(string account, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        ArgumentNullException.ThrowIfNull(account);
+        uow.StartTransaction();
 
-        var alock = _uow.AccountLockRepository.GetLock(account);
+        var alock = uow.AccountLockRepository.GetLock(account);
 
         if (alock == null || string.IsNullOrEmpty(alock?.AccountNo))
         {
             //there is no lock on this account - establish one
-            alock = _uow.AccountLockRepository.Add(account);
-            _uow.Commit();
+            alock = uow.AccountLockRepository.Add(account);
+            uow.Commit();
             AccountLocked?.Invoke(this, new AccountEventArgs() { UpdateMessage = $"Lock established for account {account}." });
             return (true, alock);
         }
@@ -195,48 +203,52 @@ public sealed class AccountService
             // check to see if the lock is this user and machine
             if (alock.UpdatedUser == _appEnvironment.User && alock.UpdatedHost == Environment.MachineName)
             {
-                _uow.Commit();
+                uow.Commit();
                 AccountLocked?.Invoke(this, new AccountEventArgs() { UpdateMessage = $"Lock established for account {account}." });
                 return (true, alock);
             }
         }
-        _uow.Commit();
+        uow.Commit();
         return (false, alock);
     }
 
-    public List<AccountLock> GetAccountLocks()
+    public List<AccountLock> GetAccountLocks(IUnitOfWork uow = null)
     {
-        return _uow.AccountLockRepository.GetAll();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.AccountLockRepository.GetAll();
     }
 
-    public bool ClearAccountLock(Account account)
+    public bool ClearAccountLock(Account account, IUnitOfWork uow = null)
     {
         ArgumentNullException.ThrowIfNull(account);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
 
         if (account.AccountLockInfo == null)
         {
-            account.AccountLockInfo = _uow.AccountLockRepository.GetLock(account.AccountNo);
+            account.AccountLockInfo = uow.AccountLockRepository.GetLock(account.AccountNo);
             if (account.AccountLockInfo == null)
             {
                 Log.Instance.Warn($"Account Lock not found for {account.AccountNo}");
                 return false;
             }
         }
-        return ClearAccountLock(account.AccountLockInfo.id);
+        return ClearAccountLock(account.AccountLockInfo.id, uow);
     }
 
-    public bool ClearAccountLock(int id)
+    public bool ClearAccountLock(int id, IUnitOfWork uow = null)
     {
-        var retval = _uow.AccountLockRepository.Delete(id);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var retval = uow.AccountLockRepository.Delete(id);
         AccountLockCleared?.Invoke(this, new AccountEventArgs() { UpdateMessage = $"Lock id {id} cleared." });
         return retval;
     }
 
-    public bool ClearAccountLocks(string username, string hostname)
+    public bool ClearAccountLocks(string username, string hostname, IUnitOfWork uow = null)
     {
         try
         {
-            return _uow.AccountLockRepository.DeleteByUserHost(username, hostname);
+            uow ??= new UnitOfWorkMain(_appEnvironment);
+            return uow.AccountLockRepository.DeleteByUserHost(username, hostname);
         }
         catch (Exception ex)
         {
@@ -245,9 +257,17 @@ public sealed class AccountService
         }
     }
 
-    public Account GetAccount(string account, bool demographicsOnly = false, bool secureLock = true)
+    public async Task<Account> GetAccountAsync(string account) => await Task.Run(() => GetAccount(account));
+    public async Task<Account> GetAccountAsync(string account, IUnitOfWork uow) => await Task.Run(() => GetAccount(account, uow));
+    public async Task<Account> GetAccountAsync(string account, bool demographicsOnly = false, bool secureLock = true, IUnitOfWork uow = null) => await Task.Run(() => GetAccount(account, demographicsOnly, secureLock, uow));
+
+
+    public Account GetAccount(string account) => GetAccount(account, false, true, null);
+    public Account GetAccount(string account, IUnitOfWork uow = null) => GetAccount(account, false, true, uow);
+    public Account GetAccount(string account, bool demographicsOnly = false, bool secureLock = true, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
 
         bool locksuccessful = false;
         AccountLock alock = null;
@@ -255,7 +275,7 @@ public sealed class AccountService
         if (secureLock)
         {
             //get lock before loading account
-            (locksuccessful, alock) = GetAccountLock(account);
+            (locksuccessful, alock) = GetAccountLock(account, uow);
             if (!locksuccessful)
             {
                 throw new AccountLockException(alock);
@@ -265,7 +285,7 @@ public sealed class AccountService
         Account record = null;
         try
         {
-            record = _uow.AccountRepository.GetByAccount(account);
+            record = uow.AccountRepository.GetByAccount(account);
         }
         catch (Exception ex)
         {
@@ -274,7 +294,7 @@ public sealed class AccountService
 
         if (record == null)
         {
-            ClearAccountLock(alock.id);
+            ClearAccountLock(alock.id, uow);
             return null;
         }
 
@@ -286,15 +306,15 @@ public sealed class AccountService
         {
             if (record.ClientMnem != _appEnvironment.ApplicationParameters.InvalidFinancialCode)
             {
-                record.Client = _dictionaryService.GetClient(record.ClientMnem);
+                record.Client = _dictionaryService.GetClient(record.ClientMnem, uow);
             }
         }
-        record.Pat = GetPatByAccount(record);
-        record.Charges = GetCharges(account, true, true, null, false).ToList();
+        record.Pat = GetPatByAccount(record, uow);
+        record.Charges = GetCharges(uow, account, true, true, null, false).ToList();
 
         if (record.FinCode != _appEnvironment.ApplicationParameters.ClientAccountFinCode)
         {
-            record.ChrgDiagnosisPointers = _uow.ChrgDiagnosisPointerRepository.GetByAccount(account).ToList();
+            record.ChrgDiagnosisPointers = uow.ChrgDiagnosisPointerRepository.GetByAccount(account).ToList();
 
             record.Charges.Where(c => c.CDMCode != _appEnvironment.ApplicationParameters.ClientInvoiceCdm).ToList().ForEach(chrg =>
             {
@@ -311,7 +331,7 @@ public sealed class AccountService
                             CptCode = cd.Cpt4,
                             DiagnosisPointer = "1:"
                         };
-                        record.ChrgDiagnosisPointers.Add(_uow.ChrgDiagnosisPointerRepository.Add(ptr));
+                        record.ChrgDiagnosisPointers.Add(uow.ChrgDiagnosisPointerRepository.Add(ptr));
                     }
                 });
             });
@@ -325,42 +345,44 @@ public sealed class AccountService
                 }
                 if (string.IsNullOrEmpty(d.CdmDescription) || string.IsNullOrEmpty(d.CptDescription))
                 {
-                    _uow.ChrgDiagnosisPointerRepository.Delete(d);
+                    uow.ChrgDiagnosisPointerRepository.Delete(d);
                     temp.Add(d);
                 }
             });
 
             temp.ForEach(d => record.ChrgDiagnosisPointers.Remove(d));
         }
-        record.Payments = _uow.ChkRepository.GetByAccount(account);
+        record.Payments = uow.ChkRepository.GetByAccount(account);
 
         if (!demographicsOnly)
         {
-            record.Insurances = GetInsByAccount(account);
-            record.Notes = _uow.AccountNoteRepository.GetByAccount(account);
-            record.BillingActivities = _uow.BillingActivityRepository.GetByAccount(account);
-            record.AccountValidationStatus = _uow.AccountValidationStatusRepository.GetByAccount(account);
-            record.Fin = _uow.FinRepository.GetFin(record.FinCode);
-            record.AccountAlert = _uow.AccountAlertRepository.GetByAccount(account);
-            record.PatientStatements = _uow.PatientStatementAccountRepository.GetByAccount(account);
+            record.Insurances = GetInsByAccount(account, uow);
+            record.Notes = uow.AccountNoteRepository.GetByAccount(account);
+            record.BillingActivities = uow.BillingActivityRepository.GetByAccount(account);
+            record.AccountValidationStatus = uow.AccountValidationStatusRepository.GetByAccount(account);
+            record.Fin = uow.FinRepository.GetFin(record.FinCode);
+            record.AccountAlert = uow.AccountAlertRepository.GetByAccount(account);
+            record.PatientStatements = uow.PatientStatementAccountRepository.GetByAccount(account);
         }
 
         return record;
     }
 
-    public Pat ClearCollectionsListDate(string accountNo)
+    public Pat ClearCollectionsListDate(string accountNo, IUnitOfWork uow = null)
     {
-        var pat = _uow.PatRepository.GetByKey(accountNo);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var pat = uow.PatRepository.GetByKey(accountNo);
         pat.BadDebtListDate = null;
-        _uow.PatRepository.Update(pat, new List<string>() { nameof(Pat.BadDebtListDate) });
+        uow.PatRepository.Update(pat, new List<string>() { nameof(Pat.BadDebtListDate) });
         return pat;
     }
 
-    public double GetBalance(string accountNo)
+    public double GetBalance(string accountNo, IUnitOfWork uow = null)
     {
-        string chrgTableName = _uow.ChrgRepository.TableInfo.TableName;
-        string accTableName = _uow.AccountRepository.TableInfo.TableName;
-        string chkTableName = _uow.ChkRepository.TableInfo.TableName;
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        string chrgTableName = uow.ChrgRepository.TableInfo.TableName;
+        string accTableName = uow.AccountRepository.TableInfo.TableName;
+        string chkTableName = uow.ChkRepository.TableInfo.TableName;
 
         if (string.IsNullOrEmpty(accountNo))
             throw new ArgumentNullException(nameof(accountNo));
@@ -369,35 +391,35 @@ public sealed class AccountService
             var sql = Sql.Builder
                 .Select(new[]
                 {
-                    $"coalesce(sum({_uow.ChrgRepository.GetRealColumn(nameof(Chrg.Quantity))} * {_uow.ChrgRepository.GetRealColumn(nameof(Chrg.NetAmount))}), 0.00) as 'Total'"
+                    $"coalesce(sum({uow.ChrgRepository.GetRealColumn(nameof(Chrg.Quantity))} * {uow.ChrgRepository.GetRealColumn(nameof(Chrg.NetAmount))}), 0.00) as 'Total'"
                 })
                 .From(chrgTableName)
                 .InnerJoin(accTableName)
-                .On($"{accTableName}.{_uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} = {chrgTableName}.{_uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo))}")
-                .Where($"{chrgTableName}.{_uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo })
-                .Where($"(({accTableName}.{_uow.AccountRepository.GetRealColumn(nameof(Account.FinCode))} = @0 and {chrgTableName}.{_uow.ChrgRepository.GetRealColumn(nameof(Chrg.Status))} <> @1)",
+                .On($"{accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} = {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo))}")
+                .Where($"{chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo })
+                .Where($"(({accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.FinCode))} = @0 and {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.Status))} <> @1)",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode },
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.ChargeInvoiceStatus })
-                .Append($"or ({accTableName}.{_uow.AccountRepository.GetRealColumn(nameof(Account.FinCode))} <> @0 and {chrgTableName}.{_uow.ChrgRepository.GetRealColumn(nameof(Chrg.Status))} not in (@1, @2, @3)))",
+                .Append($"or ({accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.FinCode))} <> @0 and {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.Status))} not in (@1, @2, @3)))",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode },
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.ChargeInvoiceStatus },
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.CapitatedChargeStatus },
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.NotApplicableChargeStatus })
-                .GroupBy(chrgTableName + "." + _uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo)));
+                .GroupBy(chrgTableName + "." + uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo)));
 
-            double charges = _uow.Context.SingleOrDefault<double>(sql);
+            double charges = uow.Context.SingleOrDefault<double>(sql);
 
             sql = Sql.Builder
                 .Select(new[]
                 {
-                    $"coalesce(sum({_uow.ChkRepository.GetRealColumn(nameof(Chk.PaidAmount))} + {_uow.ChkRepository.GetRealColumn(nameof(Chk.ContractualAmount))} + {_uow.ChkRepository.GetRealColumn(nameof(Chk.WriteOffAmount))}), 0.00) as 'Total'"
+                    $"coalesce(sum({uow.ChkRepository.GetRealColumn(nameof(Chk.PaidAmount))} + {uow.ChkRepository.GetRealColumn(nameof(Chk.ContractualAmount))} + {uow.ChkRepository.GetRealColumn(nameof(Chk.WriteOffAmount))}), 0.00) as 'Total'"
                 })
-                .From(_uow.ChkRepository.TableInfo.TableName)
-                .Where($"{chkTableName}.{_uow.ChkRepository.GetRealColumn(nameof(Chk.AccountNo))} = @0",
+                .From(uow.ChkRepository.TableInfo.TableName)
+                .Where($"{chkTableName}.{uow.ChkRepository.GetRealColumn(nameof(Chk.AccountNo))} = @0",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo })
-                .GroupBy(_uow.ChkRepository.GetRealColumn(nameof(Chk.AccountNo)));
+                .GroupBy(uow.ChkRepository.GetRealColumn(nameof(Chk.AccountNo)));
 
-            double adj = (double)_uow.Context.SingleOrDefault<double>(sql);
+            double adj = (double)uow.Context.SingleOrDefault<double>(sql);
 
             return charges - adj;
         }
@@ -407,13 +429,13 @@ public sealed class AccountService
             throw new ApplicationException($"Error in AccountRepository.GetBalance({accountNo}", ex);
         }
     }
-    public async Task<object> AddAsync(Account table) => await Task.Run(() => Add(table));
+    public async Task<object> AddAsync(Account table, IUnitOfWork uow) => await Task.Run(() => Add(table, uow));
 
-    public Account Add(Account table)
+    public Account Add(Account table, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - account {table.AccountNo}");
-
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
         if (table.FinCode != "CLIENT")
             table.PatFullName = table.PatNameDisplay;
@@ -422,49 +444,49 @@ public sealed class AccountService
 
         table.TransactionDate = table.TransactionDate.Date;
 
-        _uow.AccountRepository.Add(table);
+        uow.AccountRepository.Add(table);
 
         //make sure Pat record has an account number
         if (table.Pat.AccountNo != table.AccountNo)
             table.Pat.AccountNo = table.AccountNo;
 
-        var pat = GetPatByAccount(table);
+        var pat = GetPatByAccount(table, uow);
         if (pat == null)
-            _uow.PatRepository.Add(table.Pat);
+            uow.PatRepository.Add(table.Pat);
         else
-            _uow.PatRepository.Update(table.Pat);
+            uow.PatRepository.Update(table.Pat);
 
         table.Insurances.ForEach(ins =>
         {
             if (ins.Account != table.AccountNo)
                 ins.Account = table.AccountNo;
 
-            _uow.InsRepository.Save(ins);
+            uow.InsRepository.Save(ins);
         });
-        var result = GetAccountLock(table.AccountNo);
+        var result = GetAccountLock(table.AccountNo, uow);
         if (result.locksuccessful)
             table.AccountLockInfo = result.lockInfo;
-        _uow.Commit();
+        uow.Commit();
 
         return table;
     }
 
-    public async Task<IEnumerable<InvoiceSelect>> GetInvoiceAccountsAsync(string clientMnem, DateTime thruDate) => await Task.Run(() => GetInvoiceAccounts(clientMnem, thruDate));
+    public async Task<IEnumerable<InvoiceSelect>> GetInvoiceAccountsAsync(string clientMnem, DateTime thruDate, IUnitOfWork uow) => await Task.Run(() => GetInvoiceAccounts(clientMnem, thruDate, uow));
 
-    public IEnumerable<InvoiceSelect> GetInvoiceAccounts(string clientMnem, DateTime thruDate)
+    public IEnumerable<InvoiceSelect> GetInvoiceAccounts(string clientMnem, DateTime thruDate, IUnitOfWork uow)
     {
         Log.Instance.Trace($"Entering - client {clientMnem} thruDate {thruDate}");
-        return _uow.InvoiceSelectRepository.GetByClientAndDate(clientMnem, thruDate);
+        return uow.InvoiceSelectRepository.GetByClientAndDate(clientMnem, thruDate);
     }
 
-    public async Task<IEnumerable<ClaimItem>> GetAccountsForClaimsAsync(ClaimType claimType, int maxClaims = 0) => await Task.Run(() => GetAccountsForClaims(claimType, maxClaims));
+    public async Task<IEnumerable<ClaimItem>> GetAccountsForClaimsAsync(IUnitOfWork uow, ClaimType claimType, int maxClaims = 0) => await Task.Run(() => GetAccountsForClaims(uow, claimType, maxClaims));
 
-    public IEnumerable<ClaimItem> GetAccountsForClaims(ClaimType claimType, int maxClaims = 0)
+    public IEnumerable<ClaimItem> GetAccountsForClaims(IUnitOfWork uow, ClaimType claimType, int maxClaims = 0)
     {
         Log.Instance.Trace($"Entering - claimType {claimType}");
         try
         {
-            var queryResult = GetClaimItems(claimType);
+            var queryResult = GetClaimItems(claimType, uow);
             return queryResult;
         }
         catch (Exception ex)
@@ -476,31 +498,31 @@ public sealed class AccountService
         return new List<ClaimItem>();
     }
 
-    public List<ClaimItem> GetClaimItems(ClaimType claimType)
+    public List<ClaimItem> GetClaimItems(ClaimType claimType, IUnitOfWork uow)
     {
         PetaPoco.Sql command;
 
         string selMaxRecords = string.Empty;
-        string accTableName = _uow.AccountRepository.TableName;
-        string insTableName = _uow.InsRepository.TableName;
+        string accTableName = uow.AccountRepository.TableName;
+        string insTableName = uow.InsRepository.TableName;
 
         var selectCols = new[]
         {
-            accTableName + "." + _uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.Status)),
-            accTableName + "." + _uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.AccountNo)),
-            accTableName + "." + _uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.PatName)),
-            accTableName + "." + _uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.SocSecNum)),
-            accTableName + "." + _uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.ClientMnem)),
-            accTableName + "." + _uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.FinCode)),
-            accTableName + "." + _uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.TransactionDate)),
-            insTableName + "." + _uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.InsPlanName))
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.Status)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.AccountNo)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.PatName)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.SocSecNum)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.ClientMnem)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.FinCode)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.TransactionDate)),
+            insTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.InsPlanName))
         };
 
         command = Sql.Builder
             .Select(selectCols)
             .From(accTableName)
             .InnerJoin(insTableName)
-            .On($"{insTableName}.{_uow.InsRepository.GetRealColumn(nameof(Ins.Account))} = {accTableName}.{_uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} and {_uow.InsRepository.GetRealColumn(nameof(Ins.Coverage))} = '{InsCoverage.Primary}'");
+            .On($"{insTableName}.{uow.InsRepository.GetRealColumn(nameof(Ins.Account))} = {accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} and {uow.InsRepository.GetRealColumn(nameof(Ins.Coverage))} = '{InsCoverage.Primary}'");
 
         try
         {
@@ -517,9 +539,9 @@ public sealed class AccountService
                     break;
             }
 
-            command.OrderBy($"{_uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.TransactionDate))}");
+            command.OrderBy($"{uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.TransactionDate))}");
 
-            var queryResult = _uow.ClaimItemRepository.Fetch(command).ToList();
+            var queryResult = uow.ClaimItemRepository.Fetch(command).ToList();
 
             if (_appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch > 0)
                 return queryResult.Take(_appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch).ToList();
@@ -533,25 +555,27 @@ public sealed class AccountService
         }
     }
 
-    public List<PatientStatementAccount> GetPatientStatements(string accountNo)
+    public List<PatientStatementAccount> GetPatientStatements(string accountNo, IUnitOfWork uow = null)
     {
-        var statements = _uow.PatientStatementAccountRepository.GetByAccount(accountNo);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var statements = uow.PatientStatementAccountRepository.GetByAccount(accountNo);
 
         return statements;
     }
 
-    public async Task<bool> SetNoteAlertAsync(string account, bool showAlert) => await Task.Run(() => SetNoteAlert(account, showAlert));
+    public async Task<bool> SetNoteAlertAsync(string account, bool showAlert, IUnitOfWork uow) => await Task.Run(() => SetNoteAlert(account, showAlert, uow));
 
-    public bool SetNoteAlert(string account, bool showAlert)
+    public bool SetNoteAlert(string account, bool showAlert, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - account {account} showAlert {showAlert}");
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         if (string.IsNullOrEmpty(account))
             throw new ArgumentNullException(nameof(account));
 
         try
         {
-            var record = _uow.AccountAlertRepository.GetByAccount(account);
+            var record = uow.AccountAlertRepository.GetByAccount(account);
 
             if (record == null)
             {
@@ -561,12 +585,12 @@ public sealed class AccountService
                     Alert = showAlert
                 };
 
-                _uow.AccountAlertRepository.Add(record);
+                uow.AccountAlertRepository.Add(record);
             }
             else
             {
                 record.Alert = showAlert;
-                _uow.AccountAlertRepository.Update(record);
+                uow.AccountAlertRepository.Update(record);
             }
         }
         catch (Exception ex)
@@ -575,19 +599,20 @@ public sealed class AccountService
             return false;
         }
 
-        _uow.Commit();
+        uow.Commit();
         return true;
     }
 
-    public Account UpdateAccountDemographics(Account acc)
+    public Account UpdateAccountDemographics(Account acc, IUnitOfWork uow = null)
     {
         Log.Instance.Trace("Entering");
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         try
         {
-            var accResult = _uow.AccountRepository.Update(acc);
-            var patResult = _uow.PatRepository.Save(acc.Pat);
-            _uow.Commit();
+            var accResult = uow.AccountRepository.Update(acc);
+            var patResult = uow.PatRepository.Save(acc.Pat);
+            uow.Commit();
 
             accResult.Pat = patResult;
             return accResult;
@@ -599,28 +624,32 @@ public sealed class AccountService
         }
     }
 
-    public async Task<Account> UpdateDiagnosesAsync(Account acc) => await Task.Run(() => UpdateDiagnoses(acc));
+    public async Task<Account> UpdateDiagnosesAsync(Account acc, IUnitOfWork uow = null) => await Task.Run(() => UpdateDiagnoses(acc, uow));
 
-    public Account UpdateDiagnoses(Account acc)
+    public Account UpdateDiagnoses(Account acc, IUnitOfWork uow = null)
     {
         Log.Instance.Trace("Entering");
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         if (acc == null)
             throw new ArgumentNullException(nameof(acc));
 
-        var patResult = _uow.PatRepository.SaveDiagnoses(acc.Pat);
+        var patResult = uow.PatRepository.SaveDiagnoses(acc.Pat);
         acc.Pat = patResult;
-        _uow.Commit();
+        uow.Commit();
 
         return acc;
     }
 
-    public async Task<int> UpdateStatusAsync(string accountNo, string status) => await Task.Run(() => UpdateStatus(accountNo, status));
-    public async Task<Account> UpdateStatusAsync(Account model, string status) => await Task.Run(() => UpdateStatus(model, status));
+    public async Task<int> UpdateStatusAsync(string accountNo, string status, IUnitOfWork uow) => await Task.Run(() => UpdateStatus(accountNo, status, uow));
+    public async Task<Account> UpdateStatusAsync(Account model, string status, IUnitOfWork uow) => await Task.Run(() => UpdateStatus(model, status, uow));
 
-    public int UpdateStatus(string accountNo, string status)
+    public int UpdateStatus(string accountNo, string status, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - account {accountNo} status {status}");
+
+        uow ??= new UnitOfWork.UnitOfWorkMain(_appEnvironment);
+
 
         if (string.IsNullOrEmpty(accountNo))
             throw new ArgumentNullException(nameof(accountNo));
@@ -629,16 +658,17 @@ public sealed class AccountService
         if (!AccountStatus.IsValid(status))
             throw new ArgumentOutOfRangeException(nameof(status), "Invalid status");
 
-        var returnval = _uow.AccountRepository.UpdateStatus(accountNo, status);
+        var returnval = uow.AccountRepository.UpdateStatus(accountNo, status);
 
         return returnval;
     }
 
-    public Account UpdateStatus(Account model, string status)
+    public Account UpdateStatus(Account model, string status, IUnitOfWork uow = null)
     {
         try
         {
-            var result = _uow.AccountRepository.UpdateStatus(model, status);
+            uow ??= new UnitOfWorkMain(_appEnvironment);
+            var result = uow.AccountRepository.UpdateStatus(model, status);
             return result;
         }
         catch (Exception ex)
@@ -648,26 +678,29 @@ public sealed class AccountService
         }
     }
 
-    public Account UpdateStatementFlag(Account acc, string flag)
+    public Account UpdateStatementFlag(Account acc, string flag, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        Log.Instance.Trace($"Entering");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+
+        uow.StartTransaction();
 
         try
         {
-            AddNote(acc.AccountNo, $"Statement flag changed from {acc.Pat.StatementFlag} to {flag}");
+            AddNote(acc.AccountNo, $"Statement flag changed from {acc.Pat.StatementFlag} to {flag}", uow);
             acc.Pat.StatementFlag = flag;
             if (flag != "N")
             {
-                UpdateStatus(acc.AccountNo, AccountStatus.Statements);
+                UpdateStatus(acc.AccountNo, AccountStatus.Statements, uow);
                 acc.Status = AccountStatus.Statements;
             }
             if (flag == "N")
             {
-                UpdateStatus(acc.AccountNo, AccountStatus.New);
+                UpdateStatus(acc.AccountNo, AccountStatus.New, uow);
                 acc.Status = AccountStatus.New;
             }
-            acc.Pat = _uow.PatRepository.Update(acc.Pat, new[] { nameof(Pat.StatementFlag) });
-            _uow.Commit();
+            acc.Pat = uow.PatRepository.Update(acc.Pat, new[] { nameof(Pat.StatementFlag) });
+            uow.Commit();
         }
         catch (Exception ex)
         {
@@ -677,18 +710,21 @@ public sealed class AccountService
         return acc;
     }
 
-    public Ins SaveInsurance(Ins ins)
+    public Ins SaveInsurance(Ins ins, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        Log.Instance.Trace("Entering");
+
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         try
         {
             Ins returnIns;
             if (ins.rowguid == Guid.Empty)
-                returnIns = _uow.InsRepository.Add(ins);
+                returnIns = uow.InsRepository.Add(ins);
             else
-                returnIns = _uow.InsRepository.Update(ins);
+                returnIns = uow.InsRepository.Update(ins);
 
-            _uow.Commit();
+            uow.Commit();
             return returnIns;
         }
         catch (Exception ex)
@@ -698,39 +734,40 @@ public sealed class AccountService
         }
     }
 
-    public bool DeleteInsurance(Ins ins)
+    public bool DeleteInsurance(Ins ins, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
-        var retval = _uow.InsRepository.Delete(ins);
-        _uow.Commit();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
+        var retval = uow.InsRepository.Delete(ins);
+        uow.Commit();
         return retval;
     }
 
-    public async Task<Account> InsuranceSwapAsync(Account account, InsCoverage swap1, InsCoverage swap2) => await Task.Run(() => InsuranceSwap(account, swap1, swap2));
+    public async Task<Account> InsuranceSwapAsync(Account account, InsCoverage swap1, InsCoverage swap2, IUnitOfWork uow = null) => await Task.Run(() => InsuranceSwap(account, swap1, swap2, uow));
 
-    public Account InsuranceSwap(Account account, InsCoverage swap1, InsCoverage swap2)
+    public Account InsuranceSwap(Account account, InsCoverage swap1, InsCoverage swap2, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - Account {account.AccountNo} Ins1 {swap1} Ins2 {swap2}");
-
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         Ins insA = account.Insurances.Where(x => x.Coverage == swap1).FirstOrDefault();
         Ins insB = account.Insurances.Where(x => x.Coverage == swap2).FirstOrDefault();
 
-        _uow.StartTransaction();
+        uow.StartTransaction();
 
         try
         {
             insA.Coverage = InsCoverage.Temporary;
             insB.Coverage = swap1;
 
-            insA = _uow.InsRepository.Update(insA);
-            insB = _uow.InsRepository.Update(insB);
+            insA = uow.InsRepository.Update(insA);
+            insB = uow.InsRepository.Update(insB);
 
             insA.Coverage = swap2;
-            insA = _uow.InsRepository.Update(insA);
+            insA = uow.InsRepository.Update(insA);
 
-            account.Notes = AddNote(account.AccountNo, $"Insurance swap: {swap1} {insA.PlanName} and {swap2} {insB.PlanName}").ToList();
-            account.Insurances = GetInsByAccount(account.AccountNo);
-            _uow.Commit();
+            account.Notes = AddNote(account.AccountNo, $"Insurance swap: {swap1} {insA.PlanName} and {swap2} {insB.PlanName}", uow).ToList();
+            account.Insurances = GetInsByAccount(account.AccountNo, uow);
+            uow.Commit();
             return account;
         }
         catch (Exception ex)
@@ -741,12 +778,13 @@ public sealed class AccountService
 
     }
 
-    public async Task<Account> ChangeDateOfServiceAsync(Account table, DateTime newDate, string reason_comment) => await Task.Run(() => ChangeDateOfService(table, newDate, reason_comment));
+    public async Task<Account> ChangeDateOfServiceAsync(Account table, DateTime newDate, string reason_comment, IUnitOfWork uow = null) => await Task.Run(() => ChangeDateOfService(table, newDate, reason_comment, uow));
 
-    public Account ChangeDateOfService(Account model, DateTime newDate, string reason_comment)
+    public Account ChangeDateOfService(Account model, DateTime newDate, string reason_comment, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - account {model.AccountNo} new date {newDate} reason {reason_comment}");
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
         ArgumentNullException.ThrowIfNull(model);
         ArgumentNullException.ThrowIfNull(reason_comment);
@@ -758,9 +796,9 @@ public sealed class AccountService
         {
             oldServiceDate = (DateTime)model.TransactionDate;
             model.TransactionDate = newDate;
-            model = _uow.AccountRepository.Update(model, new[] { nameof(Account.TransactionDate) });
+            model = uow.AccountRepository.Update(model, new[] { nameof(Account.TransactionDate) });
 
-            model.Notes = AddNote(model.AccountNo, $"Service Date changed from {oldServiceDate} to {newDate}").ToList();
+            model.Notes = AddNote(model.AccountNo, $"Service Date changed from {oldServiceDate} to {newDate}", uow).ToList();
 
             //determine if charges need to be reprocessed.
 
@@ -772,10 +810,10 @@ public sealed class AccountService
             model.Charges.ForEach(c =>
             {
                 c.ServiceDate = newDate;
-                c = _uow.ChrgRepository.Update(c);
+                c = uow.ChrgRepository.Update(c);
             });
 
-            _uow.Commit();
+            uow.Commit();
             return model;
         }
         else
@@ -786,18 +824,18 @@ public sealed class AccountService
         }
     }
 
-    public async Task<IList<AccountNote>> AddNoteAsync(string account, string noteText) => await Task.Run(() => AddNote(account, noteText));
+    public async Task<IList<AccountNote>> AddNoteAsync(string account, string noteText, IUnitOfWork uow) => await Task.Run(() => AddNote(account, noteText, uow));
 
-    public IList<AccountNote> AddNote(string accountNo, string noteText)
+    public IList<AccountNote> AddNote(string accountNo, string noteText, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - account {accountNo} note {noteText}");
-
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         if (string.IsNullOrEmpty(accountNo))
             throw new ArgumentNullException(nameof(accountNo));
         if (string.IsNullOrEmpty(noteText))
             throw new ArgumentNullException(nameof(noteText));
 
-        _uow.StartTransaction();
+        uow.StartTransaction();
 
         AccountNote accountNote = new()
         {
@@ -806,9 +844,9 @@ public sealed class AccountService
         };
         try
         {
-            _uow.AccountNoteRepository.Add(accountNote);
-            _uow.Commit();
-            return _uow.AccountNoteRepository.GetByAccount(accountNo);
+            uow.AccountNoteRepository.Add(accountNote);
+            uow.Commit();
+            return uow.AccountNoteRepository.GetByAccount(accountNo);
         }
         catch (Exception ex)
         {
@@ -817,36 +855,41 @@ public sealed class AccountService
         }
     }
 
-    public List<AccountNote> GetNotes(string accountNo)
+    public List<AccountNote> GetNotes(string accountNo, IUnitOfWork uow = null)
     {
-        var notes = _uow.AccountNoteRepository.GetByAccount(accountNo);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var notes = uow.AccountNoteRepository.GetByAccount(accountNo);
         return notes;
     }
 
-    public async Task<Account> ChangeFinancialClassAsync(string accountNo, string newFinCode) => await Task.Run(() => ChangeFinancialClass(accountNo, newFinCode));
+    public async Task<Account> ChangeFinancialClassAsync(string accountNo, string newFinCode, IUnitOfWork uow = null) => await Task.Run(() => ChangeFinancialClass(accountNo, newFinCode, uow));
 
-    public Account ChangeFinancialClass(string accountNo, string newFinCode)
+    public Account ChangeFinancialClass(string accountNo, string newFinCode, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - Account {accountNo} New Fin {newFinCode}");
-        _uow.StartTransaction();
+        uow ??= new UnitOfWork.UnitOfWorkMain(_appEnvironment);
+
+        uow.StartTransaction();
 
         if (string.IsNullOrEmpty(accountNo))
             throw new ArgumentNullException(nameof(accountNo));
         if (string.IsNullOrEmpty(newFinCode))
             throw new ArgumentNullException(nameof(newFinCode));
 
-        var record = GetAccount(accountNo);
+        var record = GetAccount(accountNo, uow);
 
-        var retval = ChangeFinancialClass(record, newFinCode);
-        _uow.Commit();
+        var retval = ChangeFinancialClass(record, newFinCode, uow);
+        uow.Commit();
         return retval;
     }
 
-    public async Task<Account> ChangeFinancialClassAsync(Account model, string newFinCode) => await Task.Run(() => ChangeFinancialClass(model, newFinCode));
+    public async Task<Account> ChangeFinancialClassAsync(Account model, string newFinCode, IUnitOfWork uow = null) => await Task.Run(() => ChangeFinancialClass(model, newFinCode, uow));
 
-    public Account ChangeFinancialClass(Account model, string newFinCode)
+    public Account ChangeFinancialClass(Account model, string newFinCode, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - account {model.AccountNo} new fin {newFinCode}");
+        uow ??= new UnitOfWork.UnitOfWorkMain(_appEnvironment);
+
         if (model == null)
             throw new ArgumentNullException(nameof(model));
         else if (newFinCode == null)
@@ -857,12 +900,12 @@ public sealed class AccountService
             throw new ApplicationException($"Chosen fin code is same as current fin code. No change made. Account {model.AccountNo}, Current Fin Code {model.FinCode}, New Fin Code {newFinCode}");
         }
 
-        _uow.StartTransaction();
+        uow.StartTransaction();
 
         string oldFinCode = model.FinCode;
 
         //check that newFincode is a valid fincode
-        Fin newFin = _uow.FinRepository.GetFin(newFinCode);
+        Fin newFin = uow.FinRepository.GetFin(newFinCode);
         Fin oldFin = model.Fin;
 
         if (newFin == null)
@@ -877,9 +920,9 @@ public sealed class AccountService
                 {
                     //clear ready to bill
                     model.Status = AccountStatus.New;
-                    model.Notes = AddNote(model.AccountNo, "Ready to Bill status cleared due to financial class change.").ToList();
+                    model.Notes = AddNote(model.AccountNo, "Ready to Bill status cleared due to financial class change.", uow).ToList();
                 }
-                _uow.AccountRepository.Update(model, new[] { nameof(Account.FinCode), nameof(Account.Status) });
+                uow.AccountRepository.Update(model, new[] { nameof(Account.FinCode), nameof(Account.Status) });
                 model.FinCode = newFin.FinCode;
                 model.Fin = newFin;
             }
@@ -888,14 +931,14 @@ public sealed class AccountService
                 Log.Instance.Error(ex);
                 throw new ApplicationException($"Exception updating fin code for {model.AccountNo}.", ex);
             }
-            model.Notes = AddNote(model.AccountNo, $"Financial code updated from {oldFinCode} to {newFinCode}.").ToList();
+            model.Notes = AddNote(model.AccountNo, $"Financial code updated from {oldFinCode} to {newFinCode}.", uow).ToList();
 
             //reprocess charges if needed due to financial code change.
             if (newFin.FinClass != oldFin.FinClass)
             {
                 try
                 {
-                    model.Charges = ReprocessCharges(model, $"Fin Code changed from {oldFinCode} to {newFinCode}").ToList();
+                    model.Charges = ReprocessCharges(model, $"Fin Code changed from {oldFinCode} to {newFinCode}", uow).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -904,26 +947,27 @@ public sealed class AccountService
             }
             else
             {
-                model.Charges = UpdateChargesFinCode(model.Charges, newFinCode).ToList();
+                model.Charges = UpdateChargesFinCode(model.Charges, newFinCode, uow).ToList();
             }
-            _uow.Commit();
-            model = Validate(model);
+            uow.Commit();
+            model = Validate(model, false, uow);
         }
 
         Log.Instance.Trace($"Exiting");
         return model;
     }
 
-    public async Task<bool> ChangeClientAsync(Account table, string newClientMnem) => await Task.Run(() => ChangeClient(table, newClientMnem));
+    public async Task<bool> ChangeClientAsync(Account table, string newClientMnem, IUnitOfWork uow = null) => await Task.Run(() => ChangeClient(table, newClientMnem, uow));
 
-    public bool ChangeClient(Account model, string newClientMnem)
+    public bool ChangeClient(Account model, string newClientMnem, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - account {model.AccountNo} new client {newClientMnem}");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         if (model == null)
             throw new ArgumentNullException(nameof(model));
         else ArgumentNullException.ThrowIfNull(newClientMnem);
 
-        _uow.StartTransaction();
+        uow.StartTransaction();
 
         bool updateSuccess = true;
         string oldClientMnem = model.ClientMnem;
@@ -931,29 +975,29 @@ public sealed class AccountService
         if (oldClientMnem == null)
         {
             //account does not have a valid current client defined
-            _uow.Commit();
+            uow.Commit();
             throw new ApplicationException($"Account {model.AccountNo} does not have a valid client defined.");
         }
 
-        Client oldClient = _uow.ClientRepository.GetClient(oldClientMnem);
-        Client newClient = _uow.ClientRepository.GetClient(newClientMnem);
+        Client oldClient = uow.ClientRepository.GetClient(oldClientMnem);
+        Client newClient = uow.ClientRepository.GetClient(newClientMnem);
 
         if (oldClient == null)
         {
-            _uow.Commit();
+            uow.Commit();
             Log.Instance.Error("Client mnem {oldClientMnem} is not valid.");
             throw new ApplicationException($"Client mnem {oldClientMnem} is not valid.");
         }
 
         if (newClient == null)
         {
-            _uow.Commit();
+            uow.Commit();
             throw new ArgumentException($"Client mnem {newClientMnem} is not valid.", nameof(newClientMnem));
         }
 
         if (string.IsNullOrEmpty(newClient.FeeSchedule) || newClient.FeeSchedule == "0")
         {
-            _uow.Commit();
+            uow.Commit();
             throw new ApplicationException($"Fee schedule not defined on client {newClientMnem}. Client change aborted.");
         }
 
@@ -966,26 +1010,26 @@ public sealed class AccountService
                 model.Client = newClient;
                 try
                 {
-                    _uow.AccountRepository.Update(model, new[] { nameof(Account.ClientMnem) });
+                    uow.AccountRepository.Update(model, new[] { nameof(Account.ClientMnem) });
                 }
                 catch (Exception ex)
                 {
                     Log.Instance.Error(ex);
-                    _uow.Rollback();
+                    uow.Rollback();
                     throw new ApplicationException($"Exception updating client for {model.AccountNo}.", ex);
                 }
-                AddNote(model.AccountNo, $"Client updated from {oldClientMnem} to {newClientMnem}.");
+                AddNote(model.AccountNo, $"Client updated from {oldClientMnem} to {newClientMnem}.", uow);
 
                 //reprocess charges if fin class is client bill (C) to pick up proper discounts.
                 if (model.Fin.FinClass == _appEnvironment.ApplicationParameters.ClientFinancialTypeCode)
                 {
                     try
                     {
-                        model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}").ToList();
+                        model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}", uow).ToList();
                     }
                     catch (Exception ex)
                     {
-                        _uow.Rollback();
+                        uow.Rollback();
                         throw new ApplicationException("Error reprocessing charges.", ex);
                     }
                 }
@@ -997,11 +1041,11 @@ public sealed class AccountService
                     {
                         try
                         {
-                            model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}").ToList();
+                            model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}", uow).ToList();
                         }
                         catch (Exception ex)
                         {
-                            _uow.Rollback();
+                            uow.Rollback();
                             throw new ApplicationException("Error reprocessing charges.", ex);
                         }
                     }
@@ -1010,11 +1054,11 @@ public sealed class AccountService
                     {
                         try
                         {
-                            model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}").ToList();
+                            model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}", uow).ToList();
                         }
                         catch (Exception ex)
                         {
-                            _uow.Rollback();
+                            uow.Rollback();
                             throw new ApplicationException("Error reprocessing charges.", ex);
                         }
                     }
@@ -1022,17 +1066,17 @@ public sealed class AccountService
                     {
                         try
                         {
-                            model.Charges = UpdateChargesClient(model.AccountNo, newClientMnem).ToList();
+                            model.Charges = UpdateChargesClient(model.AccountNo, newClientMnem, uow).ToList();
                         }
                         catch (Exception ex)
                         {
-                            _uow.Rollback();
+                            uow.Rollback();
                             throw new ApplicationException("Error updating charge client.", ex);
                         }
                     }
                 }
 
-                _uow.Commit();
+                uow.Commit();
             }
             else
             {
@@ -1058,72 +1102,64 @@ public sealed class AccountService
         public decimal Quantity { get; set; }
     }
 
-    public Chrg GetCharge(int chrgNo)
+    public Chrg GetCharge(int chrgNo, IUnitOfWork uow = null)
     {
-        var charge = _uow.ChrgRepository.GetById(chrgNo);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var charge = uow.ChrgRepository.GetById(chrgNo);
 
-        charge.Cdm = _uow.CdmRepository.GetCdm(charge.CDMCode);
-        charge.ChrgDetails = _uow.ChrgDetailRepository.GetByChrgId(chrgNo).ToList();
+        charge.Cdm = uow.CdmRepository.GetCdm(charge.CDMCode);
+        charge.ChrgDetails = uow.ChrgDetailRepository.GetByChrgId(chrgNo).ToList();
 
         return charge;
     }
 
-    public IList<ClaimChargeView> GetClaimCharges(string accountNo)
+    public IList<ClaimChargeView> GetClaimCharges(string accountNo, IUnitOfWork uow)
     {
-        var charges = _uow.ChrgRepository.GetClaimCharges(accountNo);
+        var charges = uow.ChrgRepository.GetClaimCharges(accountNo);
 
         foreach (var chrg in charges)
         {
-            chrg.RevenueCodeDetail = _uow.RevenueCodeRepository.GetByCode(chrg.RevenueCode);
-            chrg.Cdm = _uow.CdmRepository.GetCdm(chrg.ChargeId, true);
+            chrg.RevenueCodeDetail = uow.RevenueCodeRepository.GetByCode(chrg.RevenueCode);
+            chrg.Cdm = uow.CdmRepository.GetCdm(chrg.ChargeId, true);
         }
 
         return charges;
     }
 
-    public IList<Chrg> GetCharges(string accountNo, bool showCredited = true, bool includeInvoiced = true, DateTime? asOfDate = null, bool excludeCBill = true)
+    public IList<Chrg> GetCharges(IUnitOfWork uow, string accountNo, bool showCredited = true, bool includeInvoiced = true, DateTime? asOfDate = null, bool excludeCBill = true)
     {
         Log.Instance.Debug($"Entering - account {accountNo}");
 
         if (string.IsNullOrEmpty(accountNo))
             throw new ArgumentNullException(nameof(accountNo));
 
-        List<Chrg> charges = _uow.ChrgRepository.GetByAccount(accountNo, showCredited, includeInvoiced, asOfDate, excludeCBill);
+        List<Chrg> charges = uow.ChrgRepository.GetByAccount(accountNo, showCredited, includeInvoiced, asOfDate, excludeCBill);
 
-        if (charges.Count > 10) //consider parallel processing if number of charges is significant.
+        charges.ForEach(chrg =>
         {
-            charges.AsParallel().ForAll(chrg =>
-            {
-                chrg.Cdm = _dictionaryService.GetCdm(chrg.CDMCode, true);
-                AddRevenueDiagnosisToChrg(chrg);
-            });
-        }
-        else
-        {
-            charges.ForEach(chrg =>
-            {
-                chrg.Cdm = _dictionaryService.GetCdm(chrg.CDMCode, true);
-                AddRevenueDiagnosisToChrg(chrg);
-            });
-        }
+            chrg.Cdm = _dictionaryService.GetCdm(chrg.CDMCode, true, uow);
+            AddRevenueDiagnosisToChrg(chrg, uow);
+        });
+
+
         return charges;
     }
 
-    internal void AddRevenueDiagnosisToChrg(Chrg chrg)
+    internal void AddRevenueDiagnosisToChrg(Chrg chrg, IUnitOfWork uow)
     {
-        chrg.Cdm = _dictionaryService.GetCdm(chrg.CDMCode, true);
-        chrg.ChrgDetails = _uow.ChrgDetailRepository.GetByChrgId(chrg.ChrgId).ToList();
+        chrg.Cdm = _dictionaryService.GetCdm(chrg.CDMCode, true, uow);
+        chrg.ChrgDetails = uow.GetRepository<ChrgDetailRepository>(true).GetByChrgId(chrg.ChrgId).ToList();
         chrg.ChrgDetails.ForEach(detail =>
         {
-            detail.RevenueCodeDetail = _dictionaryService.GetRevenueCode(detail.RevenueCode);
-            var cpt = _uow.CptAmaRepository.GetCpt(detail.Cpt4);
+            detail.RevenueCodeDetail = _dictionaryService.GetRevenueCode(uow, detail.RevenueCode);
+            var cpt = uow.GetRepository<CptAmaRepository>(true).GetCpt(detail.Cpt4);
             if (cpt != null)
                 detail.CptDescription = cpt.ShortDescription;
         });
 
     }
 
-    public async Task<IList<Chrg>> ReprocessChargesAsync(Account account, string comment) => await Task.Run(() => ReprocessCharges(account, comment));
+    public async Task<IList<Chrg>> ReprocessChargesAsync(Account account, string comment, IUnitOfWork uow) => await Task.Run(() => ReprocessCharges(account, comment, uow));
 
     /// <summary>
     /// 
@@ -1131,27 +1167,34 @@ public sealed class AccountService
     /// <param name="account"></param>
     /// <param name="comment"></param>
     /// <returns></returns>
-    public IList<Chrg> ReprocessCharges(Account account, string comment)
+    public IList<Chrg> ReprocessCharges(Account account, string comment, IUnitOfWork uow)
     {
         Log.Instance.Trace($"Entering {account}");
 
         if (account == null)
             throw new ArgumentNullException(nameof(account));
 
-        _uow.StartTransaction();
+        uow.StartTransaction();
         try
         {
             var chargesToCredit = account.Charges.Where(x => x.IsCredited == false && x.CDMCode != _appEnvironment.ApplicationParameters.ClientInvoiceCdm).ToList();
 
             chargesToCredit.ForEach(c =>
             {
-                CreditCharge(c.ChrgId, comment);
-                AddCharge(account, c.CDMCode, c.Quantity, account.TransactionDate);
+                CreditCharge(c.ChrgId, comment, uow);
+                AddCharge(new AddChargeParameters() 
+                { 
+                    Account = account, 
+                    Cdm = c.CDMCode, 
+                    Quantity = c.Quantity, 
+                    ServiceDate = account.TransactionDate, 
+                    Uow = uow 
+                });
             });
 
-            var updatedChrgList = GetCharges(account.AccountNo);
+            var updatedChrgList = GetCharges(uow, account.AccountNo);
 
-            _uow.Commit();
+            uow.Commit();
             return updatedChrgList;
         }
         catch (Exception ex)
@@ -1161,7 +1204,7 @@ public sealed class AccountService
         }
     }
 
-    public async Task<IList<Chrg>> ReprocessChargesAsync(string account, string comment) => await Task.Run(() => ReprocessCharges(account, comment));
+    public async Task<IList<Chrg>> ReprocessChargesAsync(string account, string comment, IUnitOfWork uow) => await Task.Run(() => ReprocessCharges(account, comment, uow));
 
     /// <summary>
     /// 
@@ -1169,14 +1212,14 @@ public sealed class AccountService
     /// <param name="account"></param>
     /// <param name="comment"></param>
     /// <returns></returns>
-    public IList<Chrg> ReprocessCharges(string account, string comment)
+    public IList<Chrg> ReprocessCharges(string account, string comment, IUnitOfWork uow)
     {
         Log.Instance.Trace($"Entering {account}");
 
         if (string.IsNullOrEmpty(account))
             throw new ArgumentNullException(nameof(account));
 
-        var acc = GetAccount(account);
+        var acc = GetAccount(account, uow);
 
         if (acc == null)
         {
@@ -1184,27 +1227,27 @@ public sealed class AccountService
             throw new AccountNotFoundException($"Account is not a valid account.", account);
         }
 
-        return ReprocessCharges(acc, comment);
+        return ReprocessCharges(acc, comment, uow);
     }
 
-    public async Task<IList<Chrg>> UpdateChargesFinCodeAsync(IList<Chrg> charges, string finCode) => await Task.Run(() => UpdateChargesFinCode(charges, finCode));
+    public async Task<IList<Chrg>> UpdateChargesFinCodeAsync(IList<Chrg> charges, string finCode, IUnitOfWork uow) => await Task.Run(() => UpdateChargesFinCode(charges, finCode, uow));
 
-    public IList<Chrg> UpdateChargesFinCode(IList<Chrg> charges, string finCode)
+    public IList<Chrg> UpdateChargesFinCode(IList<Chrg> charges, string finCode, IUnitOfWork uow)
     {
         Log.Instance.Trace("Entering");
         try
         {
-            _uow.StartTransaction();
+            uow.StartTransaction();
 
             if (charges == null || charges.Count == 0)
             {
                 Log.Instance.Info($"No charges to update.");
-                _uow.Commit();
+                uow.Commit();
                 return charges;
             }
             //throw new ApplicationException($"No charges for account {charges.First().AccountNo}");
 
-            var fin = _uow.FinRepository.GetFin(finCode) ?? throw new ApplicationException($"Fin {finCode} is not valid");
+            var fin = uow.FinRepository.GetFin(finCode) ?? throw new ApplicationException($"Fin {finCode} is not valid");
 
             var chrgsToUpdate = charges.Where(x => x.IsCredited == false &&
                 (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
@@ -1215,11 +1258,11 @@ public sealed class AccountService
             {
                 c.FinCode = finCode;
                 c.FinancialType = fin.FinClass;
-                c = _uow.ChrgRepository.Update(c, new[] { nameof(Chrg.FinancialType), nameof(Chrg.FinCode) });
+                c = uow.ChrgRepository.Update(c, new[] { nameof(Chrg.FinancialType), nameof(Chrg.FinCode) });
             });
 
-            _uow.Commit();
-            return GetCharges(charges.First().AccountNo).ToList();
+            uow.Commit();
+            return GetCharges(uow, charges.First().AccountNo).ToList();
         }
         catch (Exception ex)
         {
@@ -1234,7 +1277,7 @@ public sealed class AccountService
     /// <param name="account"></param>
     /// <param name="clientMnem"></param>
     /// <returns></returns>
-    public async Task<IList<Chrg>> UpdateChargesClientAsync(string account, string clientMnem) => await Task.Run(() => UpdateChargesClient(account, clientMnem));
+    public async Task<IList<Chrg>> UpdateChargesClientAsync(string account, string clientMnem, IUnitOfWork uow) => await Task.Run(() => UpdateChargesClient(account, clientMnem, uow));
 
     /// <summary>
     /// 
@@ -1242,80 +1285,38 @@ public sealed class AccountService
     /// <param name="account"></param>
     /// <param name="clientMnem"></param>
     /// <returns></returns>
-    public IList<Chrg> UpdateChargesClient(string account, string clientMnem)
+    public IList<Chrg> UpdateChargesClient(string account, string clientMnem, IUnitOfWork uow)
     {
         Log.Instance.Trace("Entering");
 
-        _uow.StartTransaction();
+        uow.StartTransaction();
 
-        List<Chrg> charges = GetCharges(account).ToList();
+        List<Chrg> charges = GetCharges(uow, account).ToList();
 
         if (charges == null || charges.Count == 0)
             throw new ApplicationException($"No charges for account {account}");
 
-        var client = _uow.ClientRepository.GetClient(clientMnem) ?? throw new ApplicationException($"Client {clientMnem} not valid.");
+        var client = uow.ClientRepository.GetClient(clientMnem) ?? throw new ApplicationException($"Client {clientMnem} not valid.");
         charges.ForEach(c =>
         {
             c.ClientMnem = clientMnem;
-            c = _uow.ChrgRepository.Update(c, new[] { nameof(Chrg.ClientMnem) });
+            c = uow.ChrgRepository.Update(c, new[] { nameof(Chrg.ClientMnem) });
         });
 
-        _uow.Commit();
+        uow.Commit();
         return charges;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="account"></param>
-    /// <param name="cdm"></param>
-    /// <param name="qty"></param>
-    /// <param name="serviceDate"></param>
-    /// <param name="comment"></param>
-    /// <param name="refNumber"></param>
-    /// <param name="miscAmount"></param>
-    /// <returns></returns>
-    public async Task<Account> AddChargeAsync(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00)
-        => await Task.Run(() => AddCharge(account, cdm, qty, serviceDate, comment, refNumber, miscAmount));
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="account"></param>
-    /// <param name="cdm"></param>
-    /// <param name="qty"></param>
-    /// <param name="serviceDate"></param>
-    /// <param name="comment"></param>
-    /// <param name="refNumber"></param>
-    /// <param name="miscAmount"></param>
-    /// <returns></returns>
-    /// <exception cref="AccountNotFoundException"></exception>
-    public Account AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00)
-    {
-        Log.Instance.Trace($"Entering - account {account} cdm {cdm}");
-
-        //verify the account exists
-        Account accData = GetAccount(account);
-        if (accData == null)
-        {
-            Log.Instance.Error($"Account {account} not found");
-            throw new AccountNotFoundException("Account is not a valid account.", account);
-        }
-
-        return AddCharge(accData, cdm, qty, serviceDate, comment, refNumber, miscAmount);
-    }
-
-
-    public Chrg AddCharge(Chrg chrg)
+    public Chrg AddCharge(Chrg chrg, IUnitOfWork uow)
     {
         Log.Instance.Trace("Entering");
 
-        var newChrg = _uow.ChrgRepository.Add(chrg);
+        var newChrg = uow.ChrgRepository.Add(chrg);
 
         chrg.ChrgDetails.ForEach(cd =>
         {
             cd.ChrgNo = newChrg.ChrgId;
-            cd = _uow.ChrgDetailRepository.Add(cd);
+            cd = uow.ChrgDetailRepository.Add(cd);
             newChrg.ChrgDetails.Add(cd);
         });
         newChrg.Cdm = chrg.Cdm;
@@ -1323,22 +1324,78 @@ public sealed class AccountService
         return newChrg;
     }
 
-    public async Task<Account> AddChargeAsync(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00)
-        => await Task.Run(() => AddCharge(accData, cdm, qty, serviceDate, comment, refNumber, miscAmount));
+    public async Task<Account> AddChargeAsync(AddChargeParameters parameters)
+        => await Task.Run(() => AddCharge(parameters));
 
     /// <summary>
-    /// Add a charge to an account. The account must exist.
+    /// Adds a charge to an account using the specified parameters.
     /// </summary>
-    /// <param name="account"></param>
-    /// <param name="cdm"></param>
-    /// <param name="qty"></param>
-    /// <param name="comment"></param>
-    /// <param name="refNumber"></param>
-    /// <param name="miscAmount"></param>
-    /// <returns>Charge number of newly entered charge or < 0 if an error occurs.</returns>
-    public Account AddCharge(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00)
+    /// <param name="parameters">
+    /// An instance of <see cref="AddChargeParameters"/> containing the details of the charge to be added:
+    /// <list type="bullet">
+    /// <item><term>Account</term> (optional): The <see cref="Account"/> object to add the charge to.</item>
+    /// <item><term>AccountNumber</term> (optional): The account number if the <c>Account</c> object is not provided.</item>
+    /// <item><term>Cdm</term> (required): The CDM code representing the charge.</item>
+    /// <item><term>Quantity</term> (required): The quantity of the charge to add.</item>
+    /// <item><term>ServiceDate</term> (required): The date of service for the charge.</item>
+    /// <item><term>Comment</term> (optional): Any additional comments related to the charge.</item>
+    /// <item><term>RefNumber</term> (optional): A reference number associated with the charge.</item>
+    /// <item><term>MiscAmount</term> (optional): An optional miscellaneous amount for the charge.</item>
+    /// <item><term>Uow</term> (optional): An instance of <see cref="IUnitOfWork"/> for database transactions.</item>
+    /// </list>
+    /// </param>
+    /// <returns>
+    /// The updated <see cref="Account"/> object after the charge has been added.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when the <c>Cdm</c> parameter is null or empty.
+    /// </exception>
+    /// <exception cref="AccountNotFoundException">
+    /// Thrown when the specified account does not exist.
+    /// </exception>
+    /// <exception cref="InvalidClientException">
+    /// Thrown when the account's client information is invalid.
+    /// </exception>
+    /// <exception cref="CdmNotFoundException">
+    /// Thrown when the specified CDM code is not found in the system.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the <c>Quantity</c> is less than or equal to zero.
+    /// </exception>
+    /// <remarks>
+    /// This method allows adding a charge to an account by providing all necessary details encapsulated in an
+    /// <see cref="AddChargeParameters"/> object. It handles transaction management and commits the changes to the database.
+    /// </remarks>
+    public Account AddCharge(AddChargeParameters parameters)
     {
-        Log.Instance.Trace($"Entering - account {accData.AccountNo} cdm {cdm}");
+        //check for required parameters
+        ArgumentNullException.ThrowIfNull(parameters);
+
+        ArgumentNullException.ThrowIfNullOrEmpty(parameters.Cdm);
+
+        //set default values for optional parameters
+        string comment = parameters.Comment ?? string.Empty;
+        string refNumber = parameters.RefNumber ?? string.Empty;
+        double miscAmount = parameters.MiscAmount;
+
+        Account accData;
+        if(parameters.Account == null)
+        {
+            //see if account number is provided and get account
+            if (string.IsNullOrEmpty(parameters.AccountNumber))
+                throw new ArgumentNullException(nameof(parameters.AccountNumber));
+
+            accData = GetAccount(parameters.AccountNumber, parameters.Uow);
+            if(accData == null)
+                throw new AccountNotFoundException("Account is not a valid account.", parameters.AccountNumber);
+        }
+        else
+        {
+            accData = parameters.Account;
+        }
+
+        Log.Instance.Trace($"Entering - account {accData.AccountNo} cdm {parameters.Cdm}");
+        var uow = parameters.Uow ?? new UnitOfWorkMain(_appEnvironment);
 
         if (accData.Client == null)
             throw new InvalidClientException("Client not valid", accData.ClientMnem);
@@ -1346,22 +1403,22 @@ public sealed class AccountService
         if (string.IsNullOrEmpty(accData.Client.FeeSchedule))
             throw new ApplicationException($"Fee Schedule not defined on client. Cannot post charge. Client {accData.ClientMnem}");
 
-        Fin fin = _dictionaryService.GetFinCode(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
+        Fin fin = _dictionaryService.GetFinCode(uow, accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
 
         //get the cdm number - if cdm number is not found - abort
-        Cdm cdmData = _dictionaryService.GetCdm(cdm);
+        Cdm cdmData = _dictionaryService.GetCdm(parameters.Cdm, uow);
         if (cdmData == null)
         {
-            Log.Instance.Error($"CDM {cdm} not found.");
-            throw new CdmNotFoundException("CDM not found.", cdm);
+            Log.Instance.Error($"CDM {parameters.Cdm} not found.");
+            throw new CdmNotFoundException("CDM not found.", parameters.Cdm);
         }
 
-        _uow.StartTransaction();
+        uow.StartTransaction();
 
         //check account status, change to NEW if it is paid out.
         if (accData.Status == AccountStatus.PaidOut)
         {
-            UpdateStatus(accData.AccountNo, AccountStatus.New);
+            UpdateStatus(accData.AccountNo, AccountStatus.New, uow);
             accData.Status = AccountStatus.New;
         }
 
@@ -1370,13 +1427,13 @@ public sealed class AccountService
         if (_appEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
         {
             //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
-            var gb = _uow.GlobalBillingCdmRepository.GetCdm(cdm, accData.TransactionDate);
+            var gb = uow.GlobalBillingCdmRepository.GetCdm(parameters.Cdm, accData.TransactionDate);
             //hard coding exception for Hardin County for now - 05/09/2023 BSP
             if (gb != null && accData.ClientMnem != _appEnvironment.ApplicationParameters.PathologyBillingClientException)
             {
-                fin = _uow.FinRepository.GetFin(_appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode)
+                fin = uow.FinRepository.GetFin(_appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode)
                     ?? throw new ApplicationException($"Fin code {_appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode} not found error {accData.AccountNo}");
-                chargeClient = _uow.ClientRepository.GetClient(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
+                chargeClient = uow.ClientRepository.GetClient(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
             }
         }
 
@@ -1385,7 +1442,7 @@ public sealed class AccountService
             //now build the charge & detail records
             AccountNo = accData.AccountNo,
             BillMethod = fin.ClaimType,
-            CDMCode = cdm,
+            CDMCode = parameters.Cdm,
             Comment = comment,
             IsCredited = false,
             FinCode = fin.FinCode,
@@ -1394,8 +1451,8 @@ public sealed class AccountService
             OrderMnem = cdmData.Mnem,
             LISReqNo = refNumber,
             PostingDate = DateTime.Today,
-            Quantity = qty,
-            ServiceDate = serviceDate
+            Quantity = parameters.Quantity,
+            ServiceDate = parameters.ServiceDate
         };
 
 
@@ -1441,7 +1498,7 @@ public sealed class AccountService
             }
             else if (fin.FinClass == _appEnvironment.ApplicationParameters.ClientFinancialTypeCode)
             {
-                var cliDiscount = chargeClient.Discounts?.Find(c => c.Cdm == cdm);
+                var cliDiscount = chargeClient.Discounts?.Find(c => c.Cdm == parameters.Cdm);
                 double discountPercentage = chargeClient.DefaultDiscount;
                 if (cliDiscount != null)
                 {
@@ -1474,7 +1531,7 @@ public sealed class AccountService
             chrgDetail.Modifier = fee.Modifier;
             chrgDetail.RevenueCode = fee.RevenueCode;
             chrgDetail.OrderCode = fee.BillCode;
-            var cpt = _uow.CptAmaRepository.GetCpt(chrgDetail.Cpt4);
+            var cpt = uow.CptAmaRepository.GetCpt(chrgDetail.Cpt4);
             if (cpt != null)
                 chrgDetail.CptDescription = cpt.ShortDescription;
 
@@ -1492,7 +1549,7 @@ public sealed class AccountService
                     CptCode = chrgDetail.Cpt4,
                     DiagnosisPointer = "1:"
                 };
-                accData.ChrgDiagnosisPointers.Add(_uow.ChrgDiagnosisPointerRepository.Add(ptr));
+                accData.ChrgDiagnosisPointers.Add(uow.ChrgDiagnosisPointerRepository.Add(ptr));
             }
         }
 
@@ -1500,19 +1557,19 @@ public sealed class AccountService
         chrg.HospAmount = ztotal;
         chrg.RetailAmount = retailTotal;
 
-        chrg = _uow.ChrgRepository.Add(chrg);
-        chrg.Cdm = _dictionaryService.GetCdm(chrg.CDMCode);
+        chrg = uow.ChrgRepository.Add(chrg);
+        chrg.Cdm = _dictionaryService.GetCdm(chrg.CDMCode, uow);
         chrgDetails.ForEach(d =>
         {
             d.ChrgNo = chrg.ChrgId;
-            d = _uow.ChrgDetailRepository.Add(d);
+            d = uow.ChrgDetailRepository.Add(d);
         });
         chrg.ChrgDetails = chrgDetails;
 
         accData.Charges.Add(chrg);
 
 
-        _uow.Commit();
+        uow.Commit();
         Log.Instance.Trace($"Exiting");
         return accData;
     }
@@ -1558,9 +1615,9 @@ public sealed class AccountService
         }
     }
 
-    public async Task<Account> UnbundlePanelsAsync(Account account) => await Task.Run(() => UnbundlePanels(account));
+    public async Task<Account> UnbundlePanelsAsync(Account account, IUnitOfWork uow) => await Task.Run(() => UnbundlePanels(account, uow));
 
-    public Account UnbundlePanels(Account account)
+    public Account UnbundlePanels(Account account, IUnitOfWork uow)
     {
         var bundledProfiles1 = account.Charges.Where(x => x.CDMCode == "MCL0029" && x.IsCredited == false);
         var bundledProfiles2 = account.Charges.Where(x => x.CDMCode == "MCL0021" && x.IsCredited == false);
@@ -1572,37 +1629,37 @@ public sealed class AccountService
 
         try
         {
-            _uow.StartTransaction();
+            uow.StartTransaction();
 
             foreach (var bundledProfile in bundledProfiles1)
             {
                 //credit the profile charge
-                CreditCharge(bundledProfile.ChrgId, "Unbundling charge");
+                CreditCharge(bundledProfile.ChrgId, "Unbundling charge", uow);
 
                 //enter charges for each component
-                AddCharge(account, "5545154", 1, account.TransactionDate);
-                AddCharge(account, "5382522", 1, account.TransactionDate);
-                AddCharge(account, "5646008", 1, account.TransactionDate);
+                AddCharge(new AddChargeParameters() { Account = account, Cdm = "5545154", Quantity = 1, ServiceDate = account.TransactionDate, Uow = uow });
+                AddCharge(new AddChargeParameters() { Account = account, Cdm = "5382522", Quantity = 1, ServiceDate = account.TransactionDate, Uow = uow });
+                AddCharge(new AddChargeParameters() { Account = account, Cdm = "5646008", Quantity = 1, ServiceDate = account.TransactionDate, Uow = uow });
             }
 
 
             foreach (var bundledProfile in bundledProfiles2)
             {
                 //credit the profile charge
-                CreditCharge(bundledProfile.ChrgId, "Unbundling charge");
+                CreditCharge(bundledProfile.ChrgId, "Unbundling charge", uow);
 
                 //enter charges for each component
-                AddCharge(account, "5545154", 1, account.TransactionDate);
-                AddCharge(account, "5646012", 1, account.TransactionDate);
-                AddCharge(account, "5646086", 1, account.TransactionDate);
-                AddCharge(account, "5646054", 1, account.TransactionDate);
-                AddCharge(account, "5728026", 1, account.TransactionDate);
-                AddCharge(account, "5728190", 1, account.TransactionDate);
+                AddCharge(new AddChargeParameters() { Account = account, Cdm = "5545154", ServiceDate = account.TransactionDate, Uow = uow });
+                AddCharge(new AddChargeParameters() { Account = account, Cdm = "5646012", ServiceDate = account.TransactionDate, Uow = uow });
+                AddCharge(new AddChargeParameters() { Account = account, Cdm = "5646086", ServiceDate = account.TransactionDate, Uow = uow });
+                AddCharge(new AddChargeParameters() { Account = account, Cdm = "5646054", ServiceDate = account.TransactionDate, Uow = uow });
+                AddCharge(new AddChargeParameters() { Account = account, Cdm = "5728026", ServiceDate = account.TransactionDate, Uow = uow });
+                AddCharge(new AddChargeParameters() { Account = account, Cdm = "5728190", ServiceDate = account.TransactionDate, Uow = uow });
             }
 
-            account.Charges = GetCharges(account.AccountNo).ToList();
+            account.Charges = GetCharges(uow, account.AccountNo).ToList();
 
-            _uow.Commit();
+            uow.Commit();
             return account;
         }
         catch (Exception ex)
@@ -1613,9 +1670,9 @@ public sealed class AccountService
 
     }
 
-    public async Task<Account> BundlePanelsAsync(Account account) => await Task.Run(() => BundlePanels(account));
+    public async Task<Account> BundlePanelsAsync(Account account, IUnitOfWork uow) => await Task.Run(() => BundlePanels(account, uow));
 
-    public Account BundlePanels(Account account)
+    public Account BundlePanels(Account account, IUnitOfWork uow)
     {
         List<BundledProfile> bundledProfiles = new()
         {
@@ -1645,7 +1702,7 @@ public sealed class AccountService
             }
         };
 
-        _uow.StartTransaction();
+        uow.StartTransaction();
 
         for (int x = 0; x < bundledProfiles.Count; x++)
         {
@@ -1667,20 +1724,20 @@ public sealed class AccountService
 
                 for (int i = 0; i < bundledProfiles[x].ComponentCpt.Count; i++)
                 {
-                    CreditCharge(bundledProfiles[x].ComponentCpt[i].ChrgId, $"Bundling to {bundledProfiles[x].ProfileCdm}");
+                    CreditCharge(bundledProfiles[x].ComponentCpt[i].ChrgId, $"Bundling to {bundledProfiles[x].ProfileCdm}", uow);
                 }
 
-                this.AddCharge(account, bundledProfiles[x].ProfileCdm, 1, (DateTime)account.TransactionDate, $"Bundled by Rule");
-                account.Notes = this.AddNote(account.AccountNo, $"Bundled charges into {bundledProfiles[x].ProfileCdm}").ToList();
+                this.AddCharge(new AddChargeParameters() { Account = account, Cdm = bundledProfiles[x].ProfileCdm, Quantity = 1, ServiceDate = account.TransactionDate, Uow = uow });
+                account.Notes = this.AddNote(account.AccountNo, $"Bundled charges into {bundledProfiles[x].ProfileCdm}", uow).ToList();
             }
         }
-        account.Charges = GetCharges(account.AccountNo).ToList();
+        account.Charges = GetCharges(uow, account.AccountNo).ToList();
 
-        _uow.Commit();
+        uow.Commit();
         return account;
     }
 
-    public async Task<Account> ValidateAsync(Account account, bool reprint = false) => await Task.Run(() => Validate(account, reprint));
+    public async Task<Account> ValidateAsync(Account account, bool reprint = false, IUnitOfWork uow = null) => await Task.Run(() => Validate(account, reprint, uow));
 
     /// <summary>
     /// Runs all validation routines on account. Updates validation status and account flags. Errors are stored in the validation status table.
@@ -1688,13 +1745,14 @@ public sealed class AccountService
     /// <param name="account"></param>
     /// <param name="reprint">Set true if validating account to resubmit the claim with no changes.</param>
     /// <returns>True if account is valid for billing, false if there are validation errors.</returns>
-    public Account Validate(Account account, bool reprint = false)
+    public Account Validate(Account account, bool reprint = false, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - account {account}");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
 
         try
         {
-            _uow.StartTransaction();
+            uow.StartTransaction();
 
             if ((account.Status == AccountStatus.InstSubmitted || account.Status == AccountStatus.ProfSubmitted
                 || account.Status == AccountStatus.ClaimSubmitted || account.Status == AccountStatus.Statements
@@ -1704,8 +1762,8 @@ public sealed class AccountService
                 account.AccountValidationStatus.Account = account.AccountNo;
                 account.AccountValidationStatus.UpdatedDate = DateTime.Now;
                 account.AccountValidationStatus.ValidationText = "Account has already been billed. Did not validate.";
-                _uow.AccountValidationStatusRepository.Save(account.AccountValidationStatus);
-                _uow.Commit();
+                uow.AccountValidationStatusRepository.Save(account.AccountValidationStatus);
+                uow.Commit();
                 return account;
             }
             else
@@ -1716,14 +1774,14 @@ public sealed class AccountService
                     if (account.InsurancePrimary.InsCompany != null)
                     {
                         if (account.InsurancePrimary.InsCompany.IsMedicareHmo)
-                            account = UnbundlePanels(account);
+                            account = UnbundlePanels(account, uow);
                         if (!account.InsurancePrimary.InsCompany.IsMedicareHmo)
-                            account = BundlePanels(account);
+                            account = BundlePanels(account, uow);
                     }
                 }
 
                 Services.Validators.ClaimValidator claimValidator = new();
-                account.LmrpErrors = ValidateLMRP(account);
+                account.LmrpErrors = ValidateLMRP(account, uow);
                 var validationResult = claimValidator.Validate(account);
 
                 bool isAccountValid = true;
@@ -1741,7 +1799,7 @@ public sealed class AccountService
                     if (!reprint)
                     {
                         account.Status = AccountStatus.New;
-                        UpdateStatus(account.AccountNo, AccountStatus.New);
+                        UpdateStatus(account.AccountNo, AccountStatus.New, uow);
                     }
                 }
 
@@ -1758,7 +1816,7 @@ public sealed class AccountService
                     if (!reprint)
                     {
                         account.Status = AccountStatus.New;
-                        UpdateStatus(account.AccountNo, AccountStatus.New);
+                        UpdateStatus(account.AccountNo, AccountStatus.New, uow);
                     }
                 }
 
@@ -1769,17 +1827,17 @@ public sealed class AccountService
                     if (account.Status == AccountStatus.ReadyToBill)
                     {
                         account.Status = account.BillForm;
-                        UpdateStatus(account.AccountNo, account.BillForm);
+                        UpdateStatus(account.AccountNo, account.BillForm, uow);
                         //if this is a self-pay, set the statement flag
                         if (account.BillForm == AccountStatus.Statements)
                         {
-                            _uow.PatRepository.SetStatementFlag(account.AccountNo, "Y");
+                            uow.PatRepository.SetStatementFlag(account.AccountNo, "Y");
                             account.Pat.StatementFlag = "Y";
                         }
                     }
                 }
 
-                _uow.AccountValidationStatusRepository.Save(account.AccountValidationStatus);
+                uow.AccountValidationStatusRepository.Save(account.AccountValidationStatus);
                 if (!string.IsNullOrEmpty(lmrperrors))
                 {
                     AccountLmrpError record = new()
@@ -1791,9 +1849,9 @@ public sealed class AccountService
                         Error = lmrperrors
                     };
 
-                    _uow.AccountLmrpErrorRepository.Save(record);
+                    uow.AccountLmrpErrorRepository.Save(record);
                 }
-                _uow.Commit();
+                uow.Commit();
                 AccountValidated?.Invoke(this, new AccountEventArgs() {  Account = account, AccountNo = account.AccountNo, UpdateMessage = account.AccountValidationStatus.ValidationText });
                 return account;
             }
@@ -1804,22 +1862,22 @@ public sealed class AccountService
             account.AccountValidationStatus.Account = account.AccountNo;
             account.AccountValidationStatus.UpdatedDate = DateTime.Now;
             account.AccountValidationStatus.ValidationText = "Exception during Validation. Unable to validate.";
-            _uow.AccountValidationStatusRepository.Save(account.AccountValidationStatus);
+            uow.AccountValidationStatusRepository.Save(account.AccountValidationStatus);
             return account;
         }
     }
 
-    private async Task<List<string>> ValidateLMRPAsync(Account account) => await Task.Run(() => ValidateLMRP(account));
+    private async Task<List<string>> ValidateLMRPAsync(Account account, IUnitOfWork uow) => await Task.Run(() => ValidateLMRP(account, uow));
 
-    private List<string> ValidateLMRP(Account account)
+    private List<string> ValidateLMRP(Account account, IUnitOfWork uow)
     {
         Log.Instance.Trace($"Entering - account {account}");
         List<string> errorList = new();
 
-        _uow.StartTransaction();
+        uow.StartTransaction();
 
         //determine if there are any rules for ama_year
-        if (_uow.LmrpRuleRepository.RulesLoaded((DateTime)account.TransactionDate) <= 0)
+        if (uow.LmrpRuleRepository.RulesLoaded((DateTime)account.TransactionDate) <= 0)
         {
             // no lmrp rules loaded for this ama year. 
             errorList.Add("Rules not loaded for AMA_Year. DO NOT BILL.");
@@ -1830,7 +1888,7 @@ public sealed class AccountService
         {
             if (cpt4 == null)
                 continue;
-            var ruleDef = _uow.LmrpRuleRepository.GetRuleDefinition(cpt4, (DateTime)account.TransactionDate);
+            var ruleDef = uow.LmrpRuleRepository.GetRuleDefinition(cpt4, (DateTime)account.TransactionDate);
             if (ruleDef == null)
                 continue;
 
@@ -1839,7 +1897,7 @@ public sealed class AccountService
 
             foreach (var dx in account.Pat.Diagnoses)
             {
-                var rule = _uow.LmrpRuleRepository.GetRule(cpt4, dx.Code, (DateTime)account.TransactionDate);
+                var rule = uow.LmrpRuleRepository.GetRule(cpt4, dx.Code, (DateTime)account.TransactionDate);
                 if (dxIsValid && rule != null)
                     dxSupported = true;
 
@@ -1856,14 +1914,14 @@ public sealed class AccountService
                 }                
             }
         }
-        _uow.Commit();
+        uow.Commit();
         return errorList;
     }
 
-    public void ValidateUnbilledAccounts()
+    public void ValidateUnbilledAccounts(IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering");
-
+        uow ??= new UnitOfWorkMain(_appEnvironment);
 
         (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
             (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, DateTime.Today.AddDays((_appEnvironment.ApplicationParameters.BillingInitialHoldDays)*-1).ToShortDateString()),
@@ -1874,7 +1932,7 @@ public sealed class AccountService
         };
 
         ValidationAccountUpdated?.Invoke(this, new ValidationUpdatedEventArgs() { UpdateMessage = "Compiling accounts", TimeStamp = DateTime.Now });
-        var accounts = _uow.AccountSearchRepository.GetBySearch(parameters).ToList();
+        var accounts = uow.AccountSearchRepository.GetBySearch(parameters).ToList();
         int p = 0;
         int t = accounts.Count;
         ValidationAccountUpdated?.Invoke(this, new ValidationUpdatedEventArgs() { UpdateMessage = "Compiled accounts", TimeStamp = DateTime.Now, Processed = p, TotalItems = t });
@@ -1883,9 +1941,10 @@ public sealed class AccountService
         {
             try
             {
-                var accountRecord = this.GetAccount(account.Account);
-                this.Validate(accountRecord);
-                ClearAccountLock(accountRecord);
+                using var lUow = new UnitOfWorkMain(_appEnvironment);
+                var accountRecord = this.GetAccount(account.Account, lUow);
+                this.Validate(accountRecord, false, uow);
+                ClearAccountLock(accountRecord, lUow);
                 p++;
                 ValidationAccountUpdated?.Invoke(this, new ValidationUpdatedEventArgs()
                 {
@@ -1904,7 +1963,7 @@ public sealed class AccountService
         });
     }
 
-    public async Task ValidateUnbilledAccountsAsync() => await Task.Run(() => ValidateUnbilledAccounts());
+    public async Task ValidateUnbilledAccountsAsync(IUnitOfWork uow) => await Task.Run(() => ValidateUnbilledAccounts(uow));
 
     /// <summary>
     /// Move all charges between accounts. Credits the charges from sourceAccount and charges them on destinationAccount.
@@ -1912,17 +1971,17 @@ public sealed class AccountService
     /// </summary>
     /// <param name="sourceAccount"></param>
     /// <param name="destinationAccount"></param>
-    public (bool isSuccess, string error) MoveCharges(string sourceAccount, string destinationAccount)
+    public (bool isSuccess, string error) MoveCharges(string sourceAccount, string destinationAccount, IUnitOfWork uow = null  )
     {
         if (string.IsNullOrEmpty(sourceAccount) || string.IsNullOrEmpty(destinationAccount))
         {
             throw new ArgumentException("One or both arguments are null or empty.");
         }
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
-        _uow.StartTransaction();
-
-        var source = GetAccount(sourceAccount);
-        var destination = GetAccount(destinationAccount);
+        var source = GetAccount(sourceAccount, uow);
+        var destination = GetAccount(destinationAccount, uow);
         if (source == null || destination == null)
         {
             Log.Instance.Error($"Either source or destination account was not valid. {sourceAccount} {destinationAccount}");
@@ -1933,17 +1992,17 @@ public sealed class AccountService
 
         charges.ForEach(charge =>
         {
-            CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
-            AddCharge(destination, charge.CDMCode, charge.Quantity, (DateTime)destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
+            CreditCharge(charge.ChrgId, $"Move to {destinationAccount}", uow);
+            AddCharge(new AddChargeParameters() { Quantity = charge.Quantity, Account = destination, Cdm = charge.CDMCode, ServiceDate = (DateTime)destination.TransactionDate, Comment = $"Moved from {sourceAccount}", Uow = uow });
         });
 
-        _uow.Commit();
-        ClearAccountLock(source);
-        ClearAccountLock(destination);
+        uow.Commit();
+        ClearAccountLock(source, uow);
+        ClearAccountLock(destination, uow);
         return (true, string.Empty);
     }
 
-    public async Task MoveChargeAsync(string sourceAccount, string destinationAccount, int chrgId) => await Task.Run(() => MoveCharge(sourceAccount, destinationAccount, chrgId));
+    public async Task MoveChargeAsync(string sourceAccount, string destinationAccount, int chrgId, IUnitOfWork uow) => await Task.Run(() => MoveCharge(sourceAccount, destinationAccount, chrgId, uow));
 
     /// <summary>
     /// Moves a single charge from sourceAccount to destinationAccount
@@ -1954,15 +2013,16 @@ public sealed class AccountService
     /// <returns>Credited charge record</returns>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ApplicationException"></exception>
-    public Chrg MoveCharge(string sourceAccount, string destinationAccount, int chrgId)
+    public Chrg MoveCharge(string sourceAccount, string destinationAccount, int chrgId, IUnitOfWork uow = null)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         if (string.IsNullOrEmpty(sourceAccount) || string.IsNullOrEmpty(destinationAccount))
         {
             throw new ArgumentException("One or both arguments are null or empty.");
         }
-        _uow.StartTransaction();
-        var source = GetAccount(sourceAccount);
-        var destination = GetAccount(destinationAccount);
+        uow.StartTransaction();
+        var source = GetAccount(sourceAccount, uow);
+        var destination = GetAccount(destinationAccount, uow);
 
         var charge = source.Charges.SingleOrDefault(c => c.ChrgId == chrgId);
 
@@ -1971,29 +2031,41 @@ public sealed class AccountService
             throw new ApplicationException("Charge is already credited.");
         }
 
-        var creditedCharge = CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
-        AddCharge(destinationAccount, charge.CDMCode, charge.Quantity, destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
-        _uow.Commit();
+        var creditedCharge = CreditCharge(charge.ChrgId, $"Move to {destinationAccount}", uow);
+        AddCharge(new AddChargeParameters()
+        {
+            AccountNumber = destinationAccount,
+            Cdm = charge.CDMCode,
+            Quantity = charge.Quantity,
+            ServiceDate = (DateTime)destination.TransactionDate,
+            Comment = $"Moved from {sourceAccount}",
+            RefNumber = charge.ReferenceReq,
+            MiscAmount = 0,
+            Uow = uow
+        });
+        uow.Commit();
         return creditedCharge;
     }
 
-    public void AddRecentlyAccessedAccount(string accountNo, string userName)
+    public void AddRecentlyAccessedAccount(string accountNo, string userName, IUnitOfWork uow = null)
     {
-        _uow.UserProfileRepository.InsertRecentAccount(accountNo, userName);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.UserProfileRepository.InsertRecentAccount(accountNo, userName);
     }
 
-    public Chk AddPayment(Chk chk)
+    public Chk AddPayment(Chk chk, IUnitOfWork uow = null)
     {
         Log.Instance.Trace("Entering");
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
         try
         {
             if (chk.IsRefund)
                 chk.Status = "REFUND";
 
-            var newChk = _uow.ChkRepository.Add(chk);
-            _uow.Commit();
+            var newChk = uow.ChkRepository.Add(chk);
+            uow.Commit();
             return newChk;
         }
         catch (Exception ex)
@@ -2003,10 +2075,11 @@ public sealed class AccountService
         }
     }
 
-    public Chk ReversePayment(Chk chk, string comment)
+    public Chk ReversePayment(Chk chk, string comment, IUnitOfWork uow = null)
     {
         Log.Instance.Trace("Entering");
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         try
         {
             Chk newChk = new()
@@ -2039,8 +2112,8 @@ public sealed class AccountService
                 ClaimNo = chk.ClaimNo
             };
 
-            newChk = _uow.ChkRepository.Add(newChk);
-            _uow.Commit();
+            newChk = uow.ChkRepository.Add(newChk);
+            uow.Commit();
             return newChk;
         }
         catch (Exception ex)
@@ -2050,32 +2123,36 @@ public sealed class AccountService
         }
     }
 
-    public ChrgDiagnosisPointer UpdateDiagnosisPointer(ChrgDiagnosisPointer ptr)
+    public ChrgDiagnosisPointer UpdateDiagnosisPointer(ChrgDiagnosisPointer ptr, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        Log.Instance.Trace("Entering");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
         ChrgDiagnosisPointer retPtr;
         if (ptr.Id < 1)
-            retPtr = _uow.ChrgDiagnosisPointerRepository.Add(ptr);
+            retPtr = uow.ChrgDiagnosisPointerRepository.Add(ptr);
         else
-            retPtr = _uow.ChrgDiagnosisPointerRepository.Update(ptr);
+            retPtr = uow.ChrgDiagnosisPointerRepository.Update(ptr);
 
-        _uow.Commit();
+        uow.Commit();
         return retPtr;
     }
 
-    public async Task ClearClaimStatusAsync(Account account) => await Task.Run(() => ClearClaimStatus(account));
+    public async Task ClearClaimStatusAsync(Account account, IUnitOfWork uow) => await Task.Run(() => ClearClaimStatus(account, uow));
 
     /// <summary>
     /// Clears all claim flags so account will be picked up in next claim batch
     /// </summary>
     /// <param name="account"></param>
-    public Account ClearClaimStatus(Account account)
+    public Account ClearClaimStatus(Account account, IUnitOfWork uow = null)
     {
+        Log.Instance.Trace("Entering");
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         if (account == null)
             throw new ArgumentNullException(nameof(account));
 
-        _uow.StartTransaction();
+        uow.StartTransaction();
         List<string> columns = new();
         try
         {
@@ -2091,12 +2168,12 @@ public sealed class AccountService
             //set account status to "NEW"
             account.Status = AccountStatus.New;
 
-            account.Pat = _uow.PatRepository.Update(account.Pat, columns);
-            UpdateStatus(account.AccountNo, AccountStatus.New);
+            account.Pat = uow.PatRepository.Update(account.Pat, columns);
+            UpdateStatus(account.AccountNo, AccountStatus.New, uow);
             account.Status = AccountStatus.New;
 
-            account.Notes = AddNote(account.AccountNo, "Claim status cleared.").ToList();
-            _uow.Commit();
+            account.Notes = AddNote(account.AccountNo, "Claim status cleared.", uow).ToList();
+            uow.Commit();
             return account;
         }
         catch (Exception ex)
@@ -2105,24 +2182,24 @@ public sealed class AccountService
         }
     }
 
-    public ChrgDetail RemoveChargeModifier(int chrgDetailId)
+    public ChrgDetail RemoveChargeModifier(int chrgDetailId, IUnitOfWork uow)
     {
-        _uow.StartTransaction();
-        var retval = _uow.ChrgDetailRepository.RemoveModifier(chrgDetailId);
-        var chrgDetail = _uow.ChrgDetailRepository.GetByKey((object)chrgDetailId);
-        _uow.Commit();
+        uow.StartTransaction();
+        var retval = uow.ChrgDetailRepository.RemoveModifier(chrgDetailId);
+        var chrgDetail = uow.ChrgDetailRepository.GetByKey((object)chrgDetailId);
+        uow.Commit();
         return chrgDetail;
     }
 
-    public ChrgDetail AddChargeModifier(int chrgDetailId, string modifier)
+    public ChrgDetail AddChargeModifier(int chrgDetailId, string modifier, IUnitOfWork uow = null)
     {
-
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         try
         {
-            _uow.StartTransaction();
-            var retval = _uow.ChrgDetailRepository.UpdateModifier(chrgDetailId, modifier);
-            var chrgDetail = _uow.ChrgDetailRepository.GetByKey((object)chrgDetailId);
-            _uow.Commit();
+            uow.StartTransaction();
+            var retval = uow.ChrgDetailRepository.UpdateModifier(chrgDetailId, modifier);
+            var chrgDetail = uow.ChrgDetailRepository.GetByKey((object)chrgDetailId);
+            uow.Commit();
 
             return chrgDetail;
         }
@@ -2133,17 +2210,17 @@ public sealed class AccountService
         }
     }
 
-    public Chrg CreditCharge(int chrgId, string comment = "")
+    public Chrg CreditCharge(int chrgId, string comment = "", IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - chrg number {chrgId} comment {comment}");
-
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         bool setCreditFlag = false;
         bool setOldChrgCreditFlag = false;
 
         if (chrgId <= 0)
             throw new ArgumentOutOfRangeException(nameof(chrgId));
 
-        var chrg = GetCharge(chrgId) ?? throw new ApplicationException($"Charge number {chrgId} not found.");
+        var chrg = GetCharge(chrgId, uow) ?? throw new ApplicationException($"Charge number {chrgId} not found.");
 
         if (chrg.FinancialType == "M")
         {
@@ -2166,54 +2243,38 @@ public sealed class AccountService
         newChrg.PostingDate = DateTime.Today;
         newChrg.ChrgDetails.ForEach(x => x.ChrgNo = 0);
 
-        newChrg = AddCharge(newChrg);
+        newChrg = AddCharge(newChrg, uow);
 
         if (setOldChrgCreditFlag)
-            chrg = _uow.ChrgRepository.SetCredited(chrgId);
+            chrg = uow.ChrgRepository.SetCredited(chrgId);
 
-        _uow.Commit();
+        uow.Commit();
         return newChrg;
     }
 
-    public Chrg SetChargeCreditFlag(int chrgId, bool flag)
+    public Chrg SetChargeCreditFlag(int chrgId, bool flag, IUnitOfWork uow = null)
     {
-        var chrg = _uow.ChrgRepository.SetCredited(chrgId, flag);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var chrg = uow.ChrgRepository.SetCredited(chrgId, flag);
         return chrg;
     }
 
-    public Pat SetCollectionsDate(Pat pat)
+    public Pat SetCollectionsDate(Pat pat, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
-        pat = _uow.PatRepository.Update(pat, new[] { nameof(Pat.BadDebtListDate) });
-        _uow.Commit();
+        pat = uow.PatRepository.Update(pat, new[] { nameof(Pat.BadDebtListDate) });
+        uow.Commit();
 
         return pat;
     }
 
     public IList<AccountSearch> SearchAccounts(string lastName, string firstName, string mrn, string ssn, string dob,
-            string sex, string accountSearch)
+            string sex, string accountSearch, IUnitOfWork uow = null)
     {
-        var results = _uow.AccountSearchRepository.GetBySearch(lastName, firstName, mrn, ssn, dob, sex, accountSearch).ToList();
-
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var results = uow.AccountSearchRepository.GetBySearch(lastName, firstName, mrn, ssn, dob, sex, accountSearch).ToList();
         return results;
     }
-}
-
-public class ValidationUpdatedEventArgs : EventArgs
-{
-    public string AccountNo { get; set; }
-    public string ValidationStatus { get; set; }
-    public string UpdateMessage { get; set; }
-    public DateTime TimeStamp { get; set; }
-    public int Processed { get; set; }
-    public int TotalItems { get; set; }
-
-}
-
-public class AccountEventArgs : EventArgs
-{
-    public string AccountNo { get; set; }
-    public string UpdateMessage { get; set; }
-    public Account Account { get; set; }
 }

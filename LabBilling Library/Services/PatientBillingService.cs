@@ -34,27 +34,36 @@ public sealed class PatientBillingService
 
     private readonly IAppEnvironment _appEnvironment;
     private readonly AccountService _accountService;
-    private readonly IUnitOfWork _uow;
 
-    public PatientBillingService(IAppEnvironment appEnvironment, IUnitOfWork uow)
+
+    public PatientBillingService(IAppEnvironment appEnvironment)
     {
         this._appEnvironment = appEnvironment;
-        _accountService = new(appEnvironment, uow);
-        _uow = uow;
+        _accountService = new(appEnvironment);
+
     }
 
     public event EventHandler<ProgressEventArgs> ProgressIncrementedEvent;
 
-    public async Task<string> SendToCollectionsAsync() => await Task.Run(() => SendToCollections());
-
-    public BadDebt GetCollectionRecord(string accountNo) => _uow.BadDebtRepository.GetRecord(accountNo);
-
-    public BadDebt SaveCollectionRecord(BadDebt badDebt)
+    public async Task<string> SendToCollectionsAsync(IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return await Task.Run(() => SendToCollections(uow));
+    }
 
-        var retval = _uow.BadDebtRepository.Update(badDebt);
-        _uow.Commit();
+    public BadDebt GetCollectionRecord(string accountNo, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.BadDebtRepository.GetRecord(accountNo);
+    }
+
+    public BadDebt SaveCollectionRecord(BadDebt badDebt, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
+
+        var retval = uow.BadDebtRepository.Update(badDebt);
+        uow.Commit();
 
         return retval;
 
@@ -65,11 +74,12 @@ public sealed class PatientBillingService
     /// </summary>
     /// <returns>Filename generated</returns>
     /// <exception cref="ApplicationException"></exception>
-    public string SendToCollections()
+    public string SendToCollections(IUnitOfWork uow)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         // set date_sent records in bad_debt table where date_sent is null to today's date
-        _uow.StartTransaction();
-        var results = _uow.BadDebtRepository.GetNotSentRecords();
+        uow.StartTransaction();
+        var results = uow.BadDebtRepository.GetNotSentRecords();
 
         if (!results.Any())
         {
@@ -86,7 +96,7 @@ public sealed class PatientBillingService
 
                 result.DateSent = DateTime.Now;
 
-                _uow.BadDebtRepository.Update(result, new[] { nameof(BadDebt.DateSent) });
+                uow.BadDebtRepository.Update(result, new[] { nameof(BadDebt.DateSent) });
 
                 _accountService.AddNote(acc.AccountNo, $"Account sent to collections. Write off amount {acc.Balance}");
 
@@ -104,11 +114,11 @@ public sealed class PatientBillingService
                     IsCollectionPmt = true
                 };
 
-                _uow.ChkRepository.Add(chk);
+                uow.ChkRepository.Add(chk);
 
                 //update bad debt date on pat record
                 acc.Pat.SentToCollectionsDate = DateTime.Today;
-                _uow.PatRepository.Update(acc.Pat, new[] { nameof(Pat.SentToCollectionsDate) });
+                uow.PatRepository.Update(acc.Pat, new[] { nameof(Pat.SentToCollectionsDate) });
 
                 int cnt = results.Count();
                 decimal processed = ++recordsProcessed / (decimal)cnt;
@@ -122,26 +132,30 @@ public sealed class PatientBillingService
                 throw new ApplicationException("Error during collections send.Process aborted.", ex);
             }
         }
-        _uow.Commit();
-        return GenerateCollectionsFile(results);
+        uow.Commit();
+        return GenerateCollectionsFile(results, uow);
 
     }
 
-    public int RegenerateCollectionsFile(DateTime tDate)
+    public int RegenerateCollectionsFile(DateTime tDate, IUnitOfWork uow = null)
     {
-
-        var results = _uow.BadDebtRepository.GetSentByDate(tDate);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var results = uow.BadDebtRepository.GetSentByDate(tDate);
 
         if (results.Any())
         {
-            GenerateCollectionsFile(results);
+            GenerateCollectionsFile(results, uow);
         }
 
         return results.Count();
     }
 
 
-    public async Task<string> GenerateCollectionsFileAsync(IEnumerable<BadDebt> records) => await Task.Run(() => GenerateCollectionsFile(records));
+    public async Task<string> GenerateCollectionsFileAsync(IEnumerable<BadDebt> records, IUnitOfWork uow)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return await Task.Run(() => GenerateCollectionsFile(records, uow));
+    }
 
     /// <summary>
     /// 
@@ -149,9 +163,10 @@ public sealed class PatientBillingService
     /// <param name="records"></param>
     /// <returns>Filename generated</returns>
     /// <exception cref="ApplicationException"></exception>
-    private string GenerateCollectionsFile(IEnumerable<BadDebt> records)
+    private string GenerateCollectionsFile(IEnumerable<BadDebt> records, IUnitOfWork uow)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         // set date_sent records in bad_debt table where date_sent is null to today's date
 
         //get first record for date
@@ -236,20 +251,21 @@ public sealed class PatientBillingService
             catch (Exception ex)
             {
                 Log.Instance.Error("Error during collections send. Process aborted.", ex);
-                _uow.Context.AbortTransaction();
+                uow.Context.AbortTransaction();
                 throw new ApplicationException("Error during collections send.Process aborted.", ex);
             }
         }
-        _uow.Commit();
+        uow.Commit();
         File.WriteAllText(fileName, sb.ToString());
 
         // TODO: email mailer P report
         return fileName;
     }
 
-    public bool BatchPreviouslyRun(string batchNo)
+    public bool BatchPreviouslyRun(string batchNo, IUnitOfWork uow = null)
     {
-        int cnt = _uow.PatientStatementRepository.GetStatementCount(batchNo);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        int cnt = uow.PatientStatementRepository.GetStatementCount(batchNo);
 
         if (cnt > 0)
             return true;
@@ -257,66 +273,73 @@ public sealed class PatientBillingService
         return false;
     }
 
-    public List<PatientStatement> GetStatements(string accountNo)
+    public List<PatientStatement> GetStatements(string accountNo, IUnitOfWork uow)
     {
-        var accountstatements = _uow.PatientStatementAccountRepository.GetByAccount(accountNo);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var accountstatements = uow.PatientStatementAccountRepository.GetByAccount(accountNo);
         var statements = accountstatements.Select(x => x.StatementNumber.ToString()).ToList();
 
-        var records = _uow.PatientStatementRepository.GetByStatement(statements);
+        var records = uow.PatientStatementRepository.GetByStatement(statements);
 
         records.ForEach(record =>
         {
-            record.Accounts = _uow.PatientStatementAccountRepository.GetByStatement(record.StatementNumber);
-            record.Encounters = _uow.PatientStatementEncounterRepository.GetByStatement(record.StatementNumber);
-            record.EncounterActivity = _uow.PatientStatementEncounterActivityRepository.GetByStatement(record.StatementNumber);
+            record.Accounts = uow.PatientStatementAccountRepository.GetByStatement(record.StatementNumber);
+            record.Encounters = uow.PatientStatementEncounterRepository.GetByStatement(record.StatementNumber);
+            record.EncounterActivity = uow.PatientStatementEncounterActivityRepository.GetByStatement(record.StatementNumber);
         });
 
         return records;
 
     }
 
-    public PatientStatement GetStatement(long statementNumber)
+    public PatientStatement GetStatement(long statementNumber, IUnitOfWork uow)
     {
-
-        var record = _uow.PatientStatementRepository.GetByStatement(statementNumber);
-        record.Accounts = _uow.PatientStatementAccountRepository.GetByStatement(record.StatementNumber);
-        record.Encounters = _uow.PatientStatementEncounterRepository.GetByStatement(record.StatementNumber);
-        record.EncounterActivity = _uow.PatientStatementEncounterActivityRepository.GetByStatement(record.StatementNumber);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var record = uow.PatientStatementRepository.GetByStatement(statementNumber);
+        record.Accounts = uow.PatientStatementAccountRepository.GetByStatement(record.StatementNumber);
+        record.Encounters = uow.PatientStatementEncounterRepository.GetByStatement(record.StatementNumber);
+        record.EncounterActivity = uow.PatientStatementEncounterActivityRepository.GetByStatement(record.StatementNumber);
 
         return record;
     }
 
-    public List<PatientStatement> GetStatementsByBatch(string batch)
+    public List<PatientStatement> GetStatementsByBatch(string batch, IUnitOfWork uow)
     {
-        var records = _uow.PatientStatementRepository.GetByBatch(batch);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var records = uow.PatientStatementRepository.GetByBatch(batch);
 
         records.ForEach(record =>
         {
-            record.Accounts = _uow.PatientStatementAccountRepository.GetByStatement(record.StatementNumber);
-            record.Encounters = _uow.PatientStatementEncounterRepository.GetByStatement(record.StatementNumber);
-            record.EncounterActivity = _uow.PatientStatementEncounterActivityRepository.GetByStatement(record.StatementNumber);
+            record.Accounts = uow.PatientStatementAccountRepository.GetByStatement(record.StatementNumber);
+            record.Encounters = uow.PatientStatementEncounterRepository.GetByStatement(record.StatementNumber);
+            record.EncounterActivity = uow.PatientStatementEncounterActivityRepository.GetByStatement(record.StatementNumber);
         });
 
         return records;
 
     }
 
-    public PatientStatement AddPatientStatement(PatientStatement record)
+    public PatientStatement AddPatientStatement(PatientStatement record, IUnitOfWork uow)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
-        _uow.PatientStatementRepository.Add(record);
-        record.Accounts.ForEach(a => _uow.PatientStatementAccountRepository.Add(a));
-        record.Encounters.ForEach(e => _uow.PatientStatementEncounterRepository.Add(e));
-        record.EncounterActivity.ForEach(ea => _uow.PatientStatementEncounterActivityRepository.Add(ea));
+        uow.PatientStatementRepository.Add(record);
+        record.Accounts.ForEach(a => uow.PatientStatementAccountRepository.Add(a));
+        record.Encounters.ForEach(e => uow.PatientStatementEncounterRepository.Add(e));
+        record.EncounterActivity.ForEach(ea => uow.PatientStatementEncounterActivityRepository.Add(ea));
 
-        var result = GetStatement(record.StatementNumber);
+        var result = GetStatement(record.StatementNumber, uow);
 
-        _uow.Commit();
+        uow.Commit();
         return result;
     }
 
-    public async Task<string> CreateStatementFileAsync(DateTime throughDate) => await Task.Run(() => CreateStatementFile(throughDate));
+    public async Task<string> CreateStatementFileAsync(DateTime throughDate, IUnitOfWork uow)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return await Task.Run(() => CreateStatementFile(throughDate, uow));
+    }
 
     /// <summary>
     /// 
@@ -325,9 +348,10 @@ public sealed class PatientBillingService
     /// <returns>Path of file created.</returns>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ApplicationException"></exception>
-    public string CreateStatementFile(DateTime throughDate)
+    public string CreateStatementFile(DateTime throughDate, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         if (throughDate == DateTime.MinValue)
         {
             throw new ArgumentException("Through Date is not a valid date.", "throughDate");
@@ -338,7 +362,7 @@ public sealed class PatientBillingService
 
         // 5. step 5 - run viewer bad debt and create file
         //AFTER running pat viewer bad debt to create the file do this. 
-        var filename = FormatStatementFile();
+        var filename = FormatStatementFile(uow);
 
         //upload statement file to DNI from MCLFTP2
         // 6. step 6 run these queries individually
@@ -348,39 +372,40 @@ public sealed class PatientBillingService
             string sql = $"update dbo.patbill_acc SET date_sent = convert(varchar(10),getdate(),101) " +
             "WHERE nullif(date_sent,'') IS null AND batch_id = @0";
 
-            _uow.Context.Execute(sql, new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = batchNo });
+            uow.Context.Execute(sql, new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = batchNo });
 
             sql = $"update dbo.patbill_stmt SET statement_submitted_dt_tm = pa.processed_date " +
             "from patbill_stmt ps inner join patbill_acc pa on pa.statement_number = ps.statement_number " +
             "WHERE nullif(ps.statement_submitted_dt_tm,'') is null " +
             "and pa.processed_date is not null";
 
-            _uow.Context.Execute(sql);
+            uow.Context.Execute(sql);
         }
         catch (Exception ex)
         {
             throw new ApplicationException("Error in Patient Billing Create Statement file", ex);
         }
-        _uow.Commit();
+        uow.Commit();
         return filename;
 
     }
 
-    private async Task<string> FormatStatementFileAsync() => await Task.Run(() => FormatStatementFile());
+    private async Task<string> FormatStatementFileAsync(IUnitOfWork uow) => await Task.Run(() => FormatStatementFile(uow));
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns>Path of file created.</returns>
-    private string FormatStatementFile()
+    private string FormatStatementFile(IUnitOfWork uow)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
-        var statements = _uow.PatientStatementRepository.GetByBatch(batchNo);
-        var accounts = _uow.PatientStatementAccountRepository.GetByBatch(batchNo);
-        var encounters = _uow.PatientStatementEncounterRepository.GetByBatch(batchNo);
-        var encountersActivity = _uow.PatientStatementEncounterActivityRepository.GetByBatch(batchNo);
-        var cernerStatement = _uow.PatientStatementCernerRepository.GetByBatch(batchNo);
+        var statements = uow.PatientStatementRepository.GetByBatch(batchNo);
+        var accounts = uow.PatientStatementAccountRepository.GetByBatch(batchNo);
+        var encounters = uow.PatientStatementEncounterRepository.GetByBatch(batchNo);
+        var encountersActivity = uow.PatientStatementEncounterActivityRepository.GetByBatch(batchNo);
+        var cernerStatement = uow.PatientStatementCernerRepository.GetByBatch(batchNo);
 
         DataTable statementDt = HelperExtensions.ConvertToDataTable(statements);
         DataTable accountsDt = HelperExtensions.ConvertToDataTable(accounts);
@@ -695,15 +720,16 @@ public sealed class PatientBillingService
 
         sw.Write("TRL~MCL\r\n");
         sw.Close();
-        _uow.Commit();
+        uow.Commit();
         return strFileName;
     }
 
-    public async Task CompileStatementsAsync(DateTime throughDate) => await Task.Run(() => CompileStatements(throughDate));
+    public async Task CompileStatementsAsync(DateTime throughDate, IUnitOfWork uow) => await Task.Run(() => CompileStatements(throughDate, uow));
 
-    public void CompileStatements(DateTime throughDate)
+    public void CompileStatements(DateTime throughDate, IUnitOfWork uow)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
         if (throughDate == DateTime.MinValue)
         {
@@ -716,15 +742,15 @@ public sealed class PatientBillingService
         {
             //run exec usp_prg_pat_bill_update_flags '<last day of prev month>'
             //step 1 - exec_prg_pat_bill_update_flags '{thrudate}'
-            _uow.Context.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags",
+            uow.Context.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags",
                 new SqlParameter() { ParameterName = "@thrudate", SqlDbType = SqlDbType.DateTime, Value = endDate });
 
             //run exec usp_prg_pat_bill_compile @batchNo = '<batchNo>', @endDate = '<last day of prev month>'
-            _uow.Context.ExecuteNonQueryProc("usp_prg_pat_bill_compile",
+            uow.Context.ExecuteNonQueryProc("usp_prg_pat_bill_compile",
                 new SqlParameter() { ParameterName = "@batchNo", SqlDbType = SqlDbType.VarChar, Value = batchNo },
                 new SqlParameter() { ParameterName = "@endDate", SqlDbType = SqlDbType.DateTime, Value = endDate });
 
-            _uow.Commit();
+            uow.Commit();
         }
         catch (Exception ex)
         {
@@ -732,9 +758,9 @@ public sealed class PatientBillingService
         }
     }
 
-    public async Task CompileStatementsNewAsync(DateTime throughDate) => await Task.Run(() => CompileStatementsNew(throughDate));
+    public async Task CompileStatementsNewAsync(DateTime throughDate, IUnitOfWork uow = null) => await Task.Run(() => CompileStatementsNew(throughDate, uow));
 
-    public void CompileStatementsNew(DateTime throughDate)
+    public void CompileStatementsNew(DateTime throughDate, IUnitOfWork uow = null)
     {
         /*
         --This procedure replaces the functionality in the PatBill program.
@@ -754,11 +780,11 @@ public sealed class PatientBillingService
         -- if mailer is P - update last_dm to today
         -- create table to record actions taken to accounts
         */
-
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
         //get accounts with status of STMT
-        var accounts = _uow.AccountRepository.GetByStatus(AccountStatus.Statements);
+        var accounts = uow.AccountRepository.GetByStatus(AccountStatus.Statements);
         //starting statement number
         double temp = (throughDate.Year * 10000000.0) + (throughDate.Month * 100000.0) + 100001.0;
         long statementNo = Convert.ToInt64(temp);
@@ -771,7 +797,7 @@ public sealed class PatientBillingService
         {
             foreach (var account in accounts)
             {
-                var acc = _uow.AccountRepository.GetByAccount(account);
+                var acc = uow.AccountRepository.GetByAccount(account);
 
                 if (acc != null)
                 {
@@ -801,10 +827,10 @@ public sealed class PatientBillingService
                             DateEntered = DateTime.Today
                         };
 
-                        _uow.BadDebtRepository.Add(bd);
+                        uow.BadDebtRepository.Add(bd);
 
                         //update account status to ?? COLL
-                        _uow.AccountRepository.UpdateStatus(acc.AccountNo, AccountStatus.Collections);
+                        uow.AccountRepository.UpdateStatus(acc.AccountNo, AccountStatus.Collections);
 
                     }
                     else
@@ -813,9 +839,9 @@ public sealed class PatientBillingService
                         //20230210083 -- increment
 
                         //if account balance < 2.50, do not generate statement
-                        var patientStatement = GenerateStatement(ref statementNo, batchId, acc);
+                        var patientStatement = GenerateStatement(ref statementNo, batchId, acc, uow);
 
-                        _uow.PatientStatementRepository.Add(patientStatement);
+                        uow.PatientStatementRepository.Add(patientStatement);
 
                     }
 
@@ -825,18 +851,19 @@ public sealed class PatientBillingService
                 int percentComplete = Convert.ToInt32(processed * 100);
                 ProgressIncrementedEvent?.Invoke(this, new ProgressEventArgs(percentComplete, $"Processed {acc.AccountNo}"));
             }
-            _uow.Commit();
+            uow.Commit();
         }
         catch (Exception e)
         {
             Log.Instance.Error(e, "Error in statement generation.");
-            Log.Instance.Debug(_uow.Context.LastSQL);
+            Log.Instance.Debug(uow.Context.LastSQL);
             throw new ApplicationException("Error in statement generation.", e);
         }
     }
 
-    private PatientStatement GenerateStatement(ref long statementNo, string batchId, Account acc)
+    private PatientStatement GenerateStatement(ref long statementNo, string batchId, Account acc, IUnitOfWork uow)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         PatientStatementAccount patientStatementAccount = new()
         {
             StatementNumber = statementNo++,

@@ -115,7 +115,7 @@ public sealed class Utilities : MenuBase
 
     public void RegenerateCollectionsFile()
     {
-        PatientBillingService patientBilling = new PatientBillingService(_appEnvironment, _uow);
+        PatientBillingService patientBilling = new (_appEnvironment);
 
         DateTime tDate;
 
@@ -134,7 +134,7 @@ public sealed class Utilities : MenuBase
 
     public void RegenerateClaimBatch()
     {
-        ClaimGeneratorService claimGenerator = new ClaimGeneratorService(_appEnvironment, _uow);
+        ClaimGeneratorService claimGenerator = new ClaimGeneratorService(_appEnvironment);
 
         var response = AnsiConsole.Ask<int>("Enter batch number: ");
 
@@ -148,7 +148,7 @@ public sealed class Utilities : MenuBase
     {
 
         _uow.StartTransaction();
-        AccountService accountService = new(_appEnvironment, _uow);
+        AccountService accountService = new(_appEnvironment);
 
         //get list of accounts
         var sql = Sql.Builder;
@@ -166,7 +166,14 @@ public sealed class Utilities : MenuBase
             accountService.CreditCharge(chrg.ChrgId, "correct DAP7 cdm");
             Console.WriteLine($"Credited {chrg.AccountNo} {chrg.ChrgId} {chrg.Cdm}");
             //charge 5869007
-            accountService.AddCharge(chrg.AccountNo, "5869007", chrg.Quantity, (DateTime)chrg.ServiceDate, "correct DAP7 cdm");
+            accountService.AddCharge(new AddChargeParameters()
+            {
+                AccountNumber = chrg.AccountNo,
+                Cdm = "5869007",
+                Quantity = chrg.Quantity,
+                ServiceDate = (DateTime)chrg.ServiceDate,
+                Comment = "correct DAP7 cdm"
+            });
             Console.WriteLine($"Added {chrg.AccountNo} 5869007");
 
         }
@@ -176,7 +183,7 @@ public sealed class Utilities : MenuBase
     public void NotesImport()
     {
         Console.WriteLine("Beginning notes import.");
-        NotesImportService notesImport = new(_appEnvironment, _uow);
+        NotesImportService notesImport = new(_appEnvironment);
         try
         {
             foreach (string filename in Directory.GetFiles(@"\\wthmclbill\shared\Billing\LIVE\claims\Notes", "*.exted"))
@@ -195,7 +202,7 @@ public sealed class Utilities : MenuBase
 
     public void ValidateAccountsJob()
     {
-        AccountService accountService = new(_appEnvironment, _uow);
+        AccountService accountService = new(_appEnvironment);
         accountService.ValidationAccountUpdated += AccountService_ValidationAccountUpdated;
         Console.WriteLine("In RunValidation() - Starting RunValidation job...");
         Console.WriteLine("Wait for process to complete, then press a key...");
@@ -221,7 +228,7 @@ public sealed class Utilities : MenuBase
     }
     public void ProcessInterfaceMessages()
     {
-        HL7ProcessorService hL7Processor = new(_appEnvironment, _uow);
+        HL7ProcessorService hL7Processor = new(_appEnvironment);
         hL7Processor.ProcessMessages();
         Console.WriteLine("Messages processed.");
     }
@@ -265,7 +272,7 @@ public sealed class Utilities : MenuBase
 
     public void RunClaimsProcessing()
     {
-        ClaimGeneratorService claimGenerator = new(_appEnvironment, _uow);
+        ClaimGeneratorService claimGenerator = new(_appEnvironment);
 
         CancellationToken cancellationToken = new();
         Progress<ProgressReportModel> progressReportModel = new();
@@ -295,7 +302,7 @@ public sealed class Utilities : MenuBase
         }
         catch (TaskCanceledException tce)
         {
-            Log.Instance.Error($"Institutional claim Batch cancelled by user", tce);
+            Log.Instance.Error($"Institutional claim Batch cancelled by user");
             Console.WriteLine("Institutional claim batch cancelled by user. No file was generated and batch has been rolled back.");
         }
         catch (Exception ex)

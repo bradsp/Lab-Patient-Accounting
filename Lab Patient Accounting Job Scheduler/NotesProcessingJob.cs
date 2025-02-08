@@ -34,7 +34,7 @@ public partial class JobProcessor
         public void NotesImport()
         {
             Console.WriteLine("Beginning notes import.");
-            NotesImportService notesImport = new NotesImportService(Program.AppEnvironment, _uow);
+            NotesImportService notesImport = new (Program.AppEnvironment);
 
             try
             {

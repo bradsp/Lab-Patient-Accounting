@@ -22,8 +22,8 @@ public partial class PatientCollectionsEditForm : Form
 
         SelectedRecord = selectedGuid;
 
-        accountService = new(Program.AppEnvironment, Program.UnitOfWork);
-        patientBillingService = new(Program.AppEnvironment, Program.UnitOfWork);
+        accountService = new(Program.AppEnvironment);
+        patientBillingService = new(Program.AppEnvironment);
     }
     
     private void BadDebtEditForm_Load(object sender, EventArgs e)

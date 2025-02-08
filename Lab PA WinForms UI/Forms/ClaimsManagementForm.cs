@@ -28,8 +28,8 @@ public partial class ClaimsManagementForm : Form
     {
         InitializeComponent();
 
-        _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
-        _claimGeneratorService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _accountService = new(Program.AppEnvironment);
+        _claimGeneratorService = new(Program.AppEnvironment);
     }
 
     private void ClaimsManagementForm_Load(object sender, EventArgs e)
@@ -198,7 +198,7 @@ public partial class ClaimsManagementForm : Form
         var selectedBatch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value;
         double batchNo = Convert.ToDouble(selectedBatch);
 
-        ClaimGeneratorService claims = new(Program.AppEnvironment, Program.UnitOfWork);
+        ClaimGeneratorService claims = new(Program.AppEnvironment);
 
         Cursor.Current = Cursors.WaitCursor;
 

@@ -25,25 +25,24 @@ public sealed class ClientInvoicesService
     public event EventHandler<ClientInvoiceGeneratedEventArgs> InvoiceRunCompleted;
     private readonly DictionaryService _dictionaryService;
     private readonly AccountService _accountService;
-    private IUnitOfWork _uow;
 
     public event EventHandler<ClientInvoiceProgressEventArgs> ReportProgress;
 
-    public ClientInvoicesService(IAppEnvironment appEnvironment, IUnitOfWork uow)
+    public ClientInvoicesService(IAppEnvironment appEnvironment)
     {
         if (appEnvironment == null) throw new ArgumentNullException(nameof(appEnvironment));
         if (!appEnvironment.EnvironmentValid) throw new ArgumentException("App Environment is not valid.");
 
         this._appEnvironment = appEnvironment;
-        _dictionaryService = new(appEnvironment, uow);
-        _accountService = new(appEnvironment, uow);
-        _uow = uow;
+        _dictionaryService = new(appEnvironment);
+        _accountService = new(appEnvironment);
     }
 
-    public async Task CompileAsync(DateTime thruDate, IList<UnbilledClient> unbilledClients, CancellationToken token)
+    public async Task CompileAsync(DateTime thruDate, IList<UnbilledClient> unbilledClients, CancellationToken token, IUnitOfWork uow = null)
     {
         Log.Instance.Trace("Begin");
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         int clientCount = unbilledClients.Count;
         try
         {
@@ -81,7 +80,7 @@ public sealed class ClientInvoicesService
                 Log.Instance.Info($"Invoice for {unbilledClient.ClientMnem} generated.");
             }
             Log.Instance.Debug("Complete Transaction");
-            _uow.Commit();
+            uow.Commit();
             Log.Instance.Info($"Client Invoice Run Complete: {tempCount} invoices generated.");
             InvoiceRunCompleted?.Invoke(this, new ClientInvoiceGeneratedEventArgs()
             {
@@ -100,18 +99,19 @@ public sealed class ClientInvoicesService
         }
     }
 
-    public InvoiceModel GenerateStatement(string clientMnemonic, DateTime asOfDate)
+    public InvoiceModel GenerateStatement(string clientMnemonic, DateTime asOfDate, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - client {clientMnemonic}");
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
         ArgumentNullException.ThrowIfNull(clientMnemonic);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(asOfDate, DateTime.Today);
 
-        Account acc = _uow.AccountRepository.GetByAccount(clientMnemonic);
+        Account acc = uow.AccountRepository.GetByAccount(clientMnemonic);
 
         if (acc == null)
-            _dictionaryService.AddClientAccount(clientMnemonic);
+            _dictionaryService.AddClientAccount(uow, clientMnemonic);
 
         InvoiceModel invoiceModel = new()
         {
@@ -125,7 +125,7 @@ public sealed class ClientInvoicesService
             ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath
         };
 
-        Client client = _uow.ClientRepository.GetClient(clientMnemonic);
+        Client client = uow.ClientRepository.GetClient(clientMnemonic);
 
         invoiceModel.ClientMnem = clientMnemonic;
         invoiceModel.ClientName = client.Name;
@@ -137,33 +137,34 @@ public sealed class ClientInvoicesService
         invoiceModel.InvoiceDate = DateTime.Today;
 
         invoiceModel.BalanceForwardDate = asOfDate;
-        invoiceModel.BalanceForward = _uow.ClientRepository.Balance(clientMnemonic, asOfDate);
-        invoiceModel.BalanceDue = _uow.ClientRepository.Balance(clientMnemonic);
+        invoiceModel.BalanceForward = uow.ClientRepository.Balance(clientMnemonic, asOfDate);
+        invoiceModel.BalanceDue = uow.ClientRepository.Balance(clientMnemonic);
 
         var details = GetStatementDetails(clientMnemonic, asOfDate);
 
         invoiceModel.ClientStatementDetails = details;
-        _uow.Commit();
+        uow.Commit();
         return invoiceModel;
     }
 
-    public async Task GenerateInvoiceAsync(string clientMnemonic, DateTime throughDate, CancellationToken token) => await Task.Run(() => GenerateInvoice(clientMnemonic, throughDate, token));
+    public async Task GenerateInvoiceAsync(string clientMnemonic, DateTime throughDate, CancellationToken token, IUnitOfWork uow = null) => await Task.Run(() => GenerateInvoice(clientMnemonic, throughDate, token, uow));
 
     /// <summary>
     /// Generate an invoice for a single client.
     /// </summary>
     /// <param name="clientMnemonic"></param>
     /// <param name="throughDate"></param>
-    public void GenerateInvoice(string clientMnemonic, DateTime throughDate, CancellationToken token)
+    public void GenerateInvoice(string clientMnemonic, DateTime throughDate, CancellationToken token, IUnitOfWork uow = null)
     {
         Log.Instance.Trace($"Entering - client {clientMnemonic} thrudate {throughDate}");
         ArgumentNullException.ThrowIfNull(clientMnemonic);
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
         try
         {
-            Account acc = _uow.AccountRepository.GetByAccount(clientMnemonic);
+            Account acc = uow.AccountRepository.GetByAccount(clientMnemonic);
             if (acc == null)
-                _dictionaryService.AddClientAccount(clientMnemonic);
+                _dictionaryService.AddClientAccount(uow, clientMnemonic);
 
             InvoiceModel invoiceModel = new()
             {
@@ -179,7 +180,7 @@ public sealed class ClientInvoicesService
                 ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath
             };
 
-            Client client = _uow.ClientRepository.GetClient(clientMnemonic);
+            Client client = uow.ClientRepository.GetClient(clientMnemonic);
             invoiceModel.ClientMnem = clientMnemonic;
             invoiceModel.ClientName = client.Name;
             invoiceModel.Address1 = client.StreetAddress1;
@@ -188,13 +189,13 @@ public sealed class ClientInvoicesService
             invoiceModel.State = client.State;
             invoiceModel.ZipCode = client.ZipCode;
             invoiceModel.InvoiceDate = DateTime.Today;
-            invoiceModel.InvoiceNo = _uow.NumberRepository.GetNumber("invoice").ToString();
+            invoiceModel.InvoiceNo = uow.NumberRepository.GetNumber("invoice").ToString();
 
             invoiceModel.InvoiceDetails = new List<InvoiceDetailModel>();
 
             invoiceModel.ShowCpt = client.PrintCptOnInvoice;
 
-            List<InvoiceSelect> accounts = _accountService.GetInvoiceAccounts(clientMnemonic, throughDate).ToList();
+            List<InvoiceSelect> accounts = _accountService.GetInvoiceAccounts(clientMnemonic, throughDate, uow).ToList();
 
             if (client.PrintInvoiceInDateOrder)
                 accounts = accounts.OrderBy(x => x.TransactionDate).ThenBy(y => y.AccountNo).ToList();
@@ -219,7 +220,7 @@ public sealed class ClientInvoicesService
                 double inpTotal = 0.0;
                 double retailTotal = 0.0;
 
-                List<InvoiceChargeView> charges = _uow.ChrgRepository.GetInvoiceCharges(account.AccountNo, clientMnemonic);
+                List<InvoiceChargeView> charges = uow.ChrgRepository.GetInvoiceCharges(account.AccountNo, clientMnemonic);
 
                 InvoiceDetailModel invoiceDetail = new()
                 {
@@ -283,12 +284,12 @@ public sealed class ClientInvoicesService
                     Amount = Math.Abs(amountTotal),
                 };
 
-                var rchrg = _uow.ChrgRepository.Add(accChrg);
+                var rchrg = uow.ChrgRepository.Add(accChrg);
                 detail.ChrgNo = rchrg.ChrgId;
 
-                _uow.ChrgDetailRepository.Add(detail);
+                uow.ChrgDetailRepository.Add(detail);
 
-                _uow.ChrgRepository.SetChargeInvoiceStatus(account.AccountNo, clientMnemonic, invoiceModel.InvoiceNo);
+                uow.ChrgRepository.SetChargeInvoiceStatus(account.AccountNo, clientMnemonic, invoiceModel.InvoiceNo);
                 ReportProgress?.Invoke(this, new ClientInvoiceProgressEventArgs()
                 {
                     AccountsTotal = accounts.Count,
@@ -321,15 +322,15 @@ public sealed class ClientInvoicesService
                 Amount = Math.Abs(invoiceAmountTotal)
             };
 
-            var retinvchrg = _uow.ChrgRepository.Add(invoiceChrg);
+            var retinvchrg = uow.ChrgRepository.Add(invoiceChrg);
             invdetail.ChrgNo = retinvchrg.ChrgId;
-            _uow.ChrgDetailRepository.Add(invdetail);
+            uow.ChrgDetailRepository.Add(invdetail);
             invoiceModel.InvoiceTotal = invoiceAmountTotal;
             invoiceModel.DiscountTotal = discountTotal;
 
             SaveInvoiceHistory(invoiceModel);
 
-            _uow.Commit();
+            uow.Commit();
         }
         catch (Exception ex)
         {
@@ -338,22 +339,24 @@ public sealed class ClientInvoicesService
         }
     }
 
-    public List<InvoiceHistory> GetInvoiceHistory(string clientMnem = null, DateTime? fromDate = null, DateTime? thruDate = null, string invoice = null)
+    public List<InvoiceHistory> GetInvoiceHistory(string clientMnem = null, DateTime? fromDate = null, DateTime? thruDate = null, string invoice = null, IUnitOfWork uow = null)
     {
-        var retval = _uow.InvoiceHistoryRepository.GetWithSort(clientMnem, fromDate, thruDate, invoice);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var retval = uow.InvoiceHistoryRepository.GetWithSort(clientMnem, fromDate, thruDate, invoice);
 
         return retval.ToList();
     }
 
-    private void SaveInvoiceHistory(InvoiceModel invoiceModel)
+    private void SaveInvoiceHistory(InvoiceModel invoiceModel, IUnitOfWork uow = null)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         //store the invoice data as xml for storage in invoice history
         XmlSerializer x = new(invoiceModel.GetType());
         StringWriter textWriter = new();
 
         x.Serialize(textWriter, invoiceModel);
 
-        _uow.StartTransaction();
+        uow.StartTransaction();
         //write client invoice history record
         InvoiceHistory invoiceHistory = new()
         {
@@ -365,8 +368,8 @@ public sealed class ClientInvoicesService
             InvoiceData = textWriter.ToString()
         };
 
-        _uow.InvoiceHistoryRepository.Add(invoiceHistory);
-        _uow.Commit();
+        uow.InvoiceHistoryRepository.Add(invoiceHistory);
+        uow.Commit();
     }
 
     public bool UndoInvoice(string invoiceNo)
@@ -374,12 +377,13 @@ public sealed class ClientInvoicesService
         throw new NotImplementedException();
     }
 
-    public List<ClientStatementDetailModel> GetStatementDetails(string clientMnem, DateTime asOfDate)
+    public List<ClientStatementDetailModel> GetStatementDetails(string clientMnem, DateTime asOfDate, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
-        var charges = _uow.ChrgRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
-        var payments = _uow.ChkRepository.GetByAccount(clientMnem, asOfDate);
+        var charges = uow.ChrgRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
+        var payments = uow.ChkRepository.GetByAccount(clientMnem, asOfDate);
 
         List<ClientStatementDetailModel> statementDetails = new();
         charges.ForEach(chrg =>
@@ -439,19 +443,19 @@ public sealed class ClientInvoicesService
         });
 
         statementDetails.Sort((x, y) => DateTime.Compare(x.ServiceDate, y.ServiceDate));
-        _uow.Commit();
+        uow.Commit();
 
         return statementDetails;
     }
 
-    public List<UnbilledClient> GetUnbilledClients(DateTime throughDate, IProgress<int> progress)
+    public List<UnbilledClient> GetUnbilledClients(DateTime throughDate, IProgress<int> progress, IUnitOfWork uow = null)
     {
-
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         List<UnbilledClient> unbilledClients = new();
 
-        var unbilledAccounts = _uow.ClientRepository.GetUnbilledAccounts(throughDate, progress);
+        var unbilledAccounts = uow.ClientRepository.GetUnbilledAccounts(throughDate, progress);
 
-        var clients = _uow.ClientRepository.GetAll(false);
+        var clients = uow.ClientRepository.GetAll(false);
 
         int total = clients.Count;
         int processed = 0;
@@ -477,9 +481,10 @@ public sealed class ClientInvoicesService
 
     }
 
-    public async Task<List<UnbilledClient>> GetUnbilledClientsAsync(DateTime throughDate, IProgress<int> progress)
+    public async Task<List<UnbilledClient>> GetUnbilledClientsAsync(DateTime throughDate, IProgress<int> progress, IUnitOfWork uow = null)
     {
-        var retval = await Task.Run(() => GetUnbilledClients(throughDate, progress));
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        var retval = await Task.Run(() => GetUnbilledClients(throughDate, progress, uow));
         retval.Sort((x, y) => x.ClientName.CompareTo(y.ClientName));
         return retval;
     }

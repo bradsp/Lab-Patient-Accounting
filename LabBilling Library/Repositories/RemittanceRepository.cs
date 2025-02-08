@@ -8,6 +8,7 @@ using LabBilling.Core.Models;
 using PetaPoco;
 using NLog;
 using LabBilling.Logging;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.Repositories;
 

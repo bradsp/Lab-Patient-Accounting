@@ -7,10 +7,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
-    <AssemblyVersion>2025.2.1.10</AssemblyVersion>
-    <FileVersion>2025.2.1.10</FileVersion>
+    <AssemblyVersion>2025.2.2.1</AssemblyVersion>
+    <FileVersion>2025.2.2.1</FileVersion>
     <Platforms>x64</Platforms>
-    <Version>2025.2.1.10</Version>
+    <Version>2025.2.2.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

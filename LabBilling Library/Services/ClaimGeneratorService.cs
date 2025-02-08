@@ -25,9 +25,8 @@ public sealed class ClaimGeneratorService
     private Billing837Service _billing837;
     private readonly AccountService _accountService;
     private readonly DictionaryService _dictionaryService;
-    private IUnitOfWork _uow;
 
-    public ClaimGeneratorService(IAppEnvironment appEnvironment, IUnitOfWork uow)
+    public ClaimGeneratorService(IAppEnvironment appEnvironment)
     {
         this._appEnvironment = appEnvironment;
         ArgumentNullException.ThrowIfNull(appEnvironment);
@@ -40,15 +39,16 @@ public sealed class ClaimGeneratorService
 
         _claims = new List<ClaimData>();
 
-        _accountService = new(appEnvironment, uow);
-        _dictionaryService = new(appEnvironment, uow);
-        _uow = uow;
+        _accountService = new(appEnvironment);
+        _dictionaryService = new(appEnvironment);
+
     }
 
 
-    public int CompileBillingBatch(ClaimType claimType, IProgress<ProgressReportModel> progress, CancellationToken cancellationToken)
+    public int CompileBillingBatch(ClaimType claimType, IProgress<ProgressReportModel> progress, CancellationToken cancellationToken, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
         _claims = new List<ClaimData>();
 
@@ -68,7 +68,7 @@ public sealed class ClaimGeneratorService
 
         try
         {
-            var batch = _uow.BillingBatchRepository.Add(billingBatch);
+            var batch = uow.BillingBatchRepository.Add(billingBatch);
             strNum = batch.Batch;
         }
         catch (Exception ex)
@@ -88,14 +88,14 @@ public sealed class ClaimGeneratorService
         switch (claimType)
         {
             case ClaimType.Institutional:
-                claimList = _accountService.GetClaimItems(ClaimType.Institutional).ToList();
+                claimList = _accountService.GetClaimItems(ClaimType.Institutional, uow).ToList();
                 billClaimType = ClaimType.Institutional;
                 processedStatus = AccountStatus.InstSubmitted;
                 batchType = AccountStatus.Institutional;
                 fileLocation = _appEnvironment.ApplicationParameters.InstitutionalClaimFileLocation;
                 break;
             case ClaimType.Professional:
-                claimList = _accountService.GetClaimItems(ClaimType.Professional).ToList();
+                claimList = _accountService.GetClaimItems(ClaimType.Professional, uow).ToList();
                 billClaimType = ClaimType.Professional;
                 processedStatus = AccountStatus.ProfSubmitted;
                 batchType = AccountStatus.Professional;
@@ -120,7 +120,7 @@ public sealed class ClaimGeneratorService
 
                 try
                 {
-                    claim = GenerateClaim(item.AccountNo);
+                    claim = GenerateClaim(item.AccountNo, uow);
                     if (claim == null)
                     {
                         //validation failed - skip to next record
@@ -145,7 +145,7 @@ public sealed class ClaimGeneratorService
                 //update status and activity date fields
                 claim.claimAccount.Status = processedStatus;
 
-                _uow.AccountRepository.Update(claim.claimAccount, new[] { nameof(Account.Status) });
+                uow.AccountRepository.Update(claim.claimAccount, new[] { nameof(Account.Status) });
 
                 claim.claimAccount.Pat.SSIBatch = interchangeControlNumber;
 
@@ -153,11 +153,11 @@ public sealed class ClaimGeneratorService
                 {
                     case ClaimType.Institutional:
                         claim.claimAccount.Pat.InstitutionalClaimDate = DateTime.Today;
-                        _uow.PatRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.InstitutionalClaimDate), nameof(Pat.SSIBatch) });
+                        uow.PatRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.InstitutionalClaimDate), nameof(Pat.SSIBatch) });
                         break;
                     case ClaimType.Professional:
                         claim.claimAccount.Pat.ProfessionalClaimDate = DateTime.Today;
-                        _uow.PatRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.ProfessionalClaimDate), nameof(Pat.SSIBatch) });
+                        uow.PatRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.ProfessionalClaimDate), nameof(Pat.SSIBatch) });
                         break;
                     default:
                         break;
@@ -182,7 +182,7 @@ public sealed class ClaimGeneratorService
                     RunUser = OS.GetUserName()
                 };
 
-                _uow.BillingActivityRepository.Add(billingActivity);
+                uow.BillingActivityRepository.Add(billingActivity);
 
                 report.RecordsProcessed++;
                 report.PercentageComplete = Convert.ToInt16((report.RecordsProcessed / report.TotalRecords) * 100);
@@ -197,14 +197,14 @@ public sealed class ClaimGeneratorService
                     batchSubmitterID, fileLocation, billClaimType);
             }
 
-            billingBatch = _uow.BillingBatchRepository.GetBatch(strNum);
+            billingBatch = uow.BillingBatchRepository.GetBatch(strNum);
             billingBatch.X12Text = x12Text;
             billingBatch.ClaimCount = _claims.Count;
             billingBatch.TotalBilled = _claims.Sum(x => x.TotalChargeAmount);
             billingBatch.BatchType = batchType;
-            _uow.BillingBatchRepository.Update(billingBatch);
+            uow.BillingBatchRepository.Update(billingBatch);
 
-            _uow.Commit();
+            uow.Commit();
 
             return _claims.Count;
         }
@@ -220,12 +220,13 @@ public sealed class ClaimGeneratorService
         }
     }
 
-    public void RegenerateBatch(double batchNo)
+    public void RegenerateBatch(double batchNo, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
         _billing837 = new Billing837Service(PropProductionEnvironment);
-        var batch = _uow.BillingBatchRepository.GetBatch(batchNo);
+        var batch = uow.BillingBatchRepository.GetBatch(batchNo);
         string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId;
         string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}", batch.Batch)));
 
@@ -264,29 +265,29 @@ public sealed class ClaimGeneratorService
             batch.RunDate = DateTime.Now.Date;
             batch.TotalBilled = _claims.Sum(x => x.TotalChargeAmount);
 
-            _uow.BillingBatchRepository.Update(batch);
+            uow.BillingBatchRepository.Update(batch);
         }
-        _uow.Commit();
+        uow.Commit();
         return;
     }
 
-    public void CompileClaim(string accountNo)
+    public void CompileClaim(string accountNo, IUnitOfWork uow = null)
     {
         //validate account data before starting - if there are errors do not process claim.
         // primary ins holder name is empty
         // no dx codes
         ClaimData claim;
         string claimx12;
-
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
         string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId;
-        decimal strNum = _uow.NumberRepository.GetNumber("ssi_batch");
+        decimal strNum = uow.NumberRepository.GetNumber("ssi_batch");
         string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
 
         try
         {
-            claim = GenerateClaim(accountNo);
+            claim = GenerateClaim(accountNo, uow);
             if (claim == null)
             {
                 throw new ApplicationException("Error in GenerateClaim");
@@ -317,10 +318,12 @@ public sealed class ClaimGeneratorService
             Text = claimx12
         };
 
-        _uow.BillingActivityRepository.Save(billingActivity);
-        _uow.Commit();
+        uow.BillingActivityRepository.Save(billingActivity);
+        uow.Commit();
 
     }
+
+    public ClaimData GenerateClaim(string account, IUnitOfWork uow = null) => GenerateClaim(account, false, uow);
 
     /// <summary>
     /// Generates the claim structure for a single account. Adds the entry to the ClaimsData list.
@@ -328,10 +331,11 @@ public sealed class ClaimGeneratorService
     /// <param name="account"></param>
     /// <returns></returns>
     /// <exception cref="InvalidParameterValueException"></exception>
-    public ClaimData GenerateClaim(string account, bool reprint = false)
+    public ClaimData GenerateClaim(string account, bool reprint = false, IUnitOfWork uow = null)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         Account accountModel = new();
-        _uow.StartTransaction();
+        uow.StartTransaction();
 
         try
         {
@@ -340,21 +344,21 @@ public sealed class ClaimGeneratorService
         catch (AccountLockException alex)
         {
             Log.Instance.Warn("Account locked. Skipping claim generation.", alex);
-            _uow.Commit();
+            uow.Commit();
             return null;
         }
         catch (Exception ex)
         {
             Log.Instance.Error($"Error encounter processing {account}", ex);
             _accountService.ClearAccountLock(accountModel);
-            _uow.Commit();
+            uow.Commit();
             return null;
         }
 
         //there is no balance so nothing to send on claim
         if (accountModel.ClaimBalance <= 0.00)
         {
-            _uow.Commit();
+            uow.Commit();
             _accountService.ClearAccountLock(accountModel);
             return null;
         }
@@ -363,10 +367,10 @@ public sealed class ClaimGeneratorService
 
         if (accountModel.AccountValidationStatus.ValidationText != "No validation errors.")
         {
-            _accountService.UpdateStatus(accountModel, AccountStatus.New);
+            _accountService.UpdateStatus(accountModel, AccountStatus.New, uow);
             _accountService.AddNote(accountModel.AccountNo, "Account has validation errors.Reverted to NEW status");
             Log.Instance.Info($"Account {accountModel.AccountNo} has validation errors. Reverted to NEW status");
-            _uow.Commit();
+            uow.Commit();
             _accountService.ClearAccountLock(accountModel);
             return null;
         }
@@ -417,8 +421,8 @@ public sealed class ClaimGeneratorService
                 RevenueCode = g.Key.RevenueCode,
                 Modifier2 = g.Key.Modifier2,
                 DiagnosisCodePointer = claimData.claimAccount.ChrgDiagnosisPointers.Where(d => d.CdmCode == g.Key.CDMCode && d.CptCode == g.Key.Cpt4).Select(d => d.DiagnosisPointer).First().ToString(),
-                Cdm = _dictionaryService.GetCdm(g.Key.CDMCode),
-                RevenueCodeDetail = _dictionaryService.GetRevenueCode(g.Key.RevenueCode)
+                Cdm = _dictionaryService.GetCdm(g.Key.CDMCode, uow),
+                RevenueCodeDetail = _dictionaryService.GetRevenueCode(uow,g.Key.RevenueCode)
             }).ToList();
 
 
@@ -694,7 +698,7 @@ public sealed class ClaimGeneratorService
             }
 
             _accountService.ClearAccountLock(accountModel);
-            _uow.Commit();
+            uow.Commit();
         }
         catch (InvalidParameterValueException ipve)
         {
@@ -712,29 +716,30 @@ public sealed class ClaimGeneratorService
         return claimData;
     }
 
-    public bool ClearBatch(double batch)
+    public bool ClearBatch(double batch, IUnitOfWork uow = null)
     {
-        _uow.StartTransaction();
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        uow.StartTransaction();
 
-        var data = _uow.BillingBatchRepository.GetBatch(batch);
+        var data = uow.BillingBatchRepository.GetBatch(batch);
 
         try
         {
             foreach (var detail in data.BillingActivities)
             {
-                var account = _uow.AccountRepository.GetByAccount(detail.AccountNo);
+                var account = uow.AccountRepository.GetByAccount(detail.AccountNo);
                 if (account != null)
                 {
 
                     _accountService.ClearClaimStatus(account);
                 }
                 // dbh - delete history record
-                _uow.BillingActivityRepository.Delete(detail);
+                uow.BillingActivityRepository.Delete(detail);
             }
             // batch - delete batch
-            _uow.BillingBatchRepository.Delete(data);
+            uow.BillingBatchRepository.Delete(data);
 
-            _uow.Commit();
+            uow.Commit();
             return true;
         }
         catch (Exception ex)
@@ -745,9 +750,17 @@ public sealed class ClaimGeneratorService
 
     }
 
-    public List<BillingBatch> GetBillingBatches() => _uow.BillingBatchRepository.GetAll();
+    public List<BillingBatch> GetBillingBatches(IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.BillingBatchRepository.GetAll();
+    }
 
-    public List<BillingActivity> GetBillingBatchActivity(string batch) => _uow.BillingActivityRepository.GetBatch(batch);
+    public List<BillingActivity> GetBillingBatchActivity(string batch, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.BillingActivityRepository.GetBatch(batch);
+    }
 
     readonly Dictionary<string, string> ClaimFilingIndicatorCode = new Dictionary<string, string>()
     {

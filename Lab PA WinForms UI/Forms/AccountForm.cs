@@ -2,6 +2,7 @@
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.Services;
+using LabBilling.Core.UnitOfWork;
 using LabBilling.Legacy;
 using LabBilling.Library;
 using LabBilling.Logging;
@@ -60,8 +61,8 @@ public partial class AccountForm : Form
     public AccountForm(string account) : this()
     {
         Log.Instance.Trace($"Entering - {account}");
-        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
-        _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _dictionaryService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment);
 
         if (account != null)
             _selectedAccount = account;
@@ -344,6 +345,7 @@ public partial class AccountForm : Form
     private async Task LoadAccountData()
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
+
 
         if (_isClosing)
             return;
@@ -1609,7 +1611,7 @@ public partial class AccountForm : Form
     private void GenerateClaimButton_Click(object sender, EventArgs e)
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
-        ClaimGeneratorService claimGenerator = new(Program.AppEnvironment, Program.UnitOfWork);
+        ClaimGeneratorService claimGenerator = new(Program.AppEnvironment);
 
         claimGenerator.CompileClaim(_currentAccount.AccountNo);
     }

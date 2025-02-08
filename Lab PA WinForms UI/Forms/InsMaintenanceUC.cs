@@ -47,8 +47,8 @@ public partial class InsMaintenanceUC : UserControl
         if (this.DesignMode)
             return;
 
-        _accountService = new(Program.AppEnvironment, Program.UnitOfWork);
-        _dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+        _accountService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
 
         InitializeComponent();
         Coverage = coverage;

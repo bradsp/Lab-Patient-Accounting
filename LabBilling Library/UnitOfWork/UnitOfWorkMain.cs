@@ -13,7 +13,9 @@ namespace LabBilling.Core.UnitOfWork;
 public class UnitOfWorkMain : IUnitOfWork
 {
     private readonly bool _useDispose;
+    private readonly string _connectionString;
     private Transaction _transaction;
+    private IAppEnvironment _appEnvironment;
 
     public PetaPoco.IDatabase Context { get; private set; }
     public AccountAlertRepository AccountAlertRepository { get; private set; }
@@ -74,19 +76,21 @@ public class UnitOfWorkMain : IUnitOfWork
 
     /// <summary>
     /// For use with other Database instances outside of Unit Of Work
-    /// </summary>
-    /// <param name="context"></param>
-    public UnitOfWorkMain(PetaPoco.Database context)
+    /// </summary>    
+    public UnitOfWorkMain(string connectionString)
     {
-        Context = context;
+        _connectionString = connectionString;
+        Context = Initialize(connectionString);
         _useDispose = false;
-        InitializeRepositories();
     }
+    /// <param name="context"></param>
+
 
     public UnitOfWorkMain(IAppEnvironment appEnvironment)
     {
         Context = Initialize(appEnvironment.ConnectionString);
         InitializeRepositories(appEnvironment);
+        _appEnvironment = appEnvironment;
         _useDispose = true;
     }
 
@@ -103,8 +107,10 @@ public class UnitOfWorkMain : IUnitOfWork
             .Create();
     }
 
-    private void InitializeRepositories(IAppEnvironment appEnvironment = null)
+    private void InitializeRepositories(IAppEnvironment appEnvironment)
     {
+        ArgumentNullException.ThrowIfNull(appEnvironment, nameof(appEnvironment));
+
         AccountAlertRepository = new(appEnvironment, Context);
         AccountLmrpErrorRepository = new(appEnvironment, Context);
         AccountLockRepository = new(appEnvironment, Context);
@@ -205,5 +211,23 @@ public class UnitOfWorkMain : IUnitOfWork
         GC.SuppressFinalize(this);
         if (doThrowTransactionException)
             throw new DataException("Transaction was aborted");
+    }
+
+    public PetaPoco.IDatabase CreateNewContext(string connectionString)
+    {
+        return Initialize(connectionString);
+    }
+
+    public TRepository GetRepository<TRepository>(bool useNewContext = false) where TRepository : class
+    {
+        if (useNewContext)
+        {
+            var newContext = CreateNewContext(_appEnvironment != null ? _appEnvironment.ConnectionString : Context.ConnectionString);
+            return (TRepository)Activator.CreateInstance(typeof(TRepository), new object[] { _appEnvironment, newContext });
+        }
+        else
+        {
+            return (TRepository)Activator.CreateInstance(typeof(TRepository), new object[] { _appEnvironment, Context });
+        }
     }
 }

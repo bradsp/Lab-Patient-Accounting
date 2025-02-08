@@ -24,7 +24,7 @@ public partial class CdmLookupForm : Form
     private bool skipSelectionChanged = false;
     private System.Windows.Forms.Timer _timer;
 
-    private readonly DictionaryService dictionaryService = new(Program.AppEnvironment, Program.UnitOfWork);
+    private readonly DictionaryService dictionaryService = new(Program.AppEnvironment);
 
     public CdmLookupForm() 
     {
