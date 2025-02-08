@@ -47,19 +47,19 @@ public sealed class PatientBillingService
 
     public async Task<string> SendToCollectionsAsync(IUnitOfWork uow = null)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         return await Task.Run(() => SendToCollections(uow));
     }
 
     public BadDebt GetCollectionRecord(string accountNo, IUnitOfWork uow = null)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         return uow.BadDebtRepository.GetRecord(accountNo);
     }
 
     public BadDebt SaveCollectionRecord(BadDebt badDebt, IUnitOfWork uow = null)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         uow.StartTransaction();
 
         var retval = uow.BadDebtRepository.Update(badDebt);
@@ -76,7 +76,7 @@ public sealed class PatientBillingService
     /// <exception cref="ApplicationException"></exception>
     public string SendToCollections(IUnitOfWork uow)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         // set date_sent records in bad_debt table where date_sent is null to today's date
         uow.StartTransaction();
         var results = uow.BadDebtRepository.GetNotSentRecords();
@@ -139,7 +139,7 @@ public sealed class PatientBillingService
 
     public int RegenerateCollectionsFile(DateTime tDate, IUnitOfWork uow = null)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         var results = uow.BadDebtRepository.GetSentByDate(tDate);
 
         if (results.Any())
@@ -153,7 +153,7 @@ public sealed class PatientBillingService
 
     public async Task<string> GenerateCollectionsFileAsync(IEnumerable<BadDebt> records, IUnitOfWork uow)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         return await Task.Run(() => GenerateCollectionsFile(records, uow));
     }
 
@@ -165,7 +165,7 @@ public sealed class PatientBillingService
     /// <exception cref="ApplicationException"></exception>
     private string GenerateCollectionsFile(IEnumerable<BadDebt> records, IUnitOfWork uow)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         uow.StartTransaction();
         // set date_sent records in bad_debt table where date_sent is null to today's date
 
@@ -264,7 +264,7 @@ public sealed class PatientBillingService
 
     public bool BatchPreviouslyRun(string batchNo, IUnitOfWork uow = null)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         int cnt = uow.PatientStatementRepository.GetStatementCount(batchNo);
 
         if (cnt > 0)
@@ -275,7 +275,7 @@ public sealed class PatientBillingService
 
     public List<PatientStatement> GetStatements(string accountNo, IUnitOfWork uow)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         var accountstatements = uow.PatientStatementAccountRepository.GetByAccount(accountNo);
         var statements = accountstatements.Select(x => x.StatementNumber.ToString()).ToList();
 
@@ -294,7 +294,7 @@ public sealed class PatientBillingService
 
     public PatientStatement GetStatement(long statementNumber, IUnitOfWork uow)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         var record = uow.PatientStatementRepository.GetByStatement(statementNumber);
         record.Accounts = uow.PatientStatementAccountRepository.GetByStatement(record.StatementNumber);
         record.Encounters = uow.PatientStatementEncounterRepository.GetByStatement(record.StatementNumber);
@@ -305,7 +305,7 @@ public sealed class PatientBillingService
 
     public List<PatientStatement> GetStatementsByBatch(string batch, IUnitOfWork uow)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         var records = uow.PatientStatementRepository.GetByBatch(batch);
 
         records.ForEach(record =>
@@ -321,7 +321,7 @@ public sealed class PatientBillingService
 
     public PatientStatement AddPatientStatement(PatientStatement record, IUnitOfWork uow)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         uow.StartTransaction();
 
         uow.PatientStatementRepository.Add(record);
@@ -337,7 +337,7 @@ public sealed class PatientBillingService
 
     public async Task<string> CreateStatementFileAsync(DateTime throughDate, IUnitOfWork uow)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         return await Task.Run(() => CreateStatementFile(throughDate, uow));
     }
 
@@ -350,7 +350,7 @@ public sealed class PatientBillingService
     /// <exception cref="ApplicationException"></exception>
     public string CreateStatementFile(DateTime throughDate, IUnitOfWork uow = null)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         uow.StartTransaction();
         if (throughDate == DateTime.MinValue)
         {
@@ -398,7 +398,7 @@ public sealed class PatientBillingService
     /// <returns>Path of file created.</returns>
     private string FormatStatementFile(IUnitOfWork uow)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         uow.StartTransaction();
 
         var statements = uow.PatientStatementRepository.GetByBatch(batchNo);
@@ -728,7 +728,7 @@ public sealed class PatientBillingService
 
     public void CompileStatements(DateTime throughDate, IUnitOfWork uow)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         uow.StartTransaction();
 
         if (throughDate == DateTime.MinValue)
@@ -780,7 +780,7 @@ public sealed class PatientBillingService
         -- if mailer is P - update last_dm to today
         -- create table to record actions taken to accounts
         */
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         uow.StartTransaction();
 
         //get accounts with status of STMT
@@ -863,7 +863,7 @@ public sealed class PatientBillingService
 
     private PatientStatement GenerateStatement(ref long statementNo, string batchId, Account acc, IUnitOfWork uow)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         PatientStatementAccount patientStatementAccount = new()
         {
             StatementNumber = statementNo++,

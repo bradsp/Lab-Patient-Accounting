@@ -467,7 +467,7 @@ public sealed class ClientInvoicesService
                 ClientMnem = client.ClientMnem,
                 ClientName = client.Name,
                 ClientType = client.ClientType.Description,
-                PriorBalance = _accountService.GetBalance(client.ClientMnem, uow),
+                PriorBalance = _accountService.GetBalance(client.ClientMnem),
                 UnbilledAccounts = unbilledAccounts.Where(x => x.ClientMnem == client.ClientMnem).ToList()
             };
 

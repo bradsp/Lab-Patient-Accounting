@@ -377,8 +377,9 @@ public sealed class AccountService
         return pat;
     }
 
-    public double GetBalance(string accountNo, IUnitOfWork uow)
+    public double GetBalance(string accountNo, IUnitOfWork uow = null)
     {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         string chrgTableName = uow.ChrgRepository.TableInfo.TableName;
         string accTableName = uow.AccountRepository.TableInfo.TableName;
         string chkTableName = uow.ChkRepository.TableInfo.TableName;

@@ -18,10 +18,9 @@ public sealed class RemittanceRepository : RepositoryBase<RemittanceFile>
     {
     }
 
-    public List<RemittanceFile> GetRemittances(bool includePosted = false, IUnitOfWork uow = null)
+    public List<RemittanceFile> GetRemittances(bool includePosted = false)
     {
         Log.Instance.Trace("Entering");
-        uow ??= new UnitOfWorkMain(AppEnvironment.ConnectionString);
         PetaPoco.Sql sql = PetaPoco.Sql.Builder;
 
         if (includePosted)

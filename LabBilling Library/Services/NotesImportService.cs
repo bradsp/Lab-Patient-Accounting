@@ -22,7 +22,7 @@ public sealed class NotesImportService
     }
     public void ImportNotes(string fileName, IUnitOfWork uow = null)
     {
-        uow ??= new UnitOfWorkMain(appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(appEnvironment);
         using (StreamReader reader = new(fileName))
         {
             uow.StartTransaction();

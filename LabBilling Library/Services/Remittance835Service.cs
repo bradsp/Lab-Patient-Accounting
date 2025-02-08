@@ -66,7 +66,7 @@ public sealed class Remittance835Service
     {
         try
         {
-            uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+            uow ??= new UnitOfWorkMain(_appEnvironment);
             uow.StartTransaction();
             uow.RemittanceRepository.Update(remittanceFile);
             uow.Commit();
@@ -81,7 +81,7 @@ public sealed class Remittance835Service
     {
         try
         {
-            uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+            uow ??= new UnitOfWorkMain(_appEnvironment);
             foreach (var claim in remittance.Claims)
             {
                 foreach (var detail in claim.ClaimDetails)
@@ -106,14 +106,14 @@ public sealed class Remittance835Service
 
     public RemittanceFile GetRemittanceByFileName(string filename, IUnitOfWork uow = null)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         return uow.RemittanceRepository.GetByFilename(filename);
     }
 
     public RemittanceData ReimportRemittance(int remittanceId, IUnitOfWork uow = null)
     {
         //delete existing RemittanceFile records
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         uow.StartTransaction();
         try
         {
@@ -135,7 +135,7 @@ public sealed class Remittance835Service
 
     public RemittanceData Load835(string fileName, IUnitOfWork uow = null)
     {
-        uow ??= new UnitOfWorkMain(_appEnvironment.ConnectionString);
+        uow ??= new UnitOfWorkMain(_appEnvironment);
         EdiDocument ediDocument;
         string logfile = "c:\\temp\\edi.log";
 
@@ -947,7 +947,11 @@ public sealed class Remittance835Service
     public async Task<List<RemittanceFile>> GetAllRemittancesAsync(IUnitOfWork uow) => await Task.Run(() => GetAllRemittances(true, uow));
 
 
-    public List<RemittanceFile> GetAllRemittances(bool includePosted = true, IUnitOfWork uow = null) => uow.RemittanceRepository.GetRemittances(includePosted, uow);
+    public List<RemittanceFile> GetAllRemittances(bool includePosted = true, IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.RemittanceRepository.GetRemittances(includePosted);
+    }
 
     //add GetRemittanceAsync method that is a Task wrapper for GetRemittance
     public async Task<RemittanceFile> GetRemittanceAsync(int remittanceId, IUnitOfWork uow = null) => await Task.Run(() => GetRemittance(remittanceId, uow));

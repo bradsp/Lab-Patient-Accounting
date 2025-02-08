@@ -76,14 +76,15 @@ public class UnitOfWorkMain : IUnitOfWork
 
     /// <summary>
     /// For use with other Database instances outside of Unit Of Work
-    /// </summary>
-    /// <param name="context"></param>
+    /// </summary>    
     public UnitOfWorkMain(string connectionString)
     {
         _connectionString = connectionString;
         Context = Initialize(connectionString);
         _useDispose = false;
     }
+    /// <param name="context"></param>
+
 
     public UnitOfWorkMain(IAppEnvironment appEnvironment)
     {
