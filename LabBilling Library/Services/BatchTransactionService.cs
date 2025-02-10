@@ -102,37 +102,45 @@ public class BatchTransactionService
     public void PostBatchPayments(int batchNo, IUnitOfWork uow = null)
     {
         Log.Instance.Trace("Entering");
-        uow ??= new UnitOfWorkMain(_appEnvironment);
-        uow.StartTransaction();
-
-        var chkBatch = GetPaymentBatchById(batchNo);
-        List<Chk> chks = new();
-        chkBatch.ChkBatchDetails.ForEach(detail =>
+        try
         {
-            Chk chk = new()
+            uow ??= new UnitOfWorkMain(_appEnvironment);
+            uow.StartTransaction();
+
+            var chkBatch = GetPaymentBatchById(batchNo);
+            List<Chk> chks = new();
+            chkBatch.ChkBatchDetails.ForEach(detail =>
             {
-                AccountNo = detail.AccountNo,
-                Batch = detail.Batch,
-                PaidAmount = detail.AmtPaid,
-                ChkDate = detail.CheckDate,
-                DateReceived = detail.DateReceived,
-                CheckNo = detail.CheckNo,
-                Comment = detail.Comment,
-                ContractualAmount = detail.Contractual,
-                WriteOffAmount = detail.WriteOffAmount,
-                WriteOffCode = detail.WriteOffCode,
-                WriteOffDate = detail.WriteOffDate,
-                Source = detail.Source,
-                Status = detail.Status,
-            };
+                Chk chk = new()
+                {
+                    AccountNo = detail.AccountNo,
+                    Batch = detail.Batch,
+                    PaidAmount = detail.AmtPaid,
+                    ChkDate = detail.CheckDate,
+                    DateReceived = detail.DateReceived,
+                    CheckNo = detail.CheckNo,
+                    Comment = detail.Comment,
+                    ContractualAmount = detail.Contractual,
+                    WriteOffAmount = detail.WriteOffAmount,
+                    WriteOffCode = detail.WriteOffCode,
+                    WriteOffDate = detail.WriteOffDate,
+                    Source = detail.Source,
+                    Status = detail.Status,
+                };
 
-            chks.Add(chk);
-        });
+                chks.Add(chk);
+            });
 
-        AddBatch(chks);
+            AddBatch(chks, uow);
 
-        uow.ChkBatchRepository.UpdatePostedDate(batchNo, DateTime.Now);
-        uow.Commit();
+            uow.ChkBatchRepository.UpdatePostedDate(batchNo, DateTime.Now);
+            uow.Commit();
+        }
+        catch(Exception ex)
+        {
+            Log.Instance.Error(ex);
+            throw new ApplicationException("Error posting batch. Records have been rolled back.", ex);
+        }
 
     }
 
@@ -190,6 +198,7 @@ public class BatchTransactionService
             {
                 uow.ChkRepository.Add(chk);
             }
+            uow.Commit();
         }
         catch (Exception e)
         {

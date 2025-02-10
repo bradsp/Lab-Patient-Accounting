@@ -172,7 +172,18 @@ namespace LabBilling
                     {
                         try
                         {
-                            pro.SetValue(objT, row[pro.Name]);
+                            var value = row[pro.Name];
+                            if (value != DBNull.Value)
+                            {
+                                if (pro.PropertyType == typeof(DateTime?))
+                                {
+                                    pro.SetValue(objT, Convert.ToDateTime(value));
+                                }
+                                else
+                                {
+                                    pro.SetValue(objT, value);
+                                }
+                            }
                         }
                         catch (Exception ex) { }
                     }
@@ -180,6 +191,7 @@ namespace LabBilling
                 return objT;
             }).ToList();
         }
+
 
         /// <summary>
         /// Returns a new DataRow from an object.

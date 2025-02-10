@@ -515,6 +515,7 @@ public partial class BatchRemittance : Form
 
         SaveBatchButton.Enabled = true;
         SubmitPaymentsButton.Enabled = true;
+        TotalPayments();
     }
 
     private void OpenBatch_SelectionChangeCommitted(object sender, EventArgs e)
