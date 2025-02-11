@@ -50,7 +50,7 @@
     <Product>LabBillingService</Product>
     <Copyright>Copyright ©  2021-2024</Copyright>
     <FileVersion>2024.1.2.598</FileVersion>
-    <InformationalVersion>2025.2.2.1</InformationalVersion>
+    <InformationalVersion>2025.2.2.2</InformationalVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">

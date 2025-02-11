@@ -9,7 +9,7 @@
     <Product>LabBilling Library</Product>
     <Copyright>Copyright ©  2021-2025</Copyright>
     <FileVersion>2025.1.21.1</FileVersion>
-    <InformationalVersion>2025.2.2.1</InformationalVersion>
+    <InformationalVersion>2025.2.2.2</InformationalVersion>
     <Platforms>x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
