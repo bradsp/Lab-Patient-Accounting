@@ -112,11 +112,9 @@ namespace LabBilling.Forms
             dxPointerGrid2 = new DataGridView();
             DxDeleteButton = new PictureBox();
             SaveDxButton = new Button();
-            QuickAddLabel = new Label();
             DxQuickAddTextBox = new TextBox();
             txtSearchDx = new TextBox();
             label4 = new Label();
-            DxSearchLabel = new Label();
             DxSearchDataGrid = new DataGridView();
             SelectedDxLabel = new Label();
             DiagnosisDataGrid = new DataGridView();
@@ -426,7 +424,6 @@ namespace LabBilling.Forms
             GuarStateComboBox.AutoCompleteMode = AutoCompleteMode.Suggest;
             GuarStateComboBox.AutoCompleteSource = AutoCompleteSource.ListItems;
             GuarStateComboBox.BackColor = Color.White;
-            GuarStateComboBox.BorderColor = Color.Blue;
             GuarStateComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             GuarStateComboBox.FlatStyle = FlatStyle.Flat;
             GuarStateComboBox.FormattingEnabled = true;
@@ -487,10 +484,10 @@ namespace LabBilling.Forms
             // 
             // DateOfBirthTextBox
             // 
-            DateOfBirthTextBox.DateValue = new DateTime(0L);
             DateOfBirthTextBox.Location = new Point(164, 352);
             DateOfBirthTextBox.Margin = new Padding(4, 3, 4, 3);
             DateOfBirthTextBox.Name = "DateOfBirthTextBox";
+            DateOfBirthTextBox.PlaceholderText = "mm/dd/yyyy";
             DateOfBirthTextBox.Size = new Size(206, 23);
             DateOfBirthTextBox.TabIndex = 23;
             // 
@@ -572,7 +569,6 @@ namespace LabBilling.Forms
             // MaritalStatusComboBox
             // 
             MaritalStatusComboBox.BackColor = Color.White;
-            MaritalStatusComboBox.BorderColor = Color.Blue;
             MaritalStatusComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             MaritalStatusComboBox.FlatStyle = FlatStyle.Flat;
             MaritalStatusComboBox.FormattingEnabled = true;
@@ -628,7 +624,6 @@ namespace LabBilling.Forms
             // SexComboBox
             // 
             SexComboBox.BackColor = Color.White;
-            SexComboBox.BorderColor = Color.Blue;
             SexComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             SexComboBox.FlatStyle = FlatStyle.Flat;
             SexComboBox.FormattingEnabled = true;
@@ -656,6 +651,7 @@ namespace LabBilling.Forms
             PhoneTextBox.Location = new Point(164, 294);
             PhoneTextBox.Margin = new Padding(4, 3, 4, 3);
             PhoneTextBox.Name = "PhoneTextBox";
+            PhoneTextBox.PlaceholderText = "(731) 555-5555";
             PhoneTextBox.Size = new Size(322, 23);
             PhoneTextBox.TabIndex = 19;
             // 
@@ -695,7 +691,6 @@ namespace LabBilling.Forms
             StateComboBox.AutoCompleteMode = AutoCompleteMode.Suggest;
             StateComboBox.AutoCompleteSource = AutoCompleteSource.ListItems;
             StateComboBox.BackColor = Color.White;
-            StateComboBox.BorderColor = Color.Blue;
             StateComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             StateComboBox.FlatStyle = FlatStyle.Flat;
             StateComboBox.FormattingEnabled = true;
@@ -831,7 +826,6 @@ namespace LabBilling.Forms
             // 
             // GuarantorRelationComboBox
             // 
-            GuarantorRelationComboBox.BorderColor = Color.Blue;
             GuarantorRelationComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             GuarantorRelationComboBox.FlatStyle = FlatStyle.Flat;
             GuarantorRelationComboBox.FormattingEnabled = true;
@@ -945,6 +939,7 @@ namespace LabBilling.Forms
             GuarantorPhoneTextBox.Location = new Point(724, 294);
             GuarantorPhoneTextBox.Margin = new Padding(4, 3, 4, 3);
             GuarantorPhoneTextBox.Name = "GuarantorPhoneTextBox";
+            GuarantorPhoneTextBox.PlaceholderText = "(731) 555-5555";
             GuarantorPhoneTextBox.Size = new Size(346, 23);
             GuarantorPhoneTextBox.TabIndex = 53;
             // 
@@ -976,11 +971,9 @@ namespace LabBilling.Forms
             tabDiagnosis.Controls.Add(dxPointerGrid2);
             tabDiagnosis.Controls.Add(DxDeleteButton);
             tabDiagnosis.Controls.Add(SaveDxButton);
-            tabDiagnosis.Controls.Add(QuickAddLabel);
             tabDiagnosis.Controls.Add(DxQuickAddTextBox);
             tabDiagnosis.Controls.Add(txtSearchDx);
             tabDiagnosis.Controls.Add(label4);
-            tabDiagnosis.Controls.Add(DxSearchLabel);
             tabDiagnosis.Controls.Add(DxSearchDataGrid);
             tabDiagnosis.Controls.Add(SelectedDxLabel);
             tabDiagnosis.Controls.Add(DiagnosisDataGrid);
@@ -1063,22 +1056,13 @@ namespace LabBilling.Forms
             SaveDxButton.Visible = false;
             SaveDxButton.Click += SaveDxButton_Click;
             // 
-            // QuickAddLabel
-            // 
-            QuickAddLabel.AutoSize = true;
-            QuickAddLabel.Location = new Point(754, 20);
-            QuickAddLabel.Margin = new Padding(4, 0, 4, 0);
-            QuickAddLabel.Name = "QuickAddLabel";
-            QuickAddLabel.Size = new Size(63, 15);
-            QuickAddLabel.TabIndex = 7;
-            QuickAddLabel.Text = "Quick Add";
-            // 
             // DxQuickAddTextBox
             // 
             DxQuickAddTextBox.CharacterCasing = CharacterCasing.Upper;
-            DxQuickAddTextBox.Location = new Point(827, 16);
+            DxQuickAddTextBox.Location = new Point(828, 20);
             DxQuickAddTextBox.Margin = new Padding(4, 3, 4, 3);
             DxQuickAddTextBox.Name = "DxQuickAddTextBox";
+            DxQuickAddTextBox.PlaceholderText = "Quick Add";
             DxQuickAddTextBox.Size = new Size(116, 23);
             DxQuickAddTextBox.TabIndex = 6;
             DxQuickAddTextBox.KeyPress += DxQuickAddTextBox_KeyPress;
@@ -1086,9 +1070,10 @@ namespace LabBilling.Forms
             // txtSearchDx
             // 
             txtSearchDx.CharacterCasing = CharacterCasing.Upper;
-            txtSearchDx.Location = new Point(133, 21);
+            txtSearchDx.Location = new Point(22, 20);
             txtSearchDx.Margin = new Padding(4, 3, 4, 3);
             txtSearchDx.Name = "txtSearchDx";
+            txtSearchDx.PlaceholderText = "Search Diagnosis";
             txtSearchDx.Size = new Size(254, 23);
             txtSearchDx.TabIndex = 4;
             txtSearchDx.KeyPress += SearchDxTextBox_KeyPress;
@@ -1103,16 +1088,6 @@ namespace LabBilling.Forms
             label4.Size = new Size(104, 15);
             label4.TabIndex = 3;
             label4.Text = "Diagnosis Pointers";
-            // 
-            // DxSearchLabel
-            // 
-            DxSearchLabel.AutoSize = true;
-            DxSearchLabel.Location = new Point(18, 24);
-            DxSearchLabel.Margin = new Padding(4, 0, 4, 0);
-            DxSearchLabel.Name = "DxSearchLabel";
-            DxSearchLabel.Size = new Size(96, 15);
-            DxSearchLabel.TabIndex = 3;
-            DxSearchLabel.Text = "Diagnosis Search";
             // 
             // DxSearchDataGrid
             // 
@@ -1213,7 +1188,7 @@ namespace LabBilling.Forms
             // DxSearchButton
             // 
             DxSearchButton.Image = Properties.Resources.lookup_icon_png_and_vector_for_free_download_pngtree_lookup_png_512_512;
-            DxSearchButton.Location = new Point(393, 17);
+            DxSearchButton.Location = new Point(282, 16);
             DxSearchButton.Margin = new Padding(4, 3, 4, 3);
             DxSearchButton.Name = "DxSearchButton";
             DxSearchButton.Size = new Size(30, 28);
@@ -1434,7 +1409,6 @@ namespace LabBilling.Forms
             notesDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             notesDataGridView.Location = new Point(3, 46);
             notesDataGridView.Name = "notesDataGridView";
-            notesDataGridView.RowTemplate.Height = 25;
             notesDataGridView.Size = new Size(1332, 515);
             notesDataGridView.TabIndex = 3;
             notesDataGridView.CellValueChanged += notesDataGridView_CellValueChanged;
@@ -1706,7 +1680,6 @@ namespace LabBilling.Forms
             // minPmtTextBox
             // 
             minPmtTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            minPmtTextBox.DollarValue = new decimal(new int[] { 0, 0, 0, 0 });
             minPmtTextBox.Location = new Point(1198, 473);
             minPmtTextBox.Margin = new Padding(4, 3, 4, 3);
             minPmtTextBox.Name = "minPmtTextBox";
@@ -2228,11 +2201,9 @@ namespace LabBilling.Forms
         private System.Windows.Forms.DataGridView DiagnosisDataGrid;
         private System.Windows.Forms.PictureBox DxSearchButton;
         private System.Windows.Forms.TextBox txtSearchDx;
-        private System.Windows.Forms.Label DxSearchLabel;
         private System.Windows.Forms.DataGridView DxSearchDataGrid;
         private System.Windows.Forms.Label SelectedDxLabel;
         private System.Windows.Forms.TextBox DxQuickAddTextBox;
-        private System.Windows.Forms.Label QuickAddLabel;
         private System.Windows.Forms.Button SaveDxButton;
         private System.Windows.Forms.PictureBox DxDeleteButton;
         private System.Windows.Forms.PictureBox RefreshButton;

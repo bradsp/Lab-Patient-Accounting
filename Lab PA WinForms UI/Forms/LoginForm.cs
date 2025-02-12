@@ -35,4 +35,20 @@ public partial class LoginForm : Form
         this.Close();
     }
 
+    private void showPasswordCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        if (showPasswordCheckBox.Checked)
+        {
+            txtPassword.PasswordChar = '\0';
+        }
+        else
+        {
+            txtPassword.PasswordChar = '*';
+        }
+    }
+
+    private void txtPassword_TextChanged(object sender, EventArgs e)
+    {
+
+    }
 }
