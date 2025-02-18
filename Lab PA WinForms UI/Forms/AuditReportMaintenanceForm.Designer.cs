@@ -29,24 +29,28 @@ partial class AuditReportMaintenanceForm
     private void InitializeComponent()
     {
         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AuditReportMaintenanceForm));
-        reportListDataGrid = new System.Windows.Forms.DataGridView();
-        reportNameLabel = new System.Windows.Forms.Label();
-        reportNameTextbox = new System.Windows.Forms.TextBox();
-        reportTitleLabel = new System.Windows.Forms.Label();
-        reportTitleTextbox = new System.Windows.Forms.TextBox();
-        buttonLabel = new System.Windows.Forms.Label();
-        buttonTextBox = new System.Windows.Forms.TextBox();
-        reportCodeLabel = new System.Windows.Forms.Label();
-        reportCodeTextbox = new System.Windows.Forms.TextBox();
-        isChildButtonCheckBox = new System.Windows.Forms.CheckBox();
-        commentLabel = new System.Windows.Forms.Label();
-        commentsTextbox = new System.Windows.Forms.TextBox();
-        saveButton = new System.Windows.Forms.Button();
-        cancelButton = new System.Windows.Forms.Button();
-        toolStrip1 = new System.Windows.Forms.ToolStrip();
-        newReportToolStripButton = new System.Windows.Forms.ToolStripButton();
-        idLabel = new System.Windows.Forms.Label();
-        deleteToolStripButton = new System.Windows.Forms.ToolStripButton();
+        reportListDataGrid = new DataGridView();
+        reportNameLabel = new Label();
+        reportNameTextbox = new TextBox();
+        reportTitleLabel = new Label();
+        reportTitleTextbox = new TextBox();
+        buttonLabel = new Label();
+        buttonTextBox = new TextBox();
+        reportCodeLabel = new Label();
+        reportCodeTextbox = new TextBox();
+        isChildButtonCheckBox = new CheckBox();
+        commentLabel = new Label();
+        commentsTextbox = new TextBox();
+        saveButton = new Button();
+        cancelButton = new Button();
+        toolStrip1 = new ToolStrip();
+        newReportToolStripButton = new ToolStripButton();
+        deleteToolStripButton = new ToolStripButton();
+        menuSelectionComboBox = new ToolStripComboBox();
+        idLabel = new Label();
+        validationErrorsLabel = new Label();
+        validationErrorsTextBox = new TextBox();
+        fixSqlCodeButton = new Button();
         ((System.ComponentModel.ISupportInitialize)reportListDataGrid).BeginInit();
         toolStrip1.SuspendLayout();
         SuspendLayout();
@@ -55,125 +59,125 @@ partial class AuditReportMaintenanceForm
         // 
         reportListDataGrid.AllowUserToAddRows = false;
         reportListDataGrid.AllowUserToDeleteRows = false;
-        reportListDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-        reportListDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        reportListDataGrid.Location = new System.Drawing.Point(17, 35);
+        reportListDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        reportListDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        reportListDataGrid.Location = new Point(17, 35);
         reportListDataGrid.MultiSelect = false;
         reportListDataGrid.Name = "reportListDataGrid";
         reportListDataGrid.ReadOnly = true;
-        reportListDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        reportListDataGrid.Size = new System.Drawing.Size(988, 150);
+        reportListDataGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        reportListDataGrid.Size = new Size(988, 150);
         reportListDataGrid.TabIndex = 0;
         reportListDataGrid.SelectionChanged += reportListDataGrid_SelectionChanged;
         // 
         // reportNameLabel
         // 
         reportNameLabel.AutoSize = true;
-        reportNameLabel.Location = new System.Drawing.Point(17, 198);
+        reportNameLabel.Location = new Point(17, 198);
         reportNameLabel.Name = "reportNameLabel";
-        reportNameLabel.Size = new System.Drawing.Size(77, 15);
+        reportNameLabel.Size = new Size(77, 15);
         reportNameLabel.TabIndex = 1;
         reportNameLabel.Text = "Report Name";
         // 
         // reportNameTextbox
         // 
-        reportNameTextbox.Location = new System.Drawing.Point(17, 216);
+        reportNameTextbox.Location = new Point(17, 216);
         reportNameTextbox.Name = "reportNameTextbox";
-        reportNameTextbox.Size = new System.Drawing.Size(266, 23);
+        reportNameTextbox.Size = new Size(266, 23);
         reportNameTextbox.TabIndex = 2;
         // 
         // reportTitleLabel
         // 
         reportTitleLabel.AutoSize = true;
-        reportTitleLabel.Location = new System.Drawing.Point(289, 198);
+        reportTitleLabel.Location = new Point(289, 198);
         reportTitleLabel.Name = "reportTitleLabel";
-        reportTitleLabel.Size = new System.Drawing.Size(67, 15);
+        reportTitleLabel.Size = new Size(67, 15);
         reportTitleLabel.TabIndex = 1;
         reportTitleLabel.Text = "Report Title";
         // 
         // reportTitleTextbox
         // 
-        reportTitleTextbox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-        reportTitleTextbox.Location = new System.Drawing.Point(289, 216);
+        reportTitleTextbox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        reportTitleTextbox.Location = new Point(289, 216);
         reportTitleTextbox.Name = "reportTitleTextbox";
-        reportTitleTextbox.Size = new System.Drawing.Size(331, 23);
+        reportTitleTextbox.Size = new Size(331, 23);
         reportTitleTextbox.TabIndex = 2;
         // 
         // buttonLabel
         // 
-        buttonLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        buttonLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         buttonLabel.AutoSize = true;
-        buttonLabel.Location = new System.Drawing.Point(626, 198);
+        buttonLabel.Location = new Point(626, 198);
         buttonLabel.Name = "buttonLabel";
-        buttonLabel.Size = new System.Drawing.Size(43, 15);
+        buttonLabel.Size = new Size(43, 15);
         buttonLabel.TabIndex = 1;
         buttonLabel.Text = "Button";
         // 
         // buttonTextBox
         // 
-        buttonTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-        buttonTextBox.Location = new System.Drawing.Point(626, 216);
+        buttonTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        buttonTextBox.Location = new Point(626, 216);
         buttonTextBox.Name = "buttonTextBox";
-        buttonTextBox.Size = new System.Drawing.Size(266, 23);
+        buttonTextBox.Size = new Size(266, 23);
         buttonTextBox.TabIndex = 2;
         // 
         // reportCodeLabel
         // 
         reportCodeLabel.AutoSize = true;
-        reportCodeLabel.Location = new System.Drawing.Point(17, 247);
+        reportCodeLabel.Location = new Point(17, 247);
         reportCodeLabel.Name = "reportCodeLabel";
-        reportCodeLabel.Size = new System.Drawing.Size(73, 15);
+        reportCodeLabel.Size = new Size(73, 15);
         reportCodeLabel.TabIndex = 1;
         reportCodeLabel.Text = "Report Code";
         // 
         // reportCodeTextbox
         // 
         reportCodeTextbox.AcceptsReturn = true;
-        reportCodeTextbox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-        reportCodeTextbox.Location = new System.Drawing.Point(17, 265);
+        reportCodeTextbox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        reportCodeTextbox.Location = new Point(17, 265);
         reportCodeTextbox.Multiline = true;
         reportCodeTextbox.Name = "reportCodeTextbox";
-        reportCodeTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-        reportCodeTextbox.Size = new System.Drawing.Size(716, 257);
+        reportCodeTextbox.ScrollBars = ScrollBars.Both;
+        reportCodeTextbox.Size = new Size(629, 257);
         reportCodeTextbox.TabIndex = 2;
         // 
         // isChildButtonCheckBox
         // 
-        isChildButtonCheckBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        isChildButtonCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         isChildButtonCheckBox.AutoSize = true;
-        isChildButtonCheckBox.Location = new System.Drawing.Point(901, 216);
+        isChildButtonCheckBox.Location = new Point(901, 216);
         isChildButtonCheckBox.Name = "isChildButtonCheckBox";
-        isChildButtonCheckBox.Size = new System.Drawing.Size(104, 19);
+        isChildButtonCheckBox.Size = new Size(104, 19);
         isChildButtonCheckBox.TabIndex = 3;
         isChildButtonCheckBox.Text = "Is Child Button";
         isChildButtonCheckBox.UseVisualStyleBackColor = true;
         // 
         // commentLabel
         // 
-        commentLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        commentLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         commentLabel.AutoSize = true;
-        commentLabel.Location = new System.Drawing.Point(739, 247);
+        commentLabel.Location = new Point(652, 247);
         commentLabel.Name = "commentLabel";
-        commentLabel.Size = new System.Drawing.Size(38, 15);
+        commentLabel.Size = new Size(38, 15);
         commentLabel.TabIndex = 1;
         commentLabel.Text = "Notes";
         // 
         // commentsTextbox
         // 
-        commentsTextbox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-        commentsTextbox.Location = new System.Drawing.Point(739, 265);
+        commentsTextbox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+        commentsTextbox.Location = new Point(652, 265);
         commentsTextbox.Multiline = true;
         commentsTextbox.Name = "commentsTextbox";
-        commentsTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-        commentsTextbox.Size = new System.Drawing.Size(266, 257);
+        commentsTextbox.ScrollBars = ScrollBars.Vertical;
+        commentsTextbox.Size = new Size(353, 118);
         commentsTextbox.TabIndex = 2;
         // 
         // saveButton
         // 
-        saveButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-        saveButton.Location = new System.Drawing.Point(849, 528);
+        saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        saveButton.Location = new Point(849, 528);
         saveButton.Name = "saveButton";
-        saveButton.Size = new System.Drawing.Size(75, 23);
+        saveButton.Size = new Size(75, 23);
         saveButton.TabIndex = 4;
         saveButton.Text = "Save";
         saveButton.UseVisualStyleBackColor = true;
@@ -181,10 +185,10 @@ partial class AuditReportMaintenanceForm
         // 
         // cancelButton
         // 
-        cancelButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-        cancelButton.Location = new System.Drawing.Point(930, 528);
+        cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        cancelButton.Location = new Point(930, 528);
         cancelButton.Name = "cancelButton";
-        cancelButton.Size = new System.Drawing.Size(75, 23);
+        cancelButton.Size = new Size(75, 23);
         cancelButton.TabIndex = 4;
         cancelButton.Text = "Cancel";
         cancelButton.UseVisualStyleBackColor = true;
@@ -192,50 +196,87 @@ partial class AuditReportMaintenanceForm
         // 
         // toolStrip1
         // 
-        toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { newReportToolStripButton, deleteToolStripButton });
-        toolStrip1.Location = new System.Drawing.Point(0, 0);
+        toolStrip1.Items.AddRange(new ToolStripItem[] { newReportToolStripButton, deleteToolStripButton, menuSelectionComboBox });
+        toolStrip1.Location = new Point(0, 0);
         toolStrip1.Name = "toolStrip1";
-        toolStrip1.Size = new System.Drawing.Size(1014, 25);
+        toolStrip1.Size = new Size(1014, 25);
         toolStrip1.TabIndex = 5;
         toolStrip1.Text = "toolStrip1";
         // 
         // newReportToolStripButton
         // 
-        newReportToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-        newReportToolStripButton.Image = (System.Drawing.Image)resources.GetObject("newReportToolStripButton.Image");
-        newReportToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+        newReportToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+        newReportToolStripButton.Image = (Image)resources.GetObject("newReportToolStripButton.Image");
+        newReportToolStripButton.ImageTransparentColor = Color.Magenta;
         newReportToolStripButton.Name = "newReportToolStripButton";
-        newReportToolStripButton.Size = new System.Drawing.Size(73, 22);
+        newReportToolStripButton.Size = new Size(73, 22);
         newReportToolStripButton.Text = "New Report";
+        // 
+        // deleteToolStripButton
+        // 
+        deleteToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+        deleteToolStripButton.Image = (Image)resources.GetObject("deleteToolStripButton.Image");
+        deleteToolStripButton.ImageTransparentColor = Color.Magenta;
+        deleteToolStripButton.Name = "deleteToolStripButton";
+        deleteToolStripButton.Size = new Size(82, 22);
+        deleteToolStripButton.Text = "Delete Report";
+        deleteToolStripButton.Click += deleteToolStripButton_Click;
+        // 
+        // menuSelectionComboBox
+        // 
+        menuSelectionComboBox.Name = "menuSelectionComboBox";
+        menuSelectionComboBox.Size = new Size(121, 25);
         // 
         // idLabel
         // 
         idLabel.AutoSize = true;
-        idLabel.Location = new System.Drawing.Point(245, 198);
+        idLabel.Location = new Point(245, 198);
         idLabel.Name = "idLabel";
-        idLabel.Size = new System.Drawing.Size(16, 15);
+        idLabel.Size = new Size(16, 15);
         idLabel.TabIndex = 6;
         idLabel.Text = "...";
         // 
-        // deleteToolStripButton
+        // validationErrorsLabel
         // 
-        deleteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-        deleteToolStripButton.Image = (System.Drawing.Image)resources.GetObject("deleteToolStripButton.Image");
-        deleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-        deleteToolStripButton.Name = "deleteToolStripButton";
-        deleteToolStripButton.Size = new System.Drawing.Size(82, 22);
-        deleteToolStripButton.Text = "Delete Report";
-        deleteToolStripButton.Click += deleteToolStripButton_Click;
+        validationErrorsLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        validationErrorsLabel.AutoSize = true;
+        validationErrorsLabel.Location = new Point(652, 386);
+        validationErrorsLabel.Name = "validationErrorsLabel";
+        validationErrorsLabel.Size = new Size(92, 15);
+        validationErrorsLabel.TabIndex = 7;
+        validationErrorsLabel.Text = "Validation Errors";
+        // 
+        // validationErrorsTextBox
+        // 
+        validationErrorsTextBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        validationErrorsTextBox.Location = new Point(652, 404);
+        validationErrorsTextBox.Multiline = true;
+        validationErrorsTextBox.Name = "validationErrorsTextBox";
+        validationErrorsTextBox.Size = new Size(350, 118);
+        validationErrorsTextBox.TabIndex = 8;
+        // 
+        // fixSqlCodeButton
+        // 
+        fixSqlCodeButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+        fixSqlCodeButton.Location = new Point(17, 528);
+        fixSqlCodeButton.Name = "fixSqlCodeButton";
+        fixSqlCodeButton.Size = new Size(75, 23);
+        fixSqlCodeButton.TabIndex = 9;
+        fixSqlCodeButton.Text = "Fix SQL Code";
+        fixSqlCodeButton.UseVisualStyleBackColor = true;
+        fixSqlCodeButton.Click += fixSqlCodeButton_Click;
         // 
         // AuditReportMaintenanceForm
         // 
         AcceptButton = saveButton;
-        AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-        AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(7F, 15F);
+        AutoScaleMode = AutoScaleMode.Font;
         CancelButton = cancelButton;
-        ClientSize = new System.Drawing.Size(1014, 562);
+        ClientSize = new Size(1014, 562);
+        Controls.Add(fixSqlCodeButton);
+        Controls.Add(validationErrorsTextBox);
+        Controls.Add(validationErrorsLabel);
         Controls.Add(idLabel);
-        Controls.Add(toolStrip1);
         Controls.Add(cancelButton);
         Controls.Add(saveButton);
         Controls.Add(isChildButtonCheckBox);
@@ -281,4 +322,8 @@ partial class AuditReportMaintenanceForm
     private System.Windows.Forms.ToolStripButton newReportToolStripButton;
     private System.Windows.Forms.Label idLabel;
     private System.Windows.Forms.ToolStripButton deleteToolStripButton;
+    private ToolStripComboBox menuSelectionComboBox;
+    private Label validationErrorsLabel;
+    private TextBox validationErrorsTextBox;
+    private Button fixSqlCodeButton;
 }

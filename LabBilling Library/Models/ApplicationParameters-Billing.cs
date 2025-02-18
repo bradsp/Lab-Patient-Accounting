@@ -148,6 +148,11 @@ public partial class ApplicationParameters
     public System.String RemitProcessingDirectory { get; set; }
 
     [Category(_billingCategory)]
+    [Description("Location of remittance PDFs")]
+    [DefaultValue(@"\\wthmclbill\shared\billing\live\claims\835pdf")]
+    public System.String RemitDocumentDirectory { get; set; }
+
+    [Category(_billingCategory)]
     [Description("Discontinue the swapping of insurance's and allow secondary billing via applications")]
     public System.DateTime SecondaryBilling { get; set; }
 

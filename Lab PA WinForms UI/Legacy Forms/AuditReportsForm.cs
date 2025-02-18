@@ -208,64 +208,6 @@ public partial class AuditReportsForm : Form
 
     }
 
-
-    /*
-    private void LoadButton(ToolStripMenuItem toolStripMenuItem)
-    {
-        tspbCount.Value = 0;
-        tspbCount.Step = 1;
-        tspbCount.Increment(10);
-        tspbCount.ToolTipText = "Working";
-
-        m_dtRecords = new DataTable("PrintDataTable");
-
-        Log.Instance.Trace("After setting grids Datasource");
-
-        SelectRows(m_strQuery);
-
-        try
-        {
-            Log.Instance.Debug($"DataTable = [{m_dtRecords.TableName}]");
-            if (m_dtRecords == null)
-            {
-                m_dgvReport.DataSource = null;
-                Log.Instance.Debug("m_dsSource.Tables.Count == 0 so return.");
-                return;
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Error($"m_dsSource.Tables[0].TableName threw an exception. [{ex.Message}]", ex);
-        }
-
-        Log.Instance.Trace("Before setting grids Datasource");
-        BindingSource bs = new BindingSource();
-        bs.DataSource = m_dtRecords;
-
-        m_dgvReport.DataSource = bs;
-
-        if (m_dgvReport.Rows.Count > 0)
-        {
-            SetRowNumbers();
-        }
-        foreach (DataGridViewRow dr in m_dgvReport.Rows)
-        {
-            toolStripMenuItem.DropDownItems.Add(dr.ToString());
-        }
-        Log.Instance.Trace("After SetRowNumbers()");
-
-        tsslRecords.Text = string.Format("{0} rows loaded.", m_dgvReport.Rows.Count);
-        try
-        {
-            MessageBox.Show(string.Format("{0} rows loaded.", m_dgvReport.Rows.Count), "LOAD FINISHED");
-        }
-        catch (Exception exmb)
-        {
-            Log.Instance.Error(exmb.Message, exmb);
-        }
-    }
-    */
-
     private void SetRowNumbers()
     {
         int rowNum = 1;
@@ -917,7 +859,9 @@ public partial class AuditReportsForm : Form
         {
             MessageBox.Show("Not valid");
         }
-
+        // {0} = from date
+        // {1} = thru date
+        // {2} = cdm
         _strReportTitle = strButton;
         currentReportTitle.Text = _strReportTitle;
         tsslReportTitle.Text = _strReportTitle;

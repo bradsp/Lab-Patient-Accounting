@@ -13,7 +13,104 @@ using Log = LabBilling.Logging.Log;
 
 namespace LabBilling.Core.Services;
 
-public sealed class AccountService
+public interface IAccountService
+{
+    event EventHandler<AccountEventArgs> AccountLockCleared;
+    event EventHandler<AccountEventArgs> AccountLocked;
+    event EventHandler<AccountEventArgs> AccountValidated;
+    event EventHandler<ValidationUpdatedEventArgs> ValidationAccountUpdated;
+
+    Account Add(Account table, IUnitOfWork uow = null);
+    Task<object> AddAsync(Account table, IUnitOfWork uow);
+    Account AddCharge(AddChargeParameters parameters);
+    Chrg AddCharge(Chrg chrg, IUnitOfWork uow);
+    Task<Account> AddChargeAsync(AddChargeParameters parameters);
+    ChrgDetail AddChargeModifier(int chrgDetailId, string modifier, IUnitOfWork uow = null);
+    IList<AccountNote> AddNote(string accountNo, string noteText, IUnitOfWork uow = null);
+    Task<IList<AccountNote>> AddNoteAsync(string account, string noteText, IUnitOfWork uow);
+    Chk AddPayment(Chk chk, IUnitOfWork uow = null);
+    void AddRecentlyAccessedAccount(string accountNo, string userName, IUnitOfWork uow = null);
+    Account BundlePanels(Account account, IUnitOfWork uow);
+    Task<Account> BundlePanelsAsync(Account account, IUnitOfWork uow);
+    bool ChangeClient(Account model, string newClientMnem, IUnitOfWork uow = null);
+    Task<bool> ChangeClientAsync(Account table, string newClientMnem, IUnitOfWork uow = null);
+    Account ChangeDateOfService(Account model, DateTime newDate, string reason_comment, IUnitOfWork uow = null);
+    Task<Account> ChangeDateOfServiceAsync(Account table, DateTime newDate, string reason_comment, IUnitOfWork uow = null);
+    Account ChangeFinancialClass(Account model, string newFinCode, IUnitOfWork uow = null);
+    Account ChangeFinancialClass(string accountNo, string newFinCode, IUnitOfWork uow = null);
+    Task<Account> ChangeFinancialClassAsync(Account model, string newFinCode, IUnitOfWork uow = null);
+    Task<Account> ChangeFinancialClassAsync(string accountNo, string newFinCode, IUnitOfWork uow = null);
+    bool ClearAccountLock(Account account, IUnitOfWork uow = null);
+    bool ClearAccountLock(int id, IUnitOfWork uow = null);
+    bool ClearAccountLocks(string username, string hostname, IUnitOfWork uow = null);
+    Account ClearClaimStatus(Account account, IUnitOfWork uow = null);
+    Task ClearClaimStatusAsync(Account account, IUnitOfWork uow);
+    Pat ClearCollectionsListDate(string accountNo, IUnitOfWork uow = null);
+    Chrg CreditCharge(int chrgId, string comment = "", IUnitOfWork uow = null);
+    bool DeleteInsurance(Ins ins, IUnitOfWork uow = null);
+    Account GetAccount(string account);
+    Account GetAccount(string account, bool demographicsOnly = false, bool secureLock = true, IUnitOfWork uow = null);
+    Account GetAccount(string account, IUnitOfWork uow = null);
+    Task<Account> GetAccountAsync(string account);
+    Task<Account> GetAccountAsync(string account, bool demographicsOnly = false, bool secureLock = true, IUnitOfWork uow = null);
+    Task<Account> GetAccountAsync(string account, IUnitOfWork uow);
+    (bool locksuccessful, AccountLock lockInfo) GetAccountLock(string account, IUnitOfWork uow = null);
+    List<AccountLock> GetAccountLocks(IUnitOfWork uow = null);
+    Account GetAccountMinimal(string accountNo, IUnitOfWork uow = null);
+    IEnumerable<ClaimItem> GetAccountsForClaims(IUnitOfWork uow, ClaimType claimType, int maxClaims = 0);
+    Task<IEnumerable<ClaimItem>> GetAccountsForClaimsAsync(IUnitOfWork uow, ClaimType claimType, int maxClaims = 0);
+    double GetBalance(string accountNo, IUnitOfWork uow = null);
+    Chrg GetCharge(int chrgNo, IUnitOfWork uow = null);
+    IList<Chrg> GetCharges(IUnitOfWork uow, string accountNo, bool showCredited = true, bool includeInvoiced = true, DateTime? asOfDate = null, bool excludeCBill = true);
+    IList<ClaimChargeView> GetClaimCharges(string accountNo, IUnitOfWork uow);
+    List<ClaimItem> GetClaimItems(ClaimType claimType, IUnitOfWork uow);
+    List<Ins> GetInsByAccount(string accountNo, IUnitOfWork uow = null);
+    Ins GetInsByAccount(string accountNo, InsCoverage coverage, IUnitOfWork uow = null);
+    IEnumerable<InvoiceSelect> GetInvoiceAccounts(string clientMnem, DateTime thruDate, IUnitOfWork uow);
+    Task<IEnumerable<InvoiceSelect>> GetInvoiceAccountsAsync(string clientMnem, DateTime thruDate, IUnitOfWork uow);
+    decimal GetNextAccountNumber(IUnitOfWork uow = null);
+    List<AccountNote> GetNotes(string accountNo, IUnitOfWork uow = null);
+    Pat GetPatByAccount(Account account, IUnitOfWork uow = null);
+    List<PatientStatementAccount> GetPatientStatements(string accountNo, IUnitOfWork uow = null);
+    Account InsuranceSwap(Account account, InsCoverage swap1, InsCoverage swap2, IUnitOfWork uow = null);
+    Task<Account> InsuranceSwapAsync(Account account, InsCoverage swap1, InsCoverage swap2, IUnitOfWork uow = null);
+    Chrg MoveCharge(string sourceAccount, string destinationAccount, int chrgId, IUnitOfWork uow = null);
+    Task MoveChargeAsync(string sourceAccount, string destinationAccount, int chrgId, IUnitOfWork uow);
+    (bool isSuccess, string error) MoveCharges(string sourceAccount, string destinationAccount, IUnitOfWork uow = null);
+    ChrgDetail RemoveChargeModifier(int chrgDetailId, IUnitOfWork uow);
+    IList<Chrg> ReprocessCharges(Account account, string comment, IUnitOfWork uow);
+    IList<Chrg> ReprocessCharges(string account, string comment, IUnitOfWork uow);
+    Task<IList<Chrg>> ReprocessChargesAsync(Account account, string comment, IUnitOfWork uow);
+    Task<IList<Chrg>> ReprocessChargesAsync(string account, string comment, IUnitOfWork uow);
+    Chk ReversePayment(Chk chk, string comment, IUnitOfWork uow = null);
+    Ins SaveInsurance(Ins ins, IUnitOfWork uow = null);
+    IList<AccountSearch> SearchAccounts(string lastName, string firstName, string mrn, string ssn, string dob, string sex, string accountSearch, IUnitOfWork uow = null);
+    Chrg SetChargeCreditFlag(int chrgId, bool flag, IUnitOfWork uow = null);
+    Pat SetCollectionsDate(Pat pat, IUnitOfWork uow = null);
+    bool SetNoteAlert(string account, bool showAlert, IUnitOfWork uow = null);
+    Task<bool> SetNoteAlertAsync(string account, bool showAlert, IUnitOfWork uow);
+    Account UnbundlePanels(Account account, IUnitOfWork uow);
+    Task<Account> UnbundlePanelsAsync(Account account, IUnitOfWork uow);
+    Account UpdateAccountDemographics(Account acc, IUnitOfWork uow = null);
+    IList<Chrg> UpdateChargesClient(string account, string clientMnem, IUnitOfWork uow);
+    Task<IList<Chrg>> UpdateChargesClientAsync(string account, string clientMnem, IUnitOfWork uow);
+    IList<Chrg> UpdateChargesFinCode(IList<Chrg> charges, string finCode, IUnitOfWork uow);
+    Task<IList<Chrg>> UpdateChargesFinCodeAsync(IList<Chrg> charges, string finCode, IUnitOfWork uow);
+    Account UpdateDiagnoses(Account acc, IUnitOfWork uow = null);
+    Task<Account> UpdateDiagnosesAsync(Account acc, IUnitOfWork uow = null);
+    ChrgDiagnosisPointer UpdateDiagnosisPointer(ChrgDiagnosisPointer ptr, IUnitOfWork uow = null);
+    Account UpdateStatementFlag(Account acc, string flag, IUnitOfWork uow = null);
+    Account UpdateStatus(Account model, string status, IUnitOfWork uow = null);
+    int UpdateStatus(string accountNo, string status, IUnitOfWork uow = null);
+    Task<Account> UpdateStatusAsync(Account model, string status, IUnitOfWork uow);
+    Task<int> UpdateStatusAsync(string accountNo, string status, IUnitOfWork uow);
+    Account Validate(Account account, bool reprint = false, IUnitOfWork uow = null);
+    Task<Account> ValidateAsync(Account account, bool reprint = false, IUnitOfWork uow = null);
+    void ValidateUnbilledAccounts(IUnitOfWork uow = null);
+    Task ValidateUnbilledAccountsAsync(IUnitOfWork uow);
+}
+
+public sealed class AccountService : IAccountService
 {
     private readonly IAppEnvironment _appEnvironment;
 
@@ -1005,7 +1102,6 @@ public sealed class AccountService
         {
             if (oldClientMnem != newClientMnem)
             {
-
                 model.ClientMnem = newClientMnem;
                 model.Client = newClient;
                 try
@@ -1182,13 +1278,13 @@ public sealed class AccountService
             chargesToCredit.ForEach(c =>
             {
                 CreditCharge(c.ChrgId, comment, uow);
-                AddCharge(new AddChargeParameters() 
-                { 
-                    Account = account, 
-                    Cdm = c.CDMCode, 
-                    Quantity = c.Quantity, 
-                    ServiceDate = account.TransactionDate, 
-                    Uow = uow 
+                AddCharge(new AddChargeParameters()
+                {
+                    Account = account,
+                    Cdm = c.CDMCode,
+                    Quantity = c.Quantity,
+                    ServiceDate = account.TransactionDate,
+                    Uow = uow
                 });
             });
 
@@ -1327,45 +1423,19 @@ public sealed class AccountService
     public async Task<Account> AddChargeAsync(AddChargeParameters parameters)
         => await Task.Run(() => AddCharge(parameters));
 
+
+
     /// <summary>
-    /// Adds a charge to an account using the specified parameters.
+    /// Adds a charge to an account based on the provided parameters.
     /// </summary>
-    /// <param name="parameters">
-    /// An instance of <see cref="AddChargeParameters"/> containing the details of the charge to be added:
-    /// <list type="bullet">
-    /// <item><term>Account</term> (optional): The <see cref="Account"/> object to add the charge to.</item>
-    /// <item><term>AccountNumber</term> (optional): The account number if the <c>Account</c> object is not provided.</item>
-    /// <item><term>Cdm</term> (required): The CDM code representing the charge.</item>
-    /// <item><term>Quantity</term> (required): The quantity of the charge to add.</item>
-    /// <item><term>ServiceDate</term> (required): The date of service for the charge.</item>
-    /// <item><term>Comment</term> (optional): Any additional comments related to the charge.</item>
-    /// <item><term>RefNumber</term> (optional): A reference number associated with the charge.</item>
-    /// <item><term>MiscAmount</term> (optional): An optional miscellaneous amount for the charge.</item>
-    /// <item><term>Uow</term> (optional): An instance of <see cref="IUnitOfWork"/> for database transactions.</item>
-    /// </list>
-    /// </param>
-    /// <returns>
-    /// The updated <see cref="Account"/> object after the charge has been added.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when the <c>Cdm</c> parameter is null or empty.
-    /// </exception>
-    /// <exception cref="AccountNotFoundException">
-    /// Thrown when the specified account does not exist.
-    /// </exception>
-    /// <exception cref="InvalidClientException">
-    /// Thrown when the account's client information is invalid.
-    /// </exception>
-    /// <exception cref="CdmNotFoundException">
-    /// Thrown when the specified CDM code is not found in the system.
-    /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when the <c>Quantity</c> is less than or equal to zero.
-    /// </exception>
-    /// <remarks>
-    /// This method allows adding a charge to an account by providing all necessary details encapsulated in an
-    /// <see cref="AddChargeParameters"/> object. It handles transaction management and commits the changes to the database.
-    /// </remarks>
+    /// <param name="parameters">The parameters required to add a charge, including account information, charge details, and optional comments.</param>
+    /// <returns>The updated account with the new charge added.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when required parameters are null.</exception>
+    /// <exception cref="AccountNotFoundException">Thrown when the specified account is not found.</exception>
+    /// <exception cref="InvalidClientException">Thrown when the client associated with the account is invalid.</exception>
+    /// <exception cref="ApplicationException">Thrown when there is an application-specific error.</exception>
+    /// <exception cref="CdmNotFoundException">Thrown when the specified CDM is not found.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when a parameter is out of the expected range.</exception>
     public Account AddCharge(AddChargeParameters parameters)
     {
         //check for required parameters
@@ -1379,14 +1449,14 @@ public sealed class AccountService
         double miscAmount = parameters.MiscAmount;
 
         Account accData;
-        if(parameters.Account == null)
+        if (parameters.Account == null)
         {
             //see if account number is provided and get account
             if (string.IsNullOrEmpty(parameters.AccountNumber))
                 throw new ArgumentNullException(nameof(parameters.AccountNumber));
 
             accData = GetAccount(parameters.AccountNumber, parameters.Uow);
-            if(accData == null)
+            if (accData == null)
                 throw new AccountNotFoundException("Account is not a valid account.", parameters.AccountNumber);
         }
         else
@@ -1852,7 +1922,7 @@ public sealed class AccountService
                     uow.AccountLmrpErrorRepository.Save(record);
                 }
                 uow.Commit();
-                AccountValidated?.Invoke(this, new AccountEventArgs() {  Account = account, AccountNo = account.AccountNo, UpdateMessage = account.AccountValidationStatus.ValidationText });
+                AccountValidated?.Invoke(this, new AccountEventArgs() { Account = account, AccountNo = account.AccountNo, UpdateMessage = account.AccountValidationStatus.ValidationText });
                 return account;
             }
         }
@@ -1911,7 +1981,7 @@ public sealed class AccountService
                 if (!account.BillableCharges.Any(x => x.ChrgDetails.Where(y => y.Cpt4 == cpt4).Any(z => z.Modifier == "GZ" || z.Modifier2 == "GZ")))
                 {
                     errorList.Add($"LMRP Violation - No dx codes support medical necessity for cpt {cpt4}.");
-                }                
+                }
             }
         }
         uow.Commit();
@@ -1971,7 +2041,7 @@ public sealed class AccountService
     /// </summary>
     /// <param name="sourceAccount"></param>
     /// <param name="destinationAccount"></param>
-    public (bool isSuccess, string error) MoveCharges(string sourceAccount, string destinationAccount, IUnitOfWork uow = null  )
+    public (bool isSuccess, string error) MoveCharges(string sourceAccount, string destinationAccount, IUnitOfWork uow = null)
     {
         if (string.IsNullOrEmpty(sourceAccount) || string.IsNullOrEmpty(destinationAccount))
         {

@@ -377,6 +377,12 @@ public class DictionaryService
         return uow.AuditReportRepository.GetAll();
     }
 
+    public List<string> GetAuditReportMenus(IUnitOfWork uow = null)
+    {
+        uow ??= new UnitOfWorkMain(_appEnvironment);
+        return uow.AuditReportRepository.GetMenus();
+    }
+
     public AuditReport SaveAuditReport(AuditReport report, IUnitOfWork uow = null)
     {
         uow ??= new UnitOfWorkMain(_appEnvironment);

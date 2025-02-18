@@ -14,6 +14,27 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.Services;
 
+public interface IRemittance835Service
+{
+    List<string> Errors { get; }
+
+    string ConvertRemittanceDataToHtml(RemittanceData remittanceData);
+    string ConvertRemittanceHeaderToHtml(RemittanceData remittanceData, string remittanceFileName);
+    string ConvertRemittanceHeaderToRtf(RemittanceData remittanceData);
+    bool DeleteRemittance(RemittanceFile remittance, IUnitOfWork uow = null);
+    List<RemittanceFile> GetAllRemittances(bool includePosted = true, IUnitOfWork uow = null);
+    Task<List<RemittanceFile>> GetAllRemittancesAsync(IUnitOfWork uow);
+    RemittanceFile GetRemittance(int remittanceId, IUnitOfWork uow = null);
+    Task<RemittanceFile> GetRemittanceAsync(int remittanceId, IUnitOfWork uow = null);
+    RemittanceFile GetRemittanceByFileName(string filename, IUnitOfWork uow = null);
+    Task<Remittance835Service.OperationResult> HandleRemittanceAsync(int remittanceId, bool isPosting, IProgress<ProgressReportModel> progress, IUnitOfWork uow = null);
+    bool IsRemittancePosted(int remittanceId, IUnitOfWork uow);
+    RemittanceData Load835(string fileName, IUnitOfWork uow = null);
+    RemittanceData ReimportRemittance(int remittanceId, IUnitOfWork uow = null);
+    Task<List<Remittance835Service.OperationResult>> ReimportUnpostedRemittancesAsync(IProgress<ProgressReportModel> progress = null, IUnitOfWork uow = null);
+    void UpdateRemittance(RemittanceFile remittanceFile, IUnitOfWork uow = null);
+}
+
 
 /*
 
@@ -50,7 +71,7 @@ AdjustmentReasonCode
 *   253 (Sequestration - reduction in federal spending): This code is used to indicate that the payment was reduced due to sequestration.
  
  */
-public sealed class Remittance835Service
+public sealed class Remittance835Service : IRemittance835Service
 {
     private readonly IAppEnvironment _appEnvironment;
     private readonly List<string> _errors = new();
@@ -478,7 +499,7 @@ public sealed class Remittance835Service
     }
 
 
-    public string ConvertRemittanceHeaderToHtml(RemittanceData remittanceData)
+    public string ConvertRemittanceHeaderToHtml(RemittanceData remittanceData, string remittanceFileName)
     {
         var html = new StringBuilder();
 
@@ -549,6 +570,29 @@ public sealed class Remittance835Service
         html.Append("</table>");
         html.Append("</div>");
         html.Append("</div>");
+
+        //look to see if there are PDF attachments for this remittance
+
+        string filenamepart = Path.GetFileNameWithoutExtension(remittanceFileName);
+        var pdfFiles = Directory.GetFiles(_appEnvironment.ApplicationParameters.RemitDocumentDirectory, $"{filenamepart}*.pdf");
+
+        if (pdfFiles.Length > 0)
+        {
+            html.Append("<div class='section'>");
+            html.Append("<div class='section-header'>Attachments</div>");
+            html.Append("<div class='section-content'>");
+            html.Append("<table>");
+            foreach (var pdfFile in pdfFiles)
+            {
+                html.Append("<tr>");
+                html.Append($"<td><a href='{pdfFile}' target='_blank'>{Path.GetFileName(pdfFile)}</a></td>");
+                html.Append("</tr>");
+            }
+            html.Append("</table>");
+            html.Append("</div>");
+            html.Append("</div>");
+        }
+
 
         html.Append("</body></html>");
 
@@ -663,7 +707,7 @@ public sealed class Remittance835Service
         COadjustmentCodes.Add("B11", "Service not authorized - The service required prior authorization, which was not obtained.");
         COadjustmentCodes.Add("B13", "Service not covered - The service rendered is not included in the coverage terms.");
         COadjustmentCodes.Add("B15", "Not a valid procedure code - The procedure code used on the claim is invalid.");
-        
+
 
 
         var html = new StringBuilder();
@@ -795,7 +839,7 @@ public sealed class Remittance835Service
                     foreach (var adjustment in loop2110.Adjustments)
                     {
                         string adjustmentDescription;
-                        switch(adjustment.ClaimAdjustmentGroupCode)
+                        switch (adjustment.ClaimAdjustmentGroupCode)
                         {
                             case "CO":
                                 COadjustmentCodes.TryGetValue(adjustment.AdjustmentReasonCode, out adjustmentDescription);

@@ -74,7 +74,7 @@ public partial class PostRemittanceForm : Form
 
         try
         {
-            remittanceInfoWebBrowser.DocumentText = remittanceService.ConvertRemittanceHeaderToHtml(remittanceData);
+            remittanceInfoWebBrowser.DocumentText = remittanceService.ConvertRemittanceHeaderToHtml(remittanceData, _selectedRemittance.FileName);
             //remittanceInfoRichTextBox.Rtf = remittanceService.ConvertRemittanceHeaderToRtf(remittanceData);
         }
         catch (Exception ex)
