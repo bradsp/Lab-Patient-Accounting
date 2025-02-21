@@ -157,6 +157,9 @@ public class WorklistService
             case Worklists.ReceivingStatements:
                 parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, AccountStatus.Statements)).ToArray();
                 break;
+            case Worklists.CreditBalance:
+                parameters = parameters.Append((nameof(AccountSearch.Balance), AccountSearchRepository.operation.LessThan, "0.00")).ToArray();
+                break;
             default:
                 break;
         }

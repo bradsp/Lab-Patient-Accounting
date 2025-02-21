@@ -23,6 +23,7 @@ public static class Worklists
     public const string SubmittedProfessional = "Submitted Professional";
     public const string SubmittedOtherClaim = "Submitted Other";
     public const string ReceivingStatements = "Receiving Statements";
+    public const string CreditBalance = "Credit Balance";
 
 
     public static List<string> ToList()

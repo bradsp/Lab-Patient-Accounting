@@ -871,7 +871,7 @@ public partial class AuditReportsForm : Form
 
         if (_strQuery.Contains(" cl_mnem in ({2})") && !string.IsNullOrEmpty(clientsToolStripComboBox.SelectedItem.ToString()))
         {
-            string[] strParts = clientsToolStripComboBox.SelectedItem.ToString().Split(new char[] { '-' });
+            string[] strParts = clientsToolStripComboBox.SelectedItem.ToString().Split(['-']);
             _strQuery = _strQuery.Replace("{2}", $"'{strParts[0].Trim()}'");
         }
         else if (_strQuery.Contains("{2}"))
@@ -892,7 +892,7 @@ public partial class AuditReportsForm : Form
             }
 
             string strCdm = null;
-            string[] strCDMs = f.tbData.Text.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            string[] strCDMs = f.tbData.Text.Split([","], StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string str in strCDMs)
             {

@@ -225,7 +225,7 @@ public partial class AuditReportMaintenanceForm : Form
         StringBuilder validationErrors = new();
 
         // Parse the SQL code
-        TSql150Parser parser = new TSql150Parser(false);
+        TSql150Parser parser = new (false);
         IList<ParseError> errors;
         TSqlFragment fragment;
 
