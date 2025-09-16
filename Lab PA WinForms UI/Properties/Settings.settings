@@ -3,19 +3,19 @@
   <Profiles />
   <Settings>
     <Setting Name="ProdDbServer" Type="System.String" Scope="Application">
-      <Value Profile="(Default)"></Value>
+      <Value Profile="(Default)">${PROD_DB_SERVER}</Value>
     </Setting>
     <Setting Name="ProdDbName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">LabBillingProd</Value>
+      <Value Profile="(Default)">${PROD_DB_NAME}</Value>
     </Setting>
     <Setting Name="ProdLogDbName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">NLog</Value>
+      <Value Profile="(Default)">${PROD_LOG_DB_NAME}</Value>
     </Setting>
     <Setting Name="TestDbName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">LabBillingTest</Value>
+      <Value Profile="(Default)">${TEST_DB_NAME}</Value>
     </Setting>
     <Setting Name="TestDbServer" Type="System.String" Scope="Application">
-      <Value Profile="(Default)"></Value>
+      <Value Profile="(Default)">${TEST_DB_SERVER}</Value>
     </Setting>
     <Setting Name="TestIntegratedSecurity" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
@@ -24,7 +24,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="TestLogDbName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">NLog</Value>
+      <Value Profile="(Default)">${TEST_LOG_DB_NAME}</Value>
     </Setting>
   </Settings>
 </SettingsFile>

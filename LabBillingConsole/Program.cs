@@ -23,8 +23,8 @@ internal class Program
 
         StringBuilder dbSelect = new();
         dbSelect.AppendLine("Select Database:\n\n");
-        dbSelect.AppendLine("1) LabBillingProd");
-        dbSelect.AppendLine("2) LabBillingTest (WTMCLBILL)");
+        dbSelect.AppendLine("1) Production Database");
+        dbSelect.AppendLine("2) Test Database");
         dbSelect.AppendLine("0) Exit");
 
         var panel1 = new Panel(dbSelect.ToString());
@@ -45,19 +45,24 @@ internal class Program
                     return ValidationResult.Error("Invalid selection.");
             }));
 
-        serverName = "WTHMCLBILL";
+        // Get server and database names from environment variables or use defaults
+        string defaultServer = Environment.GetEnvironmentVariable("DB_SERVER") ?? "${DB_SERVER}";
+        string prodDbName = Environment.GetEnvironmentVariable("PROD_DB_NAME") ?? "${PROD_DB_NAME}";
+        string testDbName = Environment.GetEnvironmentVariable("TEST_DB_NAME") ?? "${TEST_DB_NAME}";
+        
+        serverName = defaultServer;
 
         switch (menuSelect)
         {
             case 0:
                 return false;
             case 1:
-                databaseName = "LabBillingProd";
-                serverName = "WTHMCLBILL";
+                databaseName = prodDbName;
+                serverName = defaultServer;
                 break;
             case 2:
-                databaseName = "LabBillingTest";
-                serverName = "WTHMCLBILL";
+                databaseName = testDbName;
+                serverName = defaultServer;
                 break;
             default:
                 return true;
