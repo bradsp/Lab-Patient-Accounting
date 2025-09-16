@@ -3,19 +3,19 @@
   <Profiles />
   <Settings>
     <Setting Name="DbServer" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">WTHMCLBILL</Value>
+      <Value Profile="(Default)">${DB_SERVER}</Value>
     </Setting>
     <Setting Name="DbName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">LabBillingProd</Value>
+      <Value Profile="(Default)">${DB_NAME}</Value>
     </Setting>
     <Setting Name="LogDbName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">NLog</Value>
+      <Value Profile="(Default)">${LOG_DB_NAME}</Value>
     </Setting>
     <Setting Name="Username" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">interface</Value>
+      <Value Profile="(Default)">${DB_USERNAME}</Value>
     </Setting>
     <Setting Name="Password" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">0ac%%$ff0100a</Value>
+      <Value Profile="(Default)">${DB_PASSWORD}</Value>
     </Setting>
   </Settings>
 </SettingsFile>

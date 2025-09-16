@@ -25,7 +25,7 @@ namespace LabBilling.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("WTHMCLBILL")]
+        [global::System.Configuration.DefaultSettingValueAttribute("${PROD_DB_SERVER}")]
         public string ProdDbServer {
             get {
                 return ((string)(this["ProdDbServer"]));
@@ -34,7 +34,7 @@ namespace LabBilling.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("LabBillingProd")]
+        [global::System.Configuration.DefaultSettingValueAttribute("${PROD_DB_NAME}")]
         public string ProdDbName {
             get {
                 return ((string)(this["ProdDbName"]));
@@ -43,7 +43,7 @@ namespace LabBilling.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("NLog")]
+        [global::System.Configuration.DefaultSettingValueAttribute("${PROD_LOG_DB_NAME}")]
         public string ProdLogDbName {
             get {
                 return ((string)(this["ProdLogDbName"]));
@@ -52,7 +52,7 @@ namespace LabBilling.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("LabBillingTest")]
+        [global::System.Configuration.DefaultSettingValueAttribute("${TEST_DB_NAME}")]
         public string TestDbName {
             get {
                 return ((string)(this["TestDbName"]));
@@ -61,7 +61,7 @@ namespace LabBilling.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("WTHMCLBILL")]
+        [global::System.Configuration.DefaultSettingValueAttribute("${TEST_DB_SERVER}")]
         public string TestDbServer {
             get {
                 return ((string)(this["TestDbServer"]));
@@ -88,7 +88,7 @@ namespace LabBilling.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("NLog")]
+        [global::System.Configuration.DefaultSettingValueAttribute("${TEST_LOG_DB_NAME}")]
         public string TestLogDbName {
             get {
                 return ((string)(this["TestLogDbName"]));

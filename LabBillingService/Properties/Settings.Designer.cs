@@ -25,7 +25,7 @@ namespace LabBillingService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("WTHMCLBILL")]
+        [global::System.Configuration.DefaultSettingValueAttribute("${DB_SERVER}")]
         public string DbServer {
             get {
                 return ((string)(this["DbServer"]));
@@ -34,7 +34,7 @@ namespace LabBillingService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("LabBillingProd")]
+        [global::System.Configuration.DefaultSettingValueAttribute("${DB_NAME}")]
         public string DbName {
             get {
                 return ((string)(this["DbName"]));
@@ -43,7 +43,7 @@ namespace LabBillingService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("NLog")]
+        [global::System.Configuration.DefaultSettingValueAttribute("${LOG_DB_NAME}")]
         public string LogDbName {
             get {
                 return ((string)(this["LogDbName"]));
@@ -52,7 +52,7 @@ namespace LabBillingService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("interface")]
+        [global::System.Configuration.DefaultSettingValueAttribute("${DB_USERNAME}")]
         public string Username {
             get {
                 return ((string)(this["Username"]));
@@ -61,7 +61,7 @@ namespace LabBillingService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0ac%%$ff0100a")]
+        [global::System.Configuration.DefaultSettingValueAttribute("${DB_PASSWORD}")]
         public string Password {
             get {
                 return ((string)(this["Password"]));

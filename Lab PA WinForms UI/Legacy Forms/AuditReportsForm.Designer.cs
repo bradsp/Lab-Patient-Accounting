@@ -101,7 +101,7 @@
             billingReportsTsmi.ImageTransparentColor = System.Drawing.Color.Magenta;
             billingReportsTsmi.Name = "billingReportsTsmi";
             billingReportsTsmi.Size = new System.Drawing.Size(96, 22);
-            billingReportsTsmi.Tag = "WTHMCLBILL|MCLLIVE";
+            billingReportsTsmi.Tag = "${DB_SERVER}|${ALTERNATE_SERVER}";
             billingReportsTsmi.Text = "Billing Reports";
             // 
             // jCodes80299tsmi
