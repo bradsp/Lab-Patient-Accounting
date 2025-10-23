@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LabBilling Core": {
+      "commandName": "Project",
+      "commandLineArgs": "/TEST"
+    }
+  }
+}

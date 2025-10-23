@@ -167,8 +167,6 @@ public class WorklistService
         {
             return uow.AccountSearchRepository.GetBySearch(parameters);
         });
-
-
         return accounts;
     }
 

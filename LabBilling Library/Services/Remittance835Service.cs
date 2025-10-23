@@ -891,20 +891,7 @@ public sealed class Remittance835Service : IRemittance835Service
         try
         {
             uow ??= new UnitOfWorkMain(_appEnvironment);
-            var remittanceFile = new RemittanceFile
-            {
-                FileName = Path.GetFileName(fileName), // Set appropriate file name
-                ProcessedDate = remittanceData.PaymentDate ?? DateTime.Now,
-                Payer = remittanceData.PayerName,
-                TransactionTraceNumber = remittanceData.CurrentTransactionTraceNumber,
-                TotalPaymentAmount = decimal.Parse(remittanceData.TotalPremiumPaymentAmount ?? "0"),
-                ClaimCount = remittanceData.Loop2000s.Sum(x => Convert.ToInt16(x.TotalClaimCount)),
-                TotalAllowedAmount = remittanceData.Loop2000s.Sum(l => l.Loop2100s.Sum(c => decimal.Parse(c.AllowedAmount ?? "0"))),
-                TotalChargeAmount = remittanceData.Loop2000s.Sum(l => Convert.ToDecimal(l.TotalClaimChargeAmount)),
-                TotalPaidAmount = decimal.Parse(remittanceData.PaidAmount ?? "0"),
-                RemittanceData = JsonConvert.SerializeObject(remittanceData),
-                Claims = new List<RemittanceClaim>()
-            };
+            var parsedClaims = new List<RemittanceClaim>();
 
             foreach (var loop2000 in remittanceData.Loop2000s)
             {
@@ -955,9 +942,31 @@ public sealed class Remittance835Service : IRemittance835Service
                         remittanceClaim.ClaimDetails.Add(remittanceClaimDetail);
                     }
 
-                    remittanceFile.Claims.Add(remittanceClaim);
+                    parsedClaims.Add(remittanceClaim);
                 }
             }
+
+            // Calculate actual totals from parsed claims
+            var totalChargeAmount = parsedClaims.Sum(c => c.ClaimChargeAmount);
+            var totalPaymentAmount = parsedClaims.Sum(c => c.ClaimPaymentAmount);
+            var totalAllowedAmount = parsedClaims.Sum(c => c.AllowedAmount);
+            var claimCount = parsedClaims.Count;
+
+            var remittanceFile = new RemittanceFile
+            {
+                FileName = Path.GetFileName(fileName), // Set appropriate file name
+                ProcessedDate = remittanceData.PaymentDate ?? DateTime.Now,
+                Payer = remittanceData.PayerName,
+                TransactionTraceNumber = remittanceData.CurrentTransactionTraceNumber,
+                TotalPaymentAmount = decimal.Parse(remittanceData.TotalPremiumPaymentAmount ?? "0"),
+                ClaimCount = claimCount,
+                TotalAllowedAmount = totalAllowedAmount,
+                TotalChargeAmount = totalChargeAmount,
+                TotalPaidAmount = totalPaymentAmount,
+                RemittanceData = JsonConvert.SerializeObject(remittanceData),
+                Claims = parsedClaims
+            };
+
 
             //Save the remittance file and related data
             uow.StartTransaction();
