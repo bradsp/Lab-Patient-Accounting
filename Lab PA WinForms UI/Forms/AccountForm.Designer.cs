@@ -56,13 +56,13 @@ namespace LabBilling.Forms
             GuarZipTextBox = new MaskedTextBox();
             GuarZipCodeLabel = new Label();
             GuarStateLabel = new Label();
-            GuarStateComboBox = new Library.FlatCombo();
+            GuarStateComboBox = new LabBilling.Library.FlatCombo();
             GuarCityTextBox = new TextBox();
             GuarCityLabel = new Label();
             GuarantorAddressTextBox = new TextBox();
             GuarAddressLabel = new Label();
             SaveDemographics = new Button();
-            DateOfBirthTextBox = new UserControls.DateTextBox();
+            DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
             PatLastNameLabel = new Label();
             orderingProviderLabel = new Label();
             PatFirstNameLabel = new Label();
@@ -70,18 +70,18 @@ namespace LabBilling.Forms
             FirstNameTextBox = new TextBox();
             PatSSNLabel = new Label();
             PatMiddleNameLabel = new Label();
-            MaritalStatusComboBox = new Library.FlatCombo();
+            MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
             PatMaritalStatusLabel = new Label();
             PatDOBLabel = new Label();
             MiddleNameTextBox = new TextBox();
             PatSexLabel = new Label();
-            SexComboBox = new Library.FlatCombo();
+            SexComboBox = new LabBilling.Library.FlatCombo();
             PatPhoneLabel = new Label();
             PhoneTextBox = new TextBox();
             PatZipLabel = new Label();
             ZipcodeTextBox = new MaskedTextBox();
             PatStateLabel = new Label();
-            StateComboBox = new Library.FlatCombo();
+            StateComboBox = new LabBilling.Library.FlatCombo();
             PatCityLabel = new Label();
             CityTextBox = new TextBox();
             Address2TextBox = new TextBox();
@@ -94,7 +94,7 @@ namespace LabBilling.Forms
             label6 = new Label();
             label7 = new Label();
             PatRelationLabel = new Label();
-            GuarantorRelationComboBox = new Library.FlatCombo();
+            GuarantorRelationComboBox = new LabBilling.Library.FlatCombo();
             GuarCopyPatientLink = new LinkLabel();
             GuarLastNameLabel = new Label();
             GuarantorLastNameTextBox = new TextBox();
@@ -135,7 +135,7 @@ namespace LabBilling.Forms
             TotalPaymentTextBox = new TextBox();
             PaymentsDataGrid = new DataGridView();
             tabNotes = new TabPage();
-            notesDataGridView = new UserControls.LabDataGridView();
+            notesDataGridView = new LabBilling.UserControls.LabDataGridView();
             noteAlertCheckBox = new CheckBox();
             AddNoteButton = new Button();
             tabBillingActivity = new TabPage();
@@ -156,7 +156,7 @@ namespace LabBilling.Forms
             ValidationResultsTextBox = new TextBox();
             ValidateAccountButton = new Button();
             BillActivityDataGrid = new DataGridView();
-            minPmtTextBox = new UserControls.CurrencyTextBox();
+            minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
             noteTextContextMenu = new ContextMenuStrip(components);
             copyToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1 = new MenuStrip();
@@ -616,7 +616,7 @@ namespace LabBilling.Forms
             PatSexLabel.Location = new Point(4, 320);
             PatSexLabel.Margin = new Padding(4, 0, 4, 0);
             PatSexLabel.Name = "PatSexLabel";
-            PatSexLabel.Size = new Size(25, 15);
+            PatSexLabel.Size = new Size(24, 15);
             PatSexLabel.TabIndex = 20;
             PatSexLabel.Text = "Sex";
             PatSexLabel.TextAlign = ContentAlignment.TopRight;
@@ -758,7 +758,7 @@ namespace LabBilling.Forms
             PatSuffixLabel.Location = new Point(4, 117);
             PatSuffixLabel.Margin = new Padding(4, 0, 4, 0);
             PatSuffixLabel.Name = "PatSuffixLabel";
-            PatSuffixLabel.Size = new Size(37, 15);
+            PatSuffixLabel.Size = new Size(36, 15);
             PatSuffixLabel.TabIndex = 7;
             PatSuffixLabel.Text = "Suffix";
             PatSuffixLabel.TextAlign = ContentAlignment.TopRight;
@@ -910,7 +910,7 @@ namespace LabBilling.Forms
             GuarSuffixLabel.Location = new Point(564, 146);
             GuarSuffixLabel.Margin = new Padding(4, 0, 4, 0);
             GuarSuffixLabel.Name = "GuarSuffixLabel";
-            GuarSuffixLabel.Size = new Size(37, 15);
+            GuarSuffixLabel.Size = new Size(36, 15);
             GuarSuffixLabel.TabIndex = 42;
             GuarSuffixLabel.Text = "Suffix";
             GuarSuffixLabel.TextAlign = ContentAlignment.TopRight;
@@ -1274,7 +1274,7 @@ namespace LabBilling.Forms
             PmtTotalPmtAdjLabel.Location = new Point(259, 29);
             PmtTotalPmtAdjLabel.Margin = new Padding(4, 0, 4, 0);
             PmtTotalPmtAdjLabel.Name = "PmtTotalPmtAdjLabel";
-            PmtTotalPmtAdjLabel.Size = new Size(140, 15);
+            PmtTotalPmtAdjLabel.Size = new Size(141, 15);
             PmtTotalPmtAdjLabel.TabIndex = 8;
             PmtTotalPmtAdjLabel.Text = "Total Pmt && Adjustments";
             // 
@@ -1294,7 +1294,7 @@ namespace LabBilling.Forms
             PmtTotalWriteOffLabel.Location = new Point(28, 89);
             PmtTotalWriteOffLabel.Margin = new Padding(4, 0, 4, 0);
             PmtTotalWriteOffLabel.Name = "PmtTotalWriteOffLabel";
-            PmtTotalWriteOffLabel.Size = new Size(83, 15);
+            PmtTotalWriteOffLabel.Size = new Size(84, 15);
             PmtTotalWriteOffLabel.TabIndex = 6;
             PmtTotalWriteOffLabel.Text = "Total Write Off";
             // 
@@ -1314,7 +1314,7 @@ namespace LabBilling.Forms
             PmtTotalContractualLabel.Location = new Point(14, 59);
             PmtTotalContractualLabel.Margin = new Padding(4, 0, 4, 0);
             PmtTotalContractualLabel.Name = "PmtTotalContractualLabel";
-            PmtTotalContractualLabel.Size = new Size(97, 15);
+            PmtTotalContractualLabel.Size = new Size(98, 15);
             PmtTotalContractualLabel.TabIndex = 4;
             PmtTotalContractualLabel.Text = "Total Contractual";
             // 
@@ -1334,7 +1334,7 @@ namespace LabBilling.Forms
             PmtTotalPaymentLabel.Location = new Point(29, 29);
             PmtTotalPaymentLabel.Margin = new Padding(4, 0, 4, 0);
             PmtTotalPaymentLabel.Name = "PmtTotalPaymentLabel";
-            PmtTotalPaymentLabel.Size = new Size(82, 15);
+            PmtTotalPaymentLabel.Size = new Size(83, 15);
             PmtTotalPaymentLabel.TabIndex = 2;
             PmtTotalPaymentLabel.Text = "Total Payment";
             // 
@@ -1518,7 +1518,7 @@ namespace LabBilling.Forms
             statementFlagComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             statementFlagComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             statementFlagComboBox.FormattingEnabled = true;
-            statementFlagComboBox.Items.AddRange(new object[] { "N", "Y", "1", "2", "3", "4", "P" });
+            statementFlagComboBox.Items.AddRange(new object[] { "N", "Y", "1", "2", "3", "4", "P", "X" });
             statementFlagComboBox.Location = new Point(1198, 382);
             statementFlagComboBox.Margin = new Padding(4, 3, 4, 3);
             statementFlagComboBox.Name = "statementFlagComboBox";
@@ -1838,7 +1838,7 @@ namespace LabBilling.Forms
             BannerDOBSexLabel.Location = new Point(305, 19);
             BannerDOBSexLabel.Margin = new Padding(4, 0, 4, 0);
             BannerDOBSexLabel.Name = "BannerDOBSexLabel";
-            BannerDOBSexLabel.Size = new Size(57, 15);
+            BannerDOBSexLabel.Size = new Size(56, 15);
             BannerDOBSexLabel.TabIndex = 21;
             BannerDOBSexLabel.Text = "DOB/Sex:";
             // 
@@ -1893,7 +1893,7 @@ namespace LabBilling.Forms
             BannerTotalPmtLabel.Location = new Point(915, 31);
             BannerTotalPmtLabel.Margin = new Padding(4, 0, 4, 0);
             BannerTotalPmtLabel.Name = "BannerTotalPmtLabel";
-            BannerTotalPmtLabel.Size = new Size(83, 15);
+            BannerTotalPmtLabel.Size = new Size(84, 15);
             BannerTotalPmtLabel.TabIndex = 20;
             BannerTotalPmtLabel.Text = "Total Pmt/Adj:";
             // 
@@ -1904,7 +1904,7 @@ namespace LabBilling.Forms
             BannerTotalChargesLabel.Location = new Point(915, 13);
             BannerTotalChargesLabel.Margin = new Padding(4, 0, 4, 0);
             BannerTotalChargesLabel.Name = "BannerTotalChargesLabel";
-            BannerTotalChargesLabel.Size = new Size(81, 15);
+            BannerTotalChargesLabel.Size = new Size(82, 15);
             BannerTotalChargesLabel.TabIndex = 20;
             BannerTotalChargesLabel.Text = "Total Charges:";
             // 
@@ -2027,12 +2027,12 @@ namespace LabBilling.Forms
             // 
             dxPointerMenuStrip.Items.AddRange(new ToolStripItem[] { clearDxPointerToolStripMenuItem });
             dxPointerMenuStrip.Name = "dxPointerMenuStrip";
-            dxPointerMenuStrip.Size = new Size(160, 26);
+            dxPointerMenuStrip.Size = new Size(159, 26);
             // 
             // clearDxPointerToolStripMenuItem
             // 
             clearDxPointerToolStripMenuItem.Name = "clearDxPointerToolStripMenuItem";
-            clearDxPointerToolStripMenuItem.Size = new Size(159, 22);
+            clearDxPointerToolStripMenuItem.Size = new Size(158, 22);
             clearDxPointerToolStripMenuItem.Text = "Clear Dx Pointer";
             clearDxPointerToolStripMenuItem.Click += clearDxPointerToolStripMenuItem_Click;
             // 

@@ -1377,6 +1377,12 @@ public partial class AccountForm : Form
         LastValidatedLabel.Text = _currentAccount.AccountValidationStatus.UpdatedDate.ToString("G");
 
         statementFlagComboBox.SelectedItem = _currentAccount.Pat.StatementFlag;
+        // do not allow changes if statement flag is 'X' (sent to A/R Management Service)
+        if (_currentAccount.Pat.StatementFlag == "X")
+        {
+            statementFlagComboBox.Enabled = false;
+        }
+
         firstStmtDateTextBox.Text = _currentAccount.Pat.FirstStatementDate.ToString();
         lastStmtDateTextBox.Text = _currentAccount.Pat.LastStatementDate.ToString();
         minPmtTextBox.Text = _currentAccount.Pat.MinimumPaymentAmount.ToString();
