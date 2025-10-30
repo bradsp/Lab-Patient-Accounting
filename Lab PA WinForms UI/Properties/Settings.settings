@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ProdDbServer" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">WTHMCLBILL</Value>
+      <Value Profile="(Default)">WTH014</Value>
     </Setting>
     <Setting Name="ProdDbName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">LabBillingProd</Value>
@@ -15,7 +15,7 @@
       <Value Profile="(Default)">LabBillingTest</Value>
     </Setting>
     <Setting Name="TestDbServer" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">WTHMCLBILL</Value>
+      <Value Profile="(Default)">WTH014</Value>
     </Setting>
     <Setting Name="TestIntegratedSecurity" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
