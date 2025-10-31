@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>LabBilling</RootNamespace>
     <AssemblyName>LabBilling</AssemblyName>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>\\wthmclbill\installations%24\LabBilling\</PublishUrl>
+    <PublishUrl>\\wth014\installations%24\LabBilling\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -15,7 +15,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>\\wthmclbill\installations%24\LabBilling\</InstallUrl>
+    <InstallUrl>\\wth014\installations%24\LabBilling\</InstallUrl>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
     <WebPage>publish.htm</WebPage>
@@ -170,7 +170,7 @@
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup Label="Project References">
-    <ProjectReference Include="..\..\DataGridViewGrouper\DataGridViewGrouper\DataGridViewGrouper.csproj">
+    <ProjectReference Include="..\..\#Utilities\DataGridViewGrouper\DataGridViewGrouper\DataGridViewGrouper.csproj">
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj">
@@ -190,7 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CustomTabControl">
-      <HintPath>..\..\CustomTabControl2\bin\Release\net6.0-windows\CustomTabControl.dll</HintPath>
+      <HintPath>..\..\#Utilities\CustomTabControl2\bin\Release\net6.0-windows\CustomTabControl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

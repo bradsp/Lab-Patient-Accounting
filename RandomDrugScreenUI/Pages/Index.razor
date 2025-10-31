@@ -1,9 +1,112 @@
 ﻿@page "/"
+@inject IRandomDrugScreenService RdsService
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Random Drug Screen - Dashboard</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Random Drug Screen System</h1>
+<p class="lead">Manage candidate lists and perform random selections for drug screening across multiple clients.</p>
 
-Welcome to your new app.
+<div class="row mt-4">
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+              <h5 class="card-title">Total Candidates</h5>
+ <p class="card-text display-4">@totalCandidates</p>
+   <a href="/candidates" class="btn btn-light btn-sm">Manage</a>
+  </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-4">
+   <div class="card text-white bg-success">
+      <div class="card-body">
+      <h5 class="card-title">Active Clients</h5>
+                <p class="card-text display-4">@activeClients</p>
+    <a href="/candidates" class="btn btn-light btn-sm">View</a>
+</div>
+  </div>
+   </div>
+    
+   <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card text-white bg-info">
+     <div class="card-body">
+  <h5 class="card-title">Random Selection</h5>
+      <p class="card-text">Generate new selection</p>
+     <a href="/selection" class="btn btn-light btn-sm mt-2">Start Selection</a>
+        </div>
+ </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card text-white bg-warning">
+   <div class="card-body">
+    <h5 class="card-title">Import Data</h5>
+     <p class="card-text">Bulk import candidates</p>
+   <a href="/import" class="btn btn-light btn-sm mt-2">Import</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<div class="row mt-4">
+    <div class="col-md-12">
+   <div class="card">
+  <div class="card-header">
+              <h5>Quick Actions</h5>
+            </div>
+         <div class="card-body">
+ <div class="btn-group" role="group">
+              <a href="/selection" class="btn btn-primary">
+      <span class="oi oi-random"></span> Perform Random Selection
+   </a>
+    <a href="/candidates" class="btn btn-secondary">
+             <span class="oi oi-people"></span> Manage Candidates
+    </a>
+<a href="/import" class="btn btn-info">
+            <span class="oi oi-data-transfer-upload"></span> Import Candidates
+  </a>
+              <a href="/reports" class="btn btn-success">
+<span class="oi oi-bar-chart"></span> View Reports
+         </a>
+      </div>
+  </div>
+        </div>
+    </div>
+</div>
+
+@if (isLoading)
+{
+    <div class="mt-4">
+<div class="spinner-border text-primary" role="status">
+     <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="ms-2">Loading dashboard data...</span>
+    </div>
+}
+
+@code {
+    private int totalCandidates = 0;
+    private int activeClients = 0;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+ try
+   {
+        var clients = await RdsService.GetDistinctClientsAsync();
+            activeClients = clients.Count;
+ 
+            var allCandidates = await RdsService.GetAllCandidatesAsync(false);
+       totalCandidates = allCandidates.Count;
+        }
+      catch (Exception ex)
+   {
+            // Log error
+            Console.WriteLine($"Error loading dashboard: {ex.Message}");
+      }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

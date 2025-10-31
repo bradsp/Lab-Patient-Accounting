@@ -69,4 +69,5 @@ public interface IUnitOfWork : IDisposable
     RemittanceClaimDetailRepository RemittanceClaimDetailRepository { get; }
     SanctionedProviderRepository SanctionedProviderRepository { get; }
     AccountLockRepository AccountLockRepository { get; }
+    RandomDrugScreenPersonRepository RandomDrugScreenPersonRepository { get; }
 }

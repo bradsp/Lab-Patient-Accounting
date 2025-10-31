@@ -1,0 +1,478 @@
+@page "/candidates"
+@inject IRandomDrugScreenService RdsService
+@inject DictionaryService DictionaryService
+@inject IJSRuntime JSRuntime
+@inject LabBilling.Core.DataAccess.IAppEnvironment AppEnvironment
+@inject LabBilling.Core.UnitOfWork.IUnitOfWork UnitOfWork
+
+<PageTitle>Candidate Management - Random Drug Screen</PageTitle>
+
+<h3>Candidate Management</h3>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+ <label for="clientSelect" class="form-label">Select Client:</label>
+  <select id="clientSelect" class="form-select" @onchange="OnClientChanged">
+            <option value="">-- All Clients --</option>
+            @foreach (var client in clients)
+            {
+         <option value="@client.ClientMnem">@client.Name (@client.ClientMnem)</option>
+}
+        </select>
+    </div>
+    <div class="col-md-3">
+      <label for="shiftSelect" class="form-label">Filter by Shift:</label>
+ <select id="shiftSelect" class="form-select" value="@selectedShift" @onchange="OnShiftChanged">
+  <option value="">-- All Shifts --</option>
+            @foreach (var shift in shifts)
+         {
+<option value="@shift">@shift</option>
+        }
+   </select>
+    </div>
+    <div class="col-md-3">
+  <label class="form-label d-block">&nbsp;</label>
+   <div class="form-check">
+       <input class="form-check-input" type="checkbox" id="showDeleted" checked="@showDeleted" @onchange="OnShowDeletedChanged">
+     <label class="form-check-label" for="showDeleted">
+    Show Deleted
+        </label>
+      </div>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label d-block">&nbsp;</label>
+        <button class="btn btn-primary w-100" @onclick="ShowAddCandidateModal">
+            <span class="oi oi-plus"></span> Add New
+    </button>
+    </div>
+</div>
+
+@if (isLoading)
+{
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+     <p>Loading candidates...</p>
+  </div>
+}
+else if (candidates.Any())
+{
+    <div class="row mb-2">
+        <div class="col">
+          <p class="text-muted">
+        Showing @candidates.Count candidate(s)
+          @if (!string.IsNullOrEmpty(selectedClient))
+                {
+        <text> for client @selectedClient</text>
+    }
+            </p>
+     </div>
+    </div>
+
+    <div class="table-responsive">
+ <table class="table table-striped table-hover">
+       <thead>
+       <tr>
+     <th>Name</th>
+ <th>Client</th>
+        <th>Shift</th>
+             <th>Last Test Date</th>
+       <th>Status</th>
+<th>Actions</th>
+     </tr>
+         </thead>
+      <tbody>
+                @foreach (var candidate in candidates)
+                {
+    <tr class="@(candidate.IsDeleted ? "table-secondary" : "")">
+    <td>@candidate.Name</td>
+ <td>@candidate.ClientMnemonic</td>
+      <td>@(string.IsNullOrEmpty(candidate.Shift) ? "-" : candidate.Shift)</td>
+         <td>@(candidate.TestDate.HasValue ? candidate.TestDate.Value.ToShortDateString() : "Never")</td>
+      <td>
+      @if (candidate.IsDeleted)
+     {
+  <span class="badge bg-danger">Deleted</span>
+       }
+                 else
+    {
+       <span class="badge bg-success">Active</span>
+         }
+           </td>
+  <td>
+   <button class="btn btn-sm btn-primary" @onclick="() => ShowEditCandidateModal(candidate)" disabled="@candidate.IsDeleted">
+         <span class="oi oi-pencil"></span> Edit
+  </button>
+         @if (candidate.IsDeleted)
+       {
+      <button class="btn btn-sm btn-success" @onclick="() => RestoreCandidate(candidate)">
+           <span class="oi oi-action-undo"></span> Restore
+   </button>
+ }
+        else
+    {
+            <button class="btn btn-sm btn-danger" @onclick="() => ShowDeleteConfirmation(candidate)">
+     <span class="oi oi-trash"></span> Delete
+        </button>
+          }
+           </td>
+     </tr>
+           }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <span class="oi oi-info"></span> No candidates found. Add a new candidate to get started.
+    </div>
+}
+
+<!-- Add/Edit Modal -->
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+       <div class="modal-header">
+        <h5 class="modal-title">@(editingCandidate?.Id > 0 ? "Edit" : "Add") Candidate</h5>
+         <button type="button" class="btn-close" @onclick="CloseModal"></button>
+       </div>
+        <div class="modal-body">
+           <EditForm Model="editingCandidate" OnValidSubmit="SaveCandidate">
+         <DataAnnotationsValidator />
+          <ValidationSummary class="text-danger" />
+
+        <div class="mb-3">
+     <label for="candidateName" class="form-label">Name *</label>
+      <InputText id="candidateName" class="form-control" @bind-Value="editingCandidate.Name" />
+    </div>
+
+            <div class="mb-3">
+         <label for="candidateClient" class="form-label">Client *</label>
+       <select id="candidateClient" class="form-select" @bind="editingCandidate.ClientMnemonic">
+            <option value="">-- Select Client --</option>
+       @foreach (var client in clients)
+     {
+            <option value="@client.ClientMnem">@client.Name</option>
+        }
+                    </select>
+        </div>
+
+      <div class="mb-3">
+              <label for="candidateShift" class="form-label">Shift</label>
+             <InputText id="candidateShift" class="form-control" @bind-Value="editingCandidate.Shift" placeholder="Optional" />
+ </div>
+
+     @if (errorMessage != null)
+   {
+        <div class="alert alert-danger">@errorMessage</div>
+         }
+
+  <div class="modal-footer">
+  <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancel</button>
+    <button type="submit" class="btn btn-primary" disabled="@isSaving">
+          @if (isSaving)
+          {
+               <span class="spinner-border spinner-border-sm" role="status"></span>
+         <text> Saving...</text>
+          }
+ else
+    {
+       <span class="oi oi-check"></span>
+                 <text> Save</text>
+   }
+           </button>
+      </div>
+           </EditForm>
+    </div>
+       </div>
+        </div>
+    </div>
+}
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteConfirm)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+ <div class="modal-content">
+   <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+          <button type="button" class="btn-close" @onclick="CloseDeleteConfirmation"></button>
+      </div>
+      <div class="modal-body">
+          <p>Are you sure you want to delete candidate <strong>@candidateToDelete?.Name</strong>?</p>
+ <p class="text-muted">This will mark the candidate as deleted. You can restore them later if needed.</p>
+          </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" @onclick="CloseDeleteConfirmation">Cancel</button>
+     <button type="button" class="btn btn-danger" @onclick="ConfirmDelete" disabled="@isSaving">
+          @if (isSaving)
+          {
+  <span class="spinner-border spinner-border-sm" role="status"></span>
+       <text> Deleting...</text>
+       }
+         else
+         {
+           <span class="oi oi-trash"></span>
+ <text> Delete</text>
+        }
+   </button>
+             </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<RandomDrugScreenPerson> candidates = new();
+    private List<Client> clients = new();
+    private List<string> shifts = new();
+    
+    private string selectedClient = "";
+  private string selectedShift = "";
+    private bool showDeleted = false;
+    private bool isLoading = true;
+    private bool isSaving = false;
+    
+    private bool showModal = false;
+    private bool showDeleteConfirm = false;
+    private RandomDrugScreenPerson? editingCandidate;
+    private RandomDrugScreenPerson? candidateToDelete;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+   {
+       await LoadClients();
+  await LoadCandidates();
+        }
+        catch (Exception ex)
+ {
+            errorMessage = $"Error loading data: {ex.Message}";
+         Console.WriteLine(ex.ToString());
+     }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task LoadClients()
+    {
+        try
+   {
+ clients = await DictionaryService.GetAllClientsAsync(UnitOfWork, false);
+  }
+    catch (Exception ex)
+{
+         Console.WriteLine($"Error loading clients: {ex.Message}");
+            clients = new List<Client>();
+        }
+    }
+
+    private async Task LoadShifts()
+    {
+        try
+    {
+          if (!string.IsNullOrEmpty(selectedClient))
+    {
+          shifts = await RdsService.GetDistinctShiftsAsync(selectedClient);
+            }
+          else
+    {
+              shifts = await RdsService.GetDistinctShiftsAsync();
+         }
+        }
+        catch (Exception ex)
+        {
+      Console.WriteLine($"Error loading shifts: {ex.Message}");
+      shifts = new List<string>();
+        }
+    }
+
+    private async Task LoadCandidates()
+  {
+        isLoading = true;
+        try
+        {
+         if (!string.IsNullOrEmpty(selectedClient))
+      {
+         if (!string.IsNullOrEmpty(selectedShift))
+  {
+      // Filter by client and shift
+       candidates = await RdsService.GetCandidatesByClientAsync(selectedClient, showDeleted);
+             candidates = candidates.Where(c => c.Shift == selectedShift).ToList();
+                }
+   else
+         {
+  candidates = await RdsService.GetCandidatesByClientAsync(selectedClient, showDeleted);
+    }
+        }
+        else
+     {
+      candidates = await RdsService.GetAllCandidatesAsync(showDeleted);
+            }
+      }
+  catch (Exception ex)
+        {
+            errorMessage = $"Error loading candidates: {ex.Message}";
+       Console.WriteLine(ex.ToString());
+ candidates = new List<RandomDrugScreenPerson>();
+        }
+        finally
+      {
+            isLoading = false;
+     }
+    }
+
+    private async Task OnClientChanged(ChangeEventArgs e)
+    {
+        selectedClient = e.Value?.ToString() ?? "";
+        selectedShift = ""; // Reset shift when client changes
+  await LoadShifts();
+ await LoadCandidates();
+    }
+
+    private async Task OnShiftChanged(ChangeEventArgs e)
+    {
+  selectedShift = e.Value?.ToString() ?? "";
+        await LoadCandidates();
+    }
+
+    private async Task OnShowDeletedChanged(ChangeEventArgs e)
+    {
+        showDeleted = (bool)(e.Value ?? false);
+  await LoadCandidates();
+  }
+
+    private void ShowAddCandidateModal()
+    {
+        editingCandidate = new RandomDrugScreenPerson 
+        { 
+            ClientMnemonic = selectedClient,
+   TestDate = null // Use null instead of DateTime.MinValue
+    };
+        errorMessage = null;
+        showModal = true;
+  }
+
+ private void ShowEditCandidateModal(RandomDrugScreenPerson candidate)
+    {
+        editingCandidate = new RandomDrugScreenPerson
+  {
+            Id = candidate.Id,
+            Name = candidate.Name,
+            ClientMnemonic = candidate.ClientMnemonic,
+            Shift = candidate.Shift,
+     TestDate = candidate.TestDate,
+            IsDeleted = candidate.IsDeleted
+        };
+        errorMessage = null;
+        showModal = true;
+  }
+
+    private void CloseModal()
+    {
+   showModal = false;
+        editingCandidate = null;
+        errorMessage = null;
+    }
+
+    private async Task SaveCandidate()
+    {
+        if (editingCandidate == null) return;
+
+      if (string.IsNullOrWhiteSpace(editingCandidate.Name))
+        {
+      errorMessage = "Name is required";
+      return;
+        }
+
+        if (string.IsNullOrWhiteSpace(editingCandidate.ClientMnemonic))
+  {
+      errorMessage = "Client is required";
+    return;
+        }
+
+        isSaving = true;
+   errorMessage = null;
+
+        try
+  {
+       if (editingCandidate.Id > 0)
+  {
+     await RdsService.UpdateCandidateAsync(editingCandidate);
+    }
+  else
+   {
+                await RdsService.AddCandidateAsync(editingCandidate);
+}
+
+          CloseModal();
+            await LoadCandidates();
+  }
+        catch (Exception ex)
+     {
+            errorMessage = $"Error saving candidate: {ex.Message}";
+      Console.WriteLine(ex.ToString());
+  }
+        finally
+        {
+  isSaving = false;
+        }
+    }
+
+    private void ShowDeleteConfirmation(RandomDrugScreenPerson candidate)
+ {
+        candidateToDelete = candidate;
+        showDeleteConfirm = true;
+    }
+
+    private void CloseDeleteConfirmation()
+    {
+        showDeleteConfirm = false;
+ candidateToDelete = null;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (candidateToDelete == null) return;
+
+      isSaving = true;
+        try
+        {
+       await RdsService.DeleteCandidateAsync(candidateToDelete.Id);
+            CloseDeleteConfirmation();
+        await LoadCandidates();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error deleting candidate: {ex.Message}";
+            Console.WriteLine(ex.ToString());
+        }
+        finally
+        {
+        isSaving = false;
+        }
+    }
+
+    private async Task RestoreCandidate(RandomDrugScreenPerson candidate)
+    {
+        try
+     {
+            candidate.IsDeleted = false;
+            await RdsService.UpdateCandidateAsync(candidate);
+  await LoadCandidates();
+     }
+     catch (Exception ex)
+   {
+      errorMessage = $"Error restoring candidate: {ex.Message}";
+            Console.WriteLine(ex.ToString());
+        }
+    }
+}

@@ -17,7 +17,7 @@ public class RandomDrugScreenPerson : IBaseEntity
     [Column("shift")]
     public string Shift { get; set; }
     [Column("test_date")]
-    public DateTime TestDate { get; set; }
+    public DateTime? TestDate { get; set; }
     [Column("mod_date")]
     public DateTime UpdatedDate { get; set; }
     [Column("mod_user")]
