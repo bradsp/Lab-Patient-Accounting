@@ -544,72 +544,58 @@ SQL connection errors during app initialization.
 
 **Next Steps:** Begin Phase 3 - Import & Reporting
 
-### Phase 3: Import & Reporting ? READY TO START
-- [ ] Implement Import Candidates page
-- [ ] File parsing logic (CSV)
-- [ ] Implement Reports page
-- [ ] Export functionality
+### Phase 3: Import & Reporting ? COMPLETED
+- [x] Implement Import Candidates page
+- [x] File parsing logic (CSV)
+- [x] Implement Reports page
+- [x] Export functionality (CSV)
 
-## Open Questions for User
+**Completed Tasks:**
+1. **Import Candidates Page** (`ImportCandidates.razor`):
+   - Client selection dropdown
+   - Import mode selection (Merge/Update vs. Replace All)
+   - CSV file upload with validation (5MB limit)
+   - File parsing with error handling
+   - Preview functionality before import
+   - Confirmation step
+   - Import results display with statistics (added, updated, deleted counts)
+   - Smart parsing (skips headers, handles optional shift column)
+   - Support for quoted values in CSV
 
-1. **Client Selection**: Should the system pull clients from the existing `Client` table in the database, or maintain a separate list?
-   - Use existing Client table via DictionaryService
+2. **Reports Page** (`Reports.razor`):
+   - Three report types:
+     * **Non-Selected Candidates**: Shows candidates not tested since a specific date
+     * **All Active Candidates**: Shows all active candidates for a client
+     * **Client Summary**: Shows all candidates including deleted, with statistics
+   - Client summary includes:
+     * Total candidate count
+   * Active vs. deleted breakdown
+  * Candidates grouped by shift
+   - Export to CSV functionality
+   - Responsive table with sticky header
+   - Real-time generation timestamp
 
-2. **Authentication**: Should this app integrate with the existing user authentication system, or run as a standalone app?
-   - Integrate with existing UserAccount system
+**Import Features:**
+- ? CSV file upload and validation
+- ? Two import modes (Merge and Replace)
+- ? Preview before committing
+- ? Detailed import results
+- ? Error handling and validation
+- ? Support for Name and optional Shift columns
 
-3. **Email Integration**: Priority for email functionality? Should it use existing email service or new implementation?
-   - Not implementing
+**Report Features:**
+- ? Multiple report types
+- ? Date filtering for non-selected candidates
+- ? Visual statistics cards
+- ? Shift grouping analysis
+- ? CSV export capability
+- ? Status indicators (Active/Deleted)
 
-4. **Reporting Requirements**: What specific reports are most critical?
-   - Selection history
-   - Non-selected candidates
-   - Client statistics
-   - Others?
+### Phase 4: Polish & Testing ? READY TO START
+- [ ] Add JavaScript interop for actual file downloads
+- [ ] Add print functionality
+- [ ] UI refinements and UX improvements
+- [ ] Comprehensive error handling
+- [ ] User documentation
+- [ ] Final testing
 
-5. **Access Control**: Should different users have different permissions (e.g., some can only view, others can select/import)?
-   - Start with single permission level, add role-based access later
-
-6. **Data Migration**: Is there existing RDS data to migrate? If so, from what source?
-   - There is existing data in dbo.rds table that the system will use
-
-7. **Legacy System**: Should the new system remain compatible with the legacy RDS database structure, or can we optimize?
-   - Keep existing structure for now, as model and repository already exist
-
-8. **Shift Management**: Should shifts be predefined in a lookup table, or free-form text entry?
-   - Free-form
-
-9. **Selection History**: Should we track every selection made (requires new table), or only the most recent test_date?
-   - Phase 1 uses test_date only, Phase 2 adds history table
-
-10. **File Import Formats**: Which file formats are priority? CSV, Excel, both?
-    - Start with CSV (simpler), add Excel in Phase 2
-
-## Success Criteria
-
-1. Users can manage candidates (add, edit, soft delete)
-2. Users can perform random selections with proper validation
-3. Import functionality works for bulk data loading
-4. System maintains data integrity and audit trail
-5. UI is intuitive and responsive
-6. All critical paths have error handling
-7. System integrates with existing LabBilling infrastructure
-8. Performance is acceptable (< 2 seconds for typical operations)
-
-## Risk Mitigation
-
-| Risk | Impact | Mitigation |
-|------|--------|-----------|
-| Random algorithm bias | High | Use cryptographically secure RNG, add unit tests to verify distribution |
-| Data loss during import | High | Use transactions, add confirmation step before commit |
-| Performance with large datasets | Medium | Implement pagination, optimize queries, add indexes |
-| User adoption | Medium | Create intuitive UI, provide training materials |
-| Integration issues | Medium | Follow existing patterns closely, thorough testing |
-
----
-
-**Next Steps**: 
-1. Review this plan with stakeholders
-2. Answer open questions
-3. Get approval to proceed
-4. Begin Phase 1 implementation
