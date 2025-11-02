@@ -18,16 +18,18 @@
            <div class="row mb-3">
   <div class="col-md-6">
           <label for="clientSelect" class="form-label">Select Client *</label>
-     <select id="clientSelect" class="form-select" value="@selectedClient" @onchange="OnClientChanged">
-    <option value="">-- Select a Client --</option>
-     @foreach (var client in clients)
-     {
-     <option value="@client.ClientMnem">@client.Name (@client.ClientMnem)</option>
-  }
-</select>
+  <AutocompleteInput TItem="Client"
+Items="@clients"
+ SearchProperty="@(c => $"{c.Name} ({c.ClientMnem})")"
+     ValueProperty="@(c => c.ClientMnem)"
+              ItemTemplate="@clientItemTemplate"
+           OnItemSelected="@OnClientSelected"
+       Placeholder="Search by name or mnemonic..."
+   MinSearchLength="1"
+          MaxResults="15" />
     </div>
       <div class="col-md-6">
-           <label for="shiftSelect" class="form-label">Filter by Shift (Optional)</label>
+   <label for="shiftSelect" class="form-label">Filter by Shift (Optional)</label>
     <select id="shiftSelect" class="form-select" @bind="selectedShift">
       <option value="">-- All Shifts --</option>
   @foreach (var shift in shifts)
@@ -175,8 +177,8 @@
     private List<string> shifts = new();
     private List<RandomDrugScreenPerson>? selectedCandidates;
     
-    private string selectedClient = "";
-    private string selectedShift = "";
+ private string selectedClient = "";
+private string selectedShift = "";
     private int selectionCount = 1;
     private int availableCount = 0;
     
@@ -185,21 +187,51 @@
     private string? errorMessage;
     private DateTime? lastSelectionDate;
 
-    protected override async Task OnInitializedAsync()
+    // Template for autocomplete items
+    private RenderFragment<Client> clientItemTemplate = client => __builder =>
     {
-      await LoadClients();
+ <div>
+  <strong>@client.Name</strong>
+            <br />
+   <small class="text-muted">@client.ClientMnem</small>
+  </div>
+    };
+
+  protected override async Task OnInitializedAsync()
+    {
+   await LoadClients();
     }
 
-    private async Task LoadClients()
+ private async Task LoadClients()
     {
  try
         {
      clients = await DictionaryService.GetAllClientsAsync(UnitOfWork, false);
-        }
+     }
      catch (Exception ex)
         {
     errorMessage = $"Error loading clients: {ex.Message}";
       Console.WriteLine(ex.ToString());
+   }
+    }
+
+    private async Task OnClientSelected(Client client)
+    {
+  selectedClient = client?.ClientMnem ?? "";
+     selectedShift = "";
+ selectedCandidates = null;
+      validationMessage = null;
+  errorMessage = null;
+
+   if (!string.IsNullOrEmpty(selectedClient))
+  {
+   await LoadShifts();
+            await UpdateAvailableCount();
+        }
+        else
+{
+      shifts = new List<string>();
+      availableCount = 0;
         }
     }
 

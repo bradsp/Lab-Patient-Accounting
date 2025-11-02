@@ -54,9 +54,6 @@ builder.Services.AddScoped<IUnitOfWork>(sp =>
     return new UnitOfWorkMain(appEnv);
 });
 
-// Keep sample service for now
-builder.Services.AddSingleton<WeatherForecastService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

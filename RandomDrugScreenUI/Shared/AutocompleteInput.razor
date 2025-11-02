@@ -1,0 +1,136 @@
+@typeparam TItem
+
+<div class="autocomplete-wrapper">
+    <input type="text" 
+           class="form-control @CssClass" 
+           placeholder="@Placeholder"
+        value="@SearchText"
+           @oninput="OnSearchInput"
+ @onfocus="OnFocus"
+           @onblur="OnBlur" />
+    
+    @if (showDropdown && filteredItems.Any())
+  {
+      <div class="autocomplete-dropdown">
+     <ul class="list-group">
+          @foreach (var item in filteredItems.Take(MaxResults))
+        {
+          <li class="list-group-item list-group-item-action" 
+        @onmousedown="@(() => SelectItem(item))"
+              style="cursor: pointer;">
+             @ItemTemplate(item)
+ </li>
+         }
+                @if (filteredItems.Count > MaxResults)
+        {
+   <li class="list-group-item text-muted small">
+       Showing @MaxResults of @filteredItems.Count results. Continue typing to narrow down...
+        </li>
+          }
+            </ul>
+        </div>
+    }
+    
+    @if (showDropdown && !filteredItems.Any() && !string.IsNullOrWhiteSpace(SearchText))
+    {
+ <div class="autocomplete-dropdown">
+     <div class="list-group">
+          <div class="list-group-item text-muted">No results found</div>
+       </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<TItem> Items { get; set; } = new();
+    [Parameter] public Func<TItem, string> SearchProperty { get; set; } = null!;
+    [Parameter] public Func<TItem, string> ValueProperty { get; set; } = null!;
+    [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; } = null!;
+    [Parameter] public EventCallback<TItem> OnItemSelected { get; set; }
+    [Parameter] public string Placeholder { get; set; } = "Search...";
+    [Parameter] public string CssClass { get; set; } = "";
+    [Parameter] public int MaxResults { get; set; } = 10;
+    [Parameter] public int MinSearchLength { get; set; } = 2;
+
+    private string SearchText { get; set; } = "";
+    private bool showDropdown = false;
+    private List<TItem> filteredItems = new();
+
+    protected override void OnParametersSet()
+    {
+     if (Items != null && Items.Any())
+      {
+     FilterItems();
+        }
+    }
+
+    private async Task OnSearchInput(ChangeEventArgs e)
+    {
+        SearchText = e.Value?.ToString() ?? "";
+    FilterItems();
+        showDropdown = true;
+        await Task.CompletedTask;
+    }
+
+    private void FilterItems()
+    {
+        if (string.IsNullOrWhiteSpace(SearchText))
+        {
+     filteredItems = new List<TItem>();
+            return;
+        }
+
+      if (SearchText.Length < MinSearchLength)
+        {
+        filteredItems = new List<TItem>();
+        return;
+        }
+
+        var searchLower = SearchText.ToLower();
+        
+     // Search across all searchable properties
+        filteredItems = Items.Where(item =>
+        {
+     var searchValue = SearchProperty(item)?.ToLower() ?? "";
+      var valueText = ValueProperty(item)?.ToLower() ?? "";
+     
+     return searchValue.Contains(searchLower) || valueText.Contains(searchLower);
+      }).ToList();
+    }
+
+    private void OnFocus()
+    {
+        if (SearchText.Length >= MinSearchLength)
+    {
+         showDropdown = true;
+        }
+    }
+
+  private async Task OnBlur()
+    {
+        // Delay to allow click event to register
+        await Task.Delay(200);
+        showDropdown = false;
+    }
+
+    private async Task SelectItem(TItem item)
+    {
+        SearchText = SearchProperty(item) ?? "";
+showDropdown = false;
+      await OnItemSelected.InvokeAsync(item);
+    }
+
+    public void Clear()
+    {
+        SearchText = "";
+        filteredItems = new List<TItem>();
+        showDropdown = false;
+        StateHasChanged();
+    }
+
+    public void SetValue(string value)
+    {
+        SearchText = value;
+        StateHasChanged();
+    }
+}

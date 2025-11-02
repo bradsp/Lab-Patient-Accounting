@@ -27,13 +27,15 @@
 
             <div class="mb-3">
 <label for="clientSelect" class="form-label">Select Client *</label>
-   <select id="clientSelect" class="form-select" @bind="selectedClient">
-      <option value="">-- Select Client --</option>
-    @foreach (var client in clients)
-     {
-          <option value="@client.ClientMnem">@client.Name (@client.ClientMnem)</option>
-}
-  </select>
+        <AutocompleteInput TItem="Client"
+     Items="@clients"
+        SearchProperty="@(c => $"{c.Name} ({c.ClientMnem})")"
+   ValueProperty="@(c => c.ClientMnem)"
+     ItemTemplate="@clientItemTemplate"
+ OnItemSelected="@OnClientSelected"
+       Placeholder="Search by name or mnemonic..."
+         MinSearchLength="1"
+    MaxResults="15" />
    </div>
 
  @if (selectedReportType == "non-selected")
@@ -225,23 +227,40 @@
     private string? validationMessage;
     private string? errorMessage;
 
-    protected override async Task OnInitializedAsync()
+    // Template for autocomplete items
+    private RenderFragment<Client> clientItemTemplate = client => __builder =>
     {
+  <div>
+        <strong>@client.Name</strong>
+    <br />
+       <small class="text-muted">@client.ClientMnem</small>
+        </div>
+    };
+
+    protected override async Task OnInitializedAsync()
+  {
         await LoadClients();
-    }
+  }
 
     private async Task LoadClients()
-    {
+  {
    try
-        {
+     {
    clients = await DictionaryService.GetAllClientsAsync(UnitOfWork, false);
         }
-        catch (Exception ex)
+      catch (Exception ex)
         {
       errorMessage = $"Error loading clients: {ex.Message}";
     Console.WriteLine(ex.ToString());
-     }
+   }
     }
+
+    private async Task OnClientSelected(Client client)
+    {
+      selectedClient = client?.ClientMnem ?? "";
+ StateHasChanged();
+        await Task.CompletedTask;
+  }
 
     private bool CanGenerateReport()
     {
