@@ -49,13 +49,28 @@ Location: `RandomDrugScreenUI/Components/RandomDrugScreen/ReportsPanel.razor`
 
 ### PDF Export
 - Professional formatted document using MigraDocCore
+- **Portrait orientation** for standard document format
 - Includes:
   - Report title with client name
   - Generation timestamp
   - Summary statistics (for Client Summary report)
   - Table with all candidate data
+  - **Repeating column headers on each page**
+  - **Page X of Y footer** on every page
+- **Alternating row colors** for better readability
 - Filename format: `{ReportType}_{ClientMnem}_{Timestamp}.pdf`
 
+### **Current Column Layout (Portrait)**
+
+The table columns are sized appropriately for portrait:
+- **Name**: 5cm (increased to accommodate longer names)
+- **Shift**: 2cm
+- **Client**: 2cm
+- **Last Test Date**: 2.5cm
+- **Days Since Test**: 2.5cm
+- **Status**: 2cm
+
+**Total Width**: ~16cm (optimized for Letter-size portrait with margins)
 ## Technical Implementation
 
 ### Dependencies
@@ -95,7 +110,11 @@ private ReportsPanel.ClientSummaryStats summaryStats = new();
 
 #### GenerateReportPdf()
 - Creates MigraDoc document structure
+- Sets portrait orientation for standard document format
+- **Configures repeating table headers** using `HeadingFormat = true`
+- **Adds page footer** with page numbers (Page X of Y format)
 - Builds table with appropriate columns
+- Applies alternating row colors for readability
 - Formats data professionally
 - Renders to PDF and triggers download
 

@@ -430,118 +430,177 @@ csv.AppendLine($"Generated: {DateTime.Now:g}");
     {
         if (reportData == null || !reportData.Any()) return;
 
-  isReportLoading = true;
-        reportErrorMessage = null;
+      isReportLoading = true;
+      reportErrorMessage = null;
  
-        try
-    {
+      try
+   {
             var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-  var fileName = $"{GetReportFileName()}_{selectedClient}_{timestamp}.pdf";
+   var fileName = $"{GetReportFileName()}_{selectedClient}_{timestamp}.pdf";
  
             // Create PDF using MigraDoc
-       var document = new Document();
-  var section = document.AddSection();
-     
-    // Add title
-            var title = section.AddParagraph();
-      title.Format.Font.Size = 16;
-     title.Format.Font.Bold = true;
-  title.Format.SpaceAfter = "0.5cm";
-         title.AddText(GetReportTitle());
-  
-         // Add generated date
-         var dateInfo = section.AddParagraph();
-   dateInfo.Format.Font.Size = 10;
-            dateInfo.Format.SpaceAfter = "0.5cm";
-       dateInfo.AddText($"Generated: {DateTime.Now:g}");
-     
-// Add summary stats if client summary report
-     if (selectedReportType == "client-summary")
-            {
-     section.AddParagraph($"Total Active Candidates: {summaryStats.TotalActiveCandidates}");
-     section.AddParagraph($"Total Deleted Candidates: {summaryStats.TotalDeletedCandidates}");
- section.AddParagraph($"Tested This Month: {summaryStats.TestedThisMonth}");
-   section.AddParagraph($"Tested This Year: {summaryStats.TestedThisYear}");
-    section.AddParagraph($"Never Tested: {summaryStats.NeverTested}");
-        section.AddParagraph($"Average Days Since Last Test: {summaryStats.AverageDaysSinceLastTest:F1}");
-  section.AddParagraph(); // Empty line
-        }
-  
-        // Create table
- var table = section.AddTable();
-       table.Borders.Width = 0.75;
-  
-  // Define columns
-         var column = table.AddColumn("4cm");
-     column.Format.Alignment = ParagraphAlignment.Left;
- 
-      column = table.AddColumn("2cm");
-            column.Format.Alignment = ParagraphAlignment.Left;
+          var document = new Document();
+    
+    // Set up document info
+   document.Info.Title = GetReportTitle();
+     document.Info.Subject = $"Random Drug Screen Report - {selectedClient}";
+    document.Info.Author = AppEnvironment.User;
             
-     column = table.AddColumn("2cm");
-   column.Format.Alignment = ParagraphAlignment.Left;
-   
-      column = table.AddColumn("3cm");
-            column.Format.Alignment = ParagraphAlignment.Left;
-   
-      column = table.AddColumn("2.5cm");
-column.Format.Alignment = ParagraphAlignment.Right;
+            var section = document.AddSection();
+
+    // Set up page with footer
+      section.PageSetup.PageFormat = PageFormat.Letter;
+  section.PageSetup.Orientation = Orientation.Portrait;
+ 
+            // Add footer with page numbers
+            var footer = section.Footers.Primary;
+          var footerPara = footer.AddParagraph();
+          footerPara.Format.Font.Size = 9;
+            footerPara.Format.Alignment = ParagraphAlignment.Center;
+ footerPara.AddText("Page ");
+    footerPara.AddPageField();
+            footerPara.AddText(" of ");
+    footerPara.AddNumPagesField();
+            footerPara.AddText($" | Generated: {DateTime.Now:g}")
+     ;
+      
+      // Add title
+     var title = section.AddParagraph();
+       title.Format.Font.Size = 16;
+  title.Format.Font.Bold = true;
+        title.Format.SpaceAfter = "0.5cm";
+     title.AddText(GetReportTitle());
+      
+      // Add generated date
+            var dateInfo = section.AddParagraph();
+         dateInfo.Format.Font.Size = 10;
+ dateInfo.Format.SpaceAfter = "0.5cm";
+   dateInfo.AddText($"Client: {selectedClient}");
      
-     column = table.AddColumn("2cm");
- column.Format.Alignment = ParagraphAlignment.Center;
-  
-            // Add header row
- var row = table.AddRow();
-   row.Shading.Color = Colors.LightGray;
-    row.Cells[0].AddParagraph("Name");
-  row.Cells[1].AddParagraph("Shift");
-    row.Cells[2].AddParagraph("Client");
-            row.Cells[3].AddParagraph("Last Test Date");
-     row.Cells[4].AddParagraph("Days Since Test");
-      row.Cells[5].AddParagraph("Status");
-        
-  // Add data rows
-            foreach (var candidate in reportData)
- {
- row = table.AddRow();
-        row.Cells[0].AddParagraph(candidate.Name);
-       row.Cells[1].AddParagraph(string.IsNullOrEmpty(candidate.Shift) ? "-" : candidate.Shift);
-          row.Cells[2].AddParagraph(candidate.ClientMnemonic);
-     row.Cells[3].AddParagraph(candidate.TestDate.HasValue ? candidate.TestDate.Value.ToShortDateString() : "Never");
-       
-      var daysSinceTest = candidate.TestDate.HasValue 
-      ? (DateTime.Now - candidate.TestDate.Value).Days.ToString()
- : "Never";
-      row.Cells[4].AddParagraph(daysSinceTest);
-            row.Cells[5].AddParagraph(candidate.IsDeleted ? "Deleted" : "Active");
-      }
-        
-            // Render PDF
-            var pdfRenderer = new PdfDocumentRenderer(true);
- pdfRenderer.Document = document;
-        pdfRenderer.RenderDocument();
-          
-     // Save to memory stream
-using var stream = new System.IO.MemoryStream();
-     pdfRenderer.PdfDocument.Save(stream, false);
-    var pdfBytes = stream.ToArray();
-       var base64 = Convert.ToBase64String(pdfBytes);
-     
-      // Download using JavaScript
-     await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromBase64", 
-        base64, 
-         fileName, 
-       "application/pdf");
+            // Add summary stats if client summary report
+            if (selectedReportType == "client-summary")
+  {
+    section.AddParagraph($"Total Active Candidates: {summaryStats.TotalActiveCandidates}");
+     section.AddParagraph($"Total Deleted Candidates: {summaryStats.TotalDeletedCandidates}");
+         section.AddParagraph($"Tested This Month: {summaryStats.TestedThisMonth}");
+      section.AddParagraph($"Tested This Year: {summaryStats.TestedThisYear}");
+         section.AddParagraph($"Never Tested: {summaryStats.NeverTested}");
+     section.AddParagraph($"Average Days Since Last Test: {summaryStats.AverageDaysSinceLastTest:F1}");
+     section.AddParagraph(); // Empty line
 }
-      catch (Exception ex)
+      
+            // Create table
+            var table = section.AddTable();
+          table.Borders.Width = 0.75;
+   table.Borders.Color = Colors.Black;
+          
+            // Enable header row repetition on each page
+table.Format.KeepTogether = false;
+  
+ // Define columns - adjusted widths for better layout
+            // Total usable width in portrait: ~16cm (after margins)
+            var column = table.AddColumn("5cm");  // Name - increased from 3.5cm
+       column.Format.Alignment = ParagraphAlignment.Left;
+ 
+            column = table.AddColumn("2cm");  // Shift
+  column.Format.Alignment = ParagraphAlignment.Left;
+   
+            column = table.AddColumn("2cm");  // Client
+  column.Format.Alignment = ParagraphAlignment.Left;
+   
+    column = table.AddColumn("2.5cm");  // Last Test Date
+    column.Format.Alignment = ParagraphAlignment.Left;
+   
+       column = table.AddColumn("2.5cm");  // Days Since Test
+   column.Format.Alignment = ParagraphAlignment.Right;
+     
+        column = table.AddColumn("2cm");  // Status
+    column.Format.Alignment = ParagraphAlignment.Center;
+  
+       // Add header row
+        var headerRow = table.AddRow();
+   headerRow.HeadingFormat = true; // This makes the header repeat on each page
+  headerRow.Format.Font.Bold = true;
+          headerRow.Shading.Color = Colors.LightGray;
+    headerRow.Borders.Bottom.Width = 2;
+         
+  var cell = headerRow.Cells[0];
+  cell.AddParagraph("Name");
+ cell.Format.Alignment = ParagraphAlignment.Left;
+      
+            cell = headerRow.Cells[1];
+ cell.AddParagraph("Shift");
+     cell.Format.Alignment = ParagraphAlignment.Left;
+        
+  cell = headerRow.Cells[2];
+          cell.AddParagraph("Client");
+          cell.Format.Alignment = ParagraphAlignment.Left;
+    
+   cell = headerRow.Cells[3];
+       cell.AddParagraph("Last Test Date");
+    cell.Format.Alignment = ParagraphAlignment.Left;
+       
+   cell = headerRow.Cells[4];
+            cell.AddParagraph("Days Since Test");
+     cell.Format.Alignment = ParagraphAlignment.Right;
+        
+         cell = headerRow.Cells[5];
+  cell.AddParagraph("Status");
+      cell.Format.Alignment = ParagraphAlignment.Center;
+     
+ // Add data rows
+  foreach (var candidate in reportData)
+       {
+      var row = table.AddRow();
+     
+     row.Cells[0].AddParagraph(candidate.Name);
+      row.Cells[1].AddParagraph(string.IsNullOrEmpty(candidate.Shift) ? "-" : candidate.Shift);
+  row.Cells[2].AddParagraph(candidate.ClientMnemonic);
+       row.Cells[3].AddParagraph(candidate.TestDate.HasValue ? candidate.TestDate.Value.ToShortDateString() : "Never");
+       
+   var daysSinceTest = candidate.TestDate.HasValue 
+        ? (DateTime.Now - candidate.TestDate.Value).Days.ToString()
+            : "Never";
+    row.Cells[4].AddParagraph(daysSinceTest);
+      row.Cells[4].Format.Alignment = ParagraphAlignment.Right;
+ 
+     var statusCell = row.Cells[5];
+  var statusPara = statusCell.AddParagraph(candidate.IsDeleted ? "Deleted" : "Active");
+    statusPara.Format.Alignment = ParagraphAlignment.Center;
+    
+// Add subtle alternating row colors
+  if (reportData.IndexOf(candidate) % 2 == 1)
         {
-   reportErrorMessage = $"Error generating PDF: {ex.Message}";
-      Console.WriteLine(ex.ToString());
+         row.Shading.Color = new Color(245, 245, 245);
+     }
+   }
+    
+            // Render PDF
+ var pdfRenderer = new PdfDocumentRenderer(true);
+            pdfRenderer.Document = document;
+ pdfRenderer.RenderDocument();
+          
+            // Save to memory stream
+            using var stream = new System.IO.MemoryStream();
+            pdfRenderer.PdfDocument.Save(stream, false);
+  var pdfBytes = stream.ToArray();
+            var base64 = Convert.ToBase64String(pdfBytes);
+     
+          // Download using JavaScript
+   await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromBase64", 
+       base64, 
+       fileName, 
+          "application/pdf");
+    }
+        catch (Exception ex)
+        {
+            reportErrorMessage = $"Error generating PDF: {ex.Message}";
+        Console.WriteLine(ex.ToString());
         }
         finally
-      {
-   isReportLoading = false;
-  }
+     {
+            isReportLoading = false;
+        }
     }
 
     private string GetReportFileName()
