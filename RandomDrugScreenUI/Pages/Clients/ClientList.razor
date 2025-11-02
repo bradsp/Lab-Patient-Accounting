@@ -1,62 +1,427 @@
 @page "/clients"
+@inject DictionaryService DictionaryService
+@inject LabBilling.Core.UnitOfWork.IUnitOfWork UnitOfWork
+@inject NavigationManager NavigationManager
 
-<PageTitle>Client Viewer - Client List</PageTitle>
+<PageTitle>Client Viewer - Client Information</PageTitle>
 
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Client List</li>
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+     <li class="breadcrumb-item active" aria-current="page">Client Viewer</li>
     </ol>
 </nav>
 
-<h1>Client List</h1>
-<p class="lead">View and manage client information.</p>
+<h1>Client Viewer</h1>
+<p class="lead">Search and view comprehensive client information.</p>
 
 <div class="row mt-4">
     <div class="col-md-12">
         <div class="card">
-      <div class="card-header bg-secondary text-white">
-         <h5 class="mb-0">
-          <span class="oi oi-briefcase"></span> Coming Soon
-         </h5>
-            </div>
-   <div class="card-body">
-    <div class="alert alert-info">
-    <h4 class="alert-heading"><span class="oi oi-info"></span> Module Under Development</h4>
-  <p>
-          The Client Viewer module is currently under development. This feature will allow you to:
-         </p>
-          <ul>
-        <li>View comprehensive client directory</li>
-       <li>Manage client contact information</li>
-     <li>Track service agreements and history</li>
-      <li>Monitor account status and billing</li>
-      <li>Generate client-specific reports</li>
-    </ul>
-      <hr>
- <p class="mb-0">
-            <strong>Expected Release:</strong> TBD | 
-    <strong>Status:</strong> In Planning
-                  </p>
-          </div>
-
- <div class="text-center mt-4">
-   <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'%3E%3C/path%3E%3Ccircle cx='12' cy='7' r='4'%3E%3C/circle%3E%3C/svg%3E" 
-            alt="Client icon" 
-      class="mb-3" />
-   <p class="text-muted">Client management features will appear here</p>
-          </div>
-
-                <div class="mt-4">
-       <a href="/" class="btn btn-primary">
-     <span class="oi oi-home"></span> Return to Home
-</a>
+  <div class="card-header bg-secondary text-white">
+     <h5 class="mb-0">
+   <span class="oi oi-magnifying-glass"></span> Search Client
+    </h5>
+     </div>
+          <div class="card-body">
+  <div class="row mb-3">
+     <div class="col-md-6">
+            <label for="clientSearch" class="form-label">Search by Name or Mnemonic</label>
+ @if (selectedClient == null)
+   {
+     <AutocompleteInput TItem="LabBilling.Core.Models.Client"
+           Items="@allClients"
+       SearchProperty="@(c => $"{c.Name} ({c.ClientMnem})")"
+    ValueProperty="@(c => c.ClientMnem)"
+ItemTemplate="@clientItemTemplate"
+           OnItemSelected="@OnClientSelected"
+Placeholder="Search by name or mnemonic..."
+        MinSearchLength="1"
+          MaxResults="15"
+ @ref="clientAutocomplete" />
+    }
+          else
+           {
+        <div class="input-group">
+          <input type="text" class="form-control" value="@GetSelectedClientDisplay()" readonly />
+          <button class="btn btn-outline-secondary" type="button" @onclick="ClearClientSelection" title="Clear selection">
+          <span class="oi oi-x"></span>
+           </button>
+       </div>
+       <small class="text-muted">Selected: @selectedClient.ClientMnem</small>
+}
+       </div>
+ <div class="col-md-3">
+  <label class="form-label">Show Inactive</label>
+     <div class="form-check">
+    <input class="form-check-input" 
+       type="checkbox" 
+               id="showInactive" 
+    checked="@showInactive"
+       @onchange="@((ChangeEventArgs e) => OnShowInactiveChanged(e))" />
+       <label class="form-check-label" for="showInactive">
+     Include inactive clients
+      </label>
      </div>
     </div>
-  </div>
-    </div>
+          </div>
+
+         @if (errorMessage != null)
+         {
+          <div class="alert alert-danger">
+           <span class="oi oi-warning"></span> @errorMessage
+       </div>
+  }
+
+         @if (isLoading)
+       {
+<div class="text-center py-4">
+        <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+        </div>
+      <p class="mt-2">Loading clients...</p>
+       </div>
+  }
+else if (selectedClient == null)
+  {
+     <div class="alert alert-info">
+      <span class="oi oi-info"></span> Select a client from the search above to view detailed information.
+   </div>
+     }
+   </div>
+ </div>
+ </div>
 </div>
 
+@if (selectedClient != null)
+{
+ <div class="row mt-4">
+    <div class="col-md-12">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+   <div>
+       <h2>@selectedClient.Name</h2>
+       <p class="lead text-muted">
+      <span class="badge bg-primary">@selectedClient.ClientMnem</span>
+ @if (selectedClient.IsDeleted)
+  {
+   <span class="badge bg-danger">Inactive</span>
+  }
+      else
+           {
+          <span class="badge bg-success">Active</span>
+       }
+   </p>
+   </div>
+    </div>
+        </div>
+    </div>
+
+  <div class="row">
+      <!-- Client Information Card -->
+  <div class="col-md-6 mb-4">
+      <div class="card h-100">
+  <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+    <span class="oi oi-info"></span> Client Information
+     </h5>
+  </div>
+     <div class="card-body">
+    <dl class="row mb-0">
+    <dt class="col-sm-4">Client Mnemonic:</dt>
+  <dd class="col-sm-8"><span class="badge bg-secondary">@selectedClient.ClientMnem</span></dd>
+
+         <dt class="col-sm-4">Client Name:</dt>
+     <dd class="col-sm-8">@selectedClient.Name</dd>
+
+       <dt class="col-sm-4">Type:</dt>
+       <dd class="col-sm-8">@(selectedClient.ClientType?.Description ?? "Not specified")</dd>
+
+      <dt class="col-sm-4">Status:</dt>
+       <dd class="col-sm-8">
+           @if (selectedClient.IsDeleted)
+{
+   <span class="badge bg-danger">Inactive</span>
+   }
+           else
+        {
+ <span class="badge bg-success">Active</span>
+   }
+       </dd>
+
+       <dt class="col-sm-4">Client Code:</dt>
+       <dd class="col-sm-8">@(selectedClient.Id.ToString() ?? "Not provided")</dd>
+   </dl>
+           </div>
+  </div>
+    </div>
+
+        <!-- Contact Information Card -->
+        <div class="col-md-6 mb-4">
+   <div class="card h-100">
+    <div class="card-header bg-info text-white">
+  <h5 class="mb-0">
+   <span class="oi oi-phone"></span> Contact Information
+          </h5>
+      </div>
+        <div class="card-body">
+     <dl class="row mb-0">
+             <dt class="col-sm-4">Address 1:</dt>
+          <dd class="col-sm-8">
+  @if (!string.IsNullOrEmpty(selectedClient.StreetAddress1))
+        {
+     @selectedClient.StreetAddress1
+            }
+  else
+        {
+  <span class="text-muted">Not provided</span>
+  }
+         </dd>
+
+      <dt class="col-sm-4">Address 2:</dt>
+       <dd class="col-sm-8">
+    @if (!string.IsNullOrEmpty(selectedClient.StreetAddress2))
+        {
+  @selectedClient.StreetAddress2
+      }
+         else
+        {
+             <span class="text-muted">Not provided</span>
+   }
+  </dd>
+
+    <dt class="col-sm-4">City:</dt>
+       <dd class="col-sm-8">@(selectedClient.City ?? "Not provided")</dd>
+
+       <dt class="col-sm-4">State:</dt>
+   <dd class="col-sm-8">@(selectedClient.State ?? "Not provided")</dd>
+
+ <dt class="col-sm-4">ZIP Code:</dt>
+   <dd class="col-sm-8">@(selectedClient.ZipCode ?? "Not provided")</dd>
+
+ <dt class="col-sm-4">Phone:</dt>
+        <dd class="col-sm-8">
+     @if (!string.IsNullOrEmpty(selectedClient.Phone))
+     {
+         @selectedClient.Phone
+     }
+   else
+  {
+      <span class="text-muted">Not provided</span>
+   }
+  </dd>
+
+        <dt class="col-sm-4">Fax:</dt>
+    <dd class="col-sm-8">
+  @if (!string.IsNullOrEmpty(selectedClient.Fax))
+   {
+ @selectedClient.Fax
+    }
+    else
+         {
+        <span class="text-muted">Not provided</span>
+                }
+  </dd>
+
+        <dt class="col-sm-4">Contact:</dt>
+        <dd class="col-sm-8">
+            @if (!string.IsNullOrEmpty(selectedClient.Contact))
+        {
+    @selectedClient.Contact
+          }
+            else
+            {
+        <span class="text-muted">Not provided</span>
+   }
+   </dd>
+
+        <dt class="col-sm-4">Contact Email:</dt>
+        <dd class="col-sm-8">
+        @if (!string.IsNullOrEmpty(selectedClient.ContactEmail))
+       {
+                <a href="mailto:@selectedClient.ContactEmail">@selectedClient.ContactEmail</a>
+            }
+          else
+     {
+        <span class="text-muted">Not provided</span>
+            }
+    </dd>
+          </dl>
+     </div>
+    </div>
+   </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(selectedClient.Comment))
+    {
+    <div class="row">
+            <div class="col-md-12 mb-4">
+    <div class="card">
+   <div class="card-header bg-warning text-dark">
+     <h5 class="mb-0">
+                <span class="oi oi-comment-square"></span> Comments
+    </h5>
+           </div>
+     <div class="card-body">
+     <p class="mb-0">@selectedClient.Comment</p>
+ </div>
+         </div>
+            </div>
+    </div>
+    }
+
+    <!-- Actions Section -->
+    <div class="row">
+   <div class="col-md-12 mb-4">
+         <div class="card">
+           <div class="card-header bg-secondary text-white">
+<h5 class="mb-0">
+   <span class="oi oi-wrench"></span> Quick Actions
+   </h5>
+     </div>
+  <div class="card-body">
+    <div class="row">
+       <div class="col-md-4 mb-3">
+     <button class="btn btn-primary btn-lg w-100" @onclick="ViewRequisitionForms">
+             <span class="oi oi-document"></span>
+  <br />
+     <strong>Requisition Forms</strong>
+  <br />
+         <small>Manage test requisition forms</small>
+      </button>
+  </div>
+    <div class="col-md-4 mb-3">
+  <button class="btn btn-outline-secondary btn-lg w-100" disabled>
+       <span class="oi oi-people"></span>
+   <br />
+           <strong>Contacts</strong>
+          <br />
+    <small>Coming Soon</small>
+   </button>
+   </div>
+        <div class="col-md-4 mb-3">
+<button class="btn btn-outline-secondary btn-lg w-100" disabled>
+      <span class="oi oi-bar-chart"></span>
+     <br />
+ <strong>Reports</strong>
+      <br />
+      <small>Coming Soon</small>
+    </button>
+ </div>
+           </div>
+       </div>
+   </div>
+      </div>
+  </div>
+
+    <!-- Additional Information -->
+    <div class="row">
+  <div class="col-md-12">
+ <div class="card">
+    <div class="card-header">
+ <h5 class="mb-0">
+     <span class="oi oi-info"></span> Additional Details
+    </h5>
+         </div>
+    <div class="card-body">
+<div class="alert alert-info">
+       <h6 class="alert-heading"><span class="oi oi-info"></span> More Information Coming Soon</h6>
+      <p class="mb-0">
+ Additional client details including service agreements, billing information, 
+   and transaction history will be available in future updates.
+  </p>
+ </div>
+       </div>
+         </div>
+     </div>
+    </div>
+}
+
 @code {
-    // Placeholder for future implementation
+    private List<LabBilling.Core.Models.Client> allClients = new();
+    private LabBilling.Core.Models.Client? selectedClient;
+    private bool showInactive = false;
+    private bool isLoading = true;
+    private string? errorMessage;
+    private AutocompleteInput<LabBilling.Core.Models.Client>? clientAutocomplete;
+
+    // Template for autocomplete items
+    private RenderFragment<LabBilling.Core.Models.Client> clientItemTemplate = client => __builder =>
+    {
+        <div>
+<strong>@client.Name</strong>
+  <br />
+       <small class="text-muted">@client.ClientMnem</small>
+    </div>
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+     await LoadClients();
+    }
+
+    private async Task LoadClients()
+    {
+        try
+        {
+    isLoading = true;
+ errorMessage = null;
+       allClients = await DictionaryService.GetAllClientsAsync(UnitOfWork, showInactive);
+        }
+   catch (Exception ex)
+        {
+     errorMessage = $"Error loading clients: {ex.Message}";
+        Console.WriteLine(ex.ToString());
+      }
+        finally
+{
+     isLoading = false;
+     }
+    }
+
+    private async Task OnClientSelected(LabBilling.Core.Models.Client client)
+    {
+  selectedClient = client;
+      StateHasChanged();
+    await Task.CompletedTask;
+    }
+
+    private async Task ClearClientSelection()
+    {
+        selectedClient = null;
+   
+        if (clientAutocomplete != null)
+        {
+  clientAutocomplete.Clear();
+        }
+        
+        StateHasChanged();
+    await Task.CompletedTask;
+    }
+
+    private string GetSelectedClientDisplay()
+    {
+  return selectedClient != null 
+  ? $"{selectedClient.Name} ({selectedClient.ClientMnem})" 
+    : "";
+    }
+
+    private async Task OnShowInactiveChanged(ChangeEventArgs e)
+    {
+      showInactive = (bool)(e.Value ?? false);
+      await LoadClients();
+        
+      // Clear selection if the currently selected client is now filtered out
+     if (selectedClient != null && !allClients.Any(c => c.ClientMnem == selectedClient.ClientMnem))
+   {
+await ClearClientSelection();
+        }
+    }
+
+    private void ViewRequisitionForms()
+    {
+        if (selectedClient != null)
+  {
+    NavigationManager.NavigateTo($"/requisition-forms/{selectedClient.ClientMnem}");
+  }
+    }
 }
