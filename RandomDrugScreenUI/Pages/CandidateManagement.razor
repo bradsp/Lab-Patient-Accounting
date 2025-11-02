@@ -1,4 +1,6 @@
 @page "/candidates"
+@using MigraDocCore.DocumentObjectModel
+@using MigraDocCore.Rendering
 @inject IRandomDrugScreenService RdsService
 @inject DictionaryService DictionaryService
 @inject IJSRuntime JSRuntime
@@ -10,392 +12,88 @@
 
 <h3>Candidate Management</h3>
 
-<div class="row mb-3">
-  <div class="col-md-4">
-        <label for="clientSelect" class="form-label">Select Client:</label>
-        @if (string.IsNullOrEmpty(selectedClient))
-   {
-      <AutocompleteInput TItem="Client"
-      Items="@clients"
-                SearchProperty="@(c => $"{c.Name} ({c.ClientMnem})")"
-          ValueProperty="@(c => c.ClientMnem)"
-  ItemTemplate="@clientItemTemplate"
-      OnItemSelected="@OnClientSelected"
-     Placeholder="Search by name or mnemonic..."
-      MinSearchLength="1"
-                MaxResults="15" 
-             @ref="clientAutocomplete" />
-   }
-        else
-        {
-          <div class="input-group">
-         <input type="text" class="form-control" value="@GetSelectedClientDisplay()" readonly />
-        <button class="btn btn-outline-secondary" type="button" @onclick="ClearClientSelection" title="Clear selection">
-           <span class="oi oi-x"></span>
-                </button>
-         </div>
-          <small class="text-muted">Selected: @selectedClient</small>
-}
-    </div>
-    <div class="col-md-3">
-    <label for="shiftSelect" class="form-label">Filter by Shift:</label>
- <select id="shiftSelect" class="form-select" value="@selectedShift" @onchange="OnShiftChanged">
-  <option value="">-- All Shifts --</option>
-       @foreach (var shift in shifts)
-         {
-<option value="@shift">@shift</option>
-        }
-   </select>
-    </div>
-    <div class="col-md-3">
-  <label class="form-label d-block">&nbsp;</label>
-   <div class="form-check">
-       <input class="form-check-input" type="checkbox" id="showDeleted" checked="@showDeleted" @onchange="OnShowDeletedChanged">
-     <label class="form-check-label" for="showDeleted">
-    Show Deleted
-    </label>
-    </div>
-    </div>
-    <div class="col-md-2">
-   <label class="form-label d-block">&nbsp;</label>
-  <button class="btn btn-primary w-100" @onclick="ShowAddCandidateModal" disabled="@string.IsNullOrEmpty(selectedClient)">
-   <span class="oi oi-plus"></span> Add New
-  </button>
-    </div>
-</div>
-
-<!-- Random Selection Panel -->
-@if (!string.IsNullOrEmpty(selectedClient))
+@* Debug info *@
+@if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div class="row mb-3">
-  <div class="col-md-12">
-      <div class="card border-primary">
-  <div class="card-header bg-primary text-white" style="cursor: pointer;" @onclick="ToggleSelectionPanel">
-    <div class="d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">
-   <span class="oi oi-random"></span> Random Selection
-     </h5>
-       <span class="oi @(showSelectionPanel ? "oi-chevron-top" : "oi-chevron-bottom")"></span>
-      </div>
-  </div>
-  @if (showSelectionPanel)
-      {
-         <div class="card-body">
-  <div class="row">
-<div class="col-md-8">
-   <div class="row mb-3">
- <div class="col-md-6">
-       <label for="selectionShift" class="form-label">Shift Filter (Optional)</label>
- <select id="selectionShift" class="form-select" value="@selectionShift" @onchange="OnSelectionShiftChanged">
- <option value="">-- All Shifts --</option>
-    @foreach (var shift in shifts)
-      {
-      <option value="@shift">@shift</option>
-    }
-      </select>
-  </div>
-  <div class="col-md-6">
- <label for="selectionCount" class="form-label">Number to Select *</label>
-      <input type="number" id="selectionCount" class="form-control" @bind="selectionCount" min="1" max="@selectionAvailableCount" />
-            <small class="text-muted">Available: @selectionAvailableCount</small>
-   </div>
-          </div>
-
-   @if (selectionValidationMessage != null)
-   {
-          <div class="alert alert-warning">
-   <span class="oi oi-warning"></span> @selectionValidationMessage
-     </div>
-}
-
-     @if (selectionErrorMessage != null)
-      {
-             <div class="alert alert-danger">
-<span class="oi oi-x"></span> @selectionErrorMessage
-        </div>
-      }
-
-          <div class="d-grid gap-2">
-  <button class="btn btn-primary btn-lg" @onclick="PerformSelection" disabled="@(isSelectionProcessing || !CanPerformSelection())">
-      @if (isSelectionProcessing)
-    {
-   <span class="spinner-border spinner-border-sm" role="status"></span>
-      <text> Generating Selection...</text>
-       }
- else
-          {
-      <span class="oi oi-random"></span>
-   <text> Generate Random Selection</text>
-      }
-           </button>
-           </div>
-     </div>
-
-           <div class="col-md-4">
-   <div class="card bg-light">
-       <div class="card-body">
-          <h6 class="card-title">Selection Info</h6>
-   <dl class="mb-0">
-     <dt>Client</dt>
-    <dd>@selectedClient</dd>
-    <dt>Shift Filter</dt>
-         <dd>@(string.IsNullOrEmpty(selectionShift) ? "All shifts" : selectionShift)</dd>
-             <dt>Selection Count</dt>
-      <dd>@selectionCount</dd>
-         <dt>Available</dt>
-      <dd>@selectionAvailableCount</dd>
-      </dl>
-       </div>
-   </div>
-      </div>
- </div>
-     </div>
-     }
-     </div>
-        </div>
+    <div class="alert alert-danger">
+        <strong>Error:</strong> @errorMessage
     </div>
 }
 
-<!-- Selection Results -->
-@if (selectedRandomCandidates != null && selectedRandomCandidates.Any())
-{
-    <div class="row mb-3">
-        <div class="col-md-12">
-   <div class="card border-success">
-     <div class="card-header bg-success text-white">
-        <h5 class="mb-0"><span class="oi oi-check"></span> Selection Results - @selectedRandomCandidates.Count Candidate(s) Selected</h5>
-        </div>
-     <div class="card-body">
-   <div class="alert alert-success">
-  <strong>Success!</strong> @selectedRandomCandidates.Count candidate(s) have been randomly selected and their test dates have been updated.
-    </div>
+<ClientSelectionPanel 
+  Clients="@clients"
+    SelectedClient="@selectedClient"
+    Shifts="@shifts"
+    SelectedShift="@selectedShift"
+    ShowDeleted="@showDeleted"
+  OnClientSelected="@OnClientSelected"
+    OnClearSelection="@ClearClientSelection"
+    OnShiftChanged="@OnShiftChanged"
+    OnShowDeletedChanged="@OnShowDeletedChanged"
+    OnAddNew="@ShowAddCandidateModal" />
 
-        <div class="table-responsive">
-         <table class="table table-striped">
-       <thead>
-    <tr>
-    <th>#</th>
-    <th>Name</th>
-      <th>Shift</th>
-        <th>Previous Test Date</th>
-<th>New Test Date</th>
-   </tr>
-    </thead>
-        <tbody>
-       @for (int i = 0; i < selectedRandomCandidates.Count; i++)
-   {
-  var candidate = selectedRandomCandidates[i];
-               <tr>
-      <td>@(i + 1)</td>
-  <td><strong>@candidate.Name</strong></td>
-            <td>@(string.IsNullOrEmpty(candidate.Shift) ? "-" : candidate.Shift)</td>
-     <td>@(candidate.TestDate.HasValue && candidate.TestDate.Value < DateTime.Now.Date ? candidate.TestDate.Value.ToShortDateString() : "Never")</td>
-   <td><span class="badge bg-success">@DateTime.Now.ToShortDateString()</span></td>
-       </tr>
-    }
-</tbody>
-         </table>
- </div>
+<RandomSelectionPanel 
+ SelectedClient="@selectedClient"
+    Shifts="@shifts"
+    IsExpanded="@showSelectionPanel"
+    SelectionShift="@selectionShift"
+    SelectionCount="@selectionCount"
+    AvailableCount="@selectionAvailableCount"
+    IsProcessing="@isSelectionProcessing"
+    CanPerformSelection="@CanPerformSelection()"
+    ValidationMessage="@selectionValidationMessage"
+    ErrorMessage="@selectionErrorMessage"
+    OnTogglePanel="@ToggleSelectionPanel"
+    OnShiftChanged="@OnSelectionShiftChanged"
+    OnSelectionCountChanged="@OnSelectionCountChanged"
+    OnPerformSelection="@PerformSelection" />
 
-  <div class="d-flex gap-2">
-   <button class="btn btn-primary" @onclick="ExportSelectionResults">
-    <span class="oi oi-data-transfer-download"></span> Export to CSV
-       </button>
-  <button class="btn btn-secondary" @onclick="ClearSelectionResults">
-     <span class="oi oi-x"></span> Clear Results
-     </button>
-  </div>
- </div>
-   </div>
-  </div>
-    </div>
-}
+<SelectionResultsPanel 
+    SelectedCandidates="@selectedRandomCandidates"
+    OnExport="@ExportSelectionResults"
+    OnClear="@ClearSelectionResults" />
 
-@if (isLoading)
-{
-    <div class="text-center">
-     <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-     </div>
-     <p>Loading candidates...</p>
-  </div>
-}
-else if (string.IsNullOrEmpty(selectedClient))
-{
-  <div class="alert alert-info">
-    <span class="oi oi-info"></span> Please select a client to view candidates.
-    </div>
-}
-else if (candidates.Any())
-{
-    <div class="row mb-2">
-      <div class="col">
-     <p class="text-muted">
-        Showing @candidates.Count candidate(s) for client @selectedClient
-  </p>
- </div>
-    </div>
+<ReportsPanel 
+    SelectedClient="@selectedClient"
+    IsExpanded="@showReportsPanel"
+    SelectedReportType="@selectedReportType"
+    DaysSinceLastTest="@daysSinceLastTest"
+    IsProcessing="@isReportLoading"
+    ErrorMessage="@reportErrorMessage"
+    PreviewData="@reportData"
+    SummaryStats="@summaryStats"
+    OnTogglePanel="@ToggleReportsPanel"
+    OnReportTypeChanged="@OnReportTypeChanged"
+    OnDaysChanged="@OnDaysChanged"
+    OnExportCsv="@ExportReportToCsv"
+    OnGeneratePdf="@GenerateReportPdf" />
 
-    <div class="table-responsive">
- <table class="table table-striped table-hover">
-       <thead>
- <tr>
-     <th>Name</th>
- <th>Client</th>
-  <th>Shift</th>
-    <th>Last Test Date</th>
-     <th>Status</th>
-<th>Actions</th>
-  </tr>
-     </thead>
-      <tbody>
-    @foreach (var candidate in candidates)
-       {
-    <tr class="@(candidate.IsDeleted ? "table-secondary" : "")">
- <td>@candidate.Name</td>
- <td>@candidate.ClientMnemonic</td>
-      <td>@(string.IsNullOrEmpty(candidate.Shift) ? "-" : candidate.Shift)</td>
-    <td>@(candidate.TestDate.HasValue ? candidate.TestDate.Value.ToShortDateString() : "Never")</td>
-   <td>
-      @if (candidate.IsDeleted)
-     {
-  <span class="badge bg-danger">Deleted</span>
-       }
-           else
-    {
-       <span class="badge bg-success">Active</span>
-         }
-   </td>
-  <td>
-   <button class="btn btn-sm btn-primary" @onclick="() => ShowEditCandidateModal(candidate)" disabled="@candidate.IsDeleted">
-  <span class="oi oi-pencil"></span> Edit
-  </button>
-  @if (candidate.IsDeleted)
-  {
-      <button class="btn btn-sm btn-success" @onclick="() => RestoreCandidate(candidate)">
-           <span class="oi oi-action-undo"></span> Restore
-   </button>
- }
-        else
-    {
-    <button class="btn btn-sm btn-danger" @onclick="() => ShowDeleteConfirmation(candidate)">
-     <span class="oi oi-trash"></span> Delete
-        </button>
-    }
-   </td>
-     </tr>
-         }
-   </tbody>
-        </table>
- </div>
-}
-else
-{
-    <div class="alert alert-info">
-        <span class="oi oi-info"></span> No candidates found for client @selectedClient. Add a new candidate to get started.
-  </div>
-}
+<CandidateListTable 
+    Candidates="@candidates"
+    SelectedClient="@selectedClient"
+    IsLoading="@isLoading"
+    OnEdit="@ShowEditCandidateModal"
+    OnDelete="@ShowDeleteConfirmation"
+    OnRestore="@RestoreCandidate" />
 
-<!-- Add/Edit Modal -->
-@if (showModal)
-{
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog">
-            <div class="modal-content">
-       <div class="modal-header">
-        <h5 class="modal-title">@(editingCandidate?.Id > 0 ? "Edit" : "Add") Candidate</h5>
-         <button type="button" class="btn-close" @onclick="CloseModal"></button>
-       </div>
-        <div class="modal-body">
-           <EditForm Model="editingCandidate" OnValidSubmit="SaveCandidate">
-         <DataAnnotationsValidator />
-          <ValidationSummary class="text-danger" />
+<CandidateModal 
+    IsVisible="@showModal"
+    Candidate="@editingCandidate"
+    Clients="@clients"
+    IsProcessing="@isSaving"
+    ErrorMessage="@errorMessage"
+  OnSave="@SaveCandidate"
+ OnCancel="@CloseModal" />
 
-        <div class="mb-3">
-     <label for="candidateName" class="form-label">Name *</label>
-      <InputText id="candidateName" class="form-control" @bind-Value="editingCandidate.Name" />
-    </div>
-
-            <div class="mb-3">
-         <label for="candidateClient" class="form-label">Client *</label>
-        <AutocompleteInput TItem="Client"
- Items="@clients"
-          SearchProperty="@(c => $"{c.Name} ({c.ClientMnem})")"
-            ValueProperty="@(c => c.ClientMnem)"
-  ItemTemplate="@clientItemTemplate"
-        OnItemSelected="@((client) => { if (editingCandidate != null) editingCandidate.ClientMnemonic = client.ClientMnem; })"
-Placeholder="Search by name or mnemonic..."
-    MinSearchLength="1"
- MaxResults="10" />
-   </div>
-
-      <div class="mb-3">
-              <label for="candidateShift" class="form-label">Shift</label>
-             <InputText id="candidateShift" class="form-control" @bind-Value="editingCandidate.Shift" placeholder="Optional" />
- </div>
-
-     @if (errorMessage != null)
-   {
-        <div class="alert alert-danger">@errorMessage</div>
-         }
-
-  <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cancel</button>
-    <button type="submit" class="btn btn-primary" disabled="@isSaving">
-          @if (isSaving)
-          {
-               <span class="spinner-border spinner-border-sm" role="status"></span>
-         <text> Saving...</text>
-          }
- else
-    {
-       <span class="oi oi-check"></span>
-                 <text> Save</text>
-   }
-           </button>
-      </div>
-           </EditForm>
-    </div>
-       </div>
-        </div>
-    </div>
-}
-
-<!-- Delete Confirmation Modal -->
-@if (showDeleteConfirm)
-{
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-    <div class="modal-dialog">
- <div class="modal-content">
-   <div class="modal-header">
-        <h5 class="modal-title">Confirm Delete</h5>
-          <button type="button" class="btn-close" @onclick="CloseDeleteConfirmation"></button>
-      </div>
-      <div class="modal-body">
-          <p>Are you sure you want to delete candidate <strong>@candidateToDelete?.Name</strong>?</p>
- <p class="text-muted">This will mark the candidate as deleted. You can restore them later if needed.</p>
-          </div>
-      <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @onclick="CloseDeleteConfirmation">Cancel</button>
-     <button type="button" class="btn btn-danger" @onclick="ConfirmDelete" disabled="@isSaving">
-          @if (isSaving)
-          {
-  <span class="spinner-border spinner-border-sm" role="status"></span>
-       <text> Deleting...</text>
-       }
-         else
-         {
-           <span class="oi oi-trash"></span>
- <text> Delete</text>
-        }
-   </button>
-             </div>
-            </div>
-        </div>
-    </div>
-}
+<DeleteConfirmationModal 
+    IsVisible="@showDeleteConfirm"
+  CandidateName="@(candidateToDelete?.Name ?? "")"
+    IsProcessing="@isSaving"
+    OnConfirm="@ConfirmDelete"
+    OnCancel="@CloseDeleteConfirmation" />
 
 @code {
+    // State fields
   private List<RandomDrugScreenPerson> candidates = new();
     private List<Client> clients = new();
     private List<string> shifts = new();
@@ -413,8 +111,8 @@ Placeholder="Search by name or mnemonic..."
     private string? errorMessage;
 
     // Random Selection fields
- private bool showSelectionPanel = false;
-    private string selectionShift = "";
+    private bool showSelectionPanel = false;
+ private string selectionShift = "";
     private int selectionCount = 1;
     private int selectionAvailableCount = 0;
     private bool isSelectionProcessing = false;
@@ -422,448 +120,722 @@ Placeholder="Search by name or mnemonic..."
     private string? selectionErrorMessage;
     private List<RandomDrugScreenPerson>? selectedRandomCandidates;
 
-    // Autocomplete reference
-    private AutocompleteInput<Client>? clientAutocomplete;
-
-    // Template for autocomplete items
-    private RenderFragment<Client> clientItemTemplate = client => __builder =>
-    {
-     <div>
-<strong>@client.Name</strong>
-   <br />
- <small class="text-muted">@client.ClientMnem</small>
-  </div>
-    };
+    // Reports fields
+    private bool showReportsPanel = false;
+    private string selectedReportType = "";
+  private int daysSinceLastTest = 30;
+    private bool isReportLoading = false;
+    private string? reportErrorMessage;
+    private List<RandomDrugScreenPerson>? reportData;
+    private ReportsPanel.ClientSummaryStats summaryStats = new();
 
     protected override async Task OnInitializedAsync()
     {
         try
- {
- await LoadClients();
-       
-       // Check for client query parameter
-    var uri = new Uri(NavigationManager.Uri);
-       var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-       var clientParam = query["client"];
-     
-    if (!string.IsNullOrEmpty(clientParam))
-       {
-    // Pre-select the client from query parameter
-     var client = clients.FirstOrDefault(c => c.ClientMnem == clientParam);
-  if (client != null)
-     {
-       await OnClientSelected(client);
-  }
-     }
-  }
-     catch (Exception ex)
- {
-  errorMessage = $"Error loading data: {ex.Message}";
- Console.WriteLine(ex.ToString());
- }
-      finally
         {
-   isLoading = false;
-    }
+       await LoadClients();
+       
+    // Check for client query parameter
+            var uri = new Uri(NavigationManager.Uri);
+   var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+var clientParam = query["client"];
+     
+            if (!string.IsNullOrEmpty(clientParam))
+            {
+   // Pre-select the client from query parameter
+                var client = clients.FirstOrDefault(c => c.ClientMnem == clientParam);
+      if (client != null)
+           {
+     await OnClientSelected(client);
+       }
+        }
+        }
+        catch (Exception ex)
+      {
+            errorMessage = $"Error loading data: {ex.Message}";
+  Console.WriteLine(ex.ToString());
+        }
+        finally
+        {
+            isLoading = false;
+      }
     }
 
-  private async Task LoadClients()
+    // Data loading methods
+    private async Task LoadClients()
     {
-try
-   {
- clients = await DictionaryService.GetAllClientsAsync(UnitOfWork, false);
-  }
-    catch (Exception ex)
-{
-         Console.WriteLine($"Error loading clients: {ex.Message}");
-   clients = new List<Client>();
-}
+        try
+        {
+     clients = await DictionaryService.GetAllClientsAsync(UnitOfWork, false);
+     }
+ catch (Exception ex)
+ {
+            Console.WriteLine($"Error loading clients: {ex.Message}");
+       clients = new List<Client>();
+        }
     }
 
     private async Task LoadShifts()
-    {
-      try
-    {
-     if (!string.IsNullOrEmpty(selectedClient))
-    {
-  shifts = await RdsService.GetDistinctShiftsAsync(selectedClient);
-   }
-          else
-    {
-      shifts = await RdsService.GetDistinctShiftsAsync();
- }
-   }
-        catch (Exception ex)
-     {
-   Console.WriteLine($"Error loading shifts: {ex.Message}");
-      shifts = new List<string>();
-        }
-    }
-
-    private async Task LoadCandidates()
   {
-   isLoading = true;
-      try
-     {
-         if (!string.IsNullOrEmpty(selectedClient))
-      {
-      if (!string.IsNullOrEmpty(selectedShift))
-  {
-      // Filter by client and shift
-       candidates = await RdsService.GetCandidatesByClientAsync(selectedClient, showDeleted);
-  candidates = candidates.Where(c => c.Shift == selectedShift).ToList();
-      }
-   else
-       {
-  candidates = await RdsService.GetCandidatesByClientAsync(selectedClient, showDeleted);
-    }
-        }
-   else
-     {
-      candidates = await RdsService.GetAllCandidatesAsync(showDeleted);
-  }
-  }
-  catch (Exception ex)
-  {
-  errorMessage = $"Error loading candidates: {ex.Message}";
-       Console.WriteLine(ex.ToString());
- candidates = new List<RandomDrugScreenPerson>();
-        }
-        finally
-      {
-    isLoading = false;
-     }
-    }
-
-    private async Task ClearClientSelection()
-    {
- selectedClient = "";
-        selectedShift = "";
-     candidates = new List<RandomDrugScreenPerson>();
-        shifts = new List<string>();
-        selectionAvailableCount = 0;
-        selectedRandomCandidates = null;
-        
-        if (clientAutocomplete != null)
+        try
         {
-            clientAutocomplete.Clear();
-}
-        
-        StateHasChanged();
-        await Task.CompletedTask;
+        if (!string.IsNullOrEmpty(selectedClient))
+     {
+            shifts = await RdsService.GetDistinctShiftsAsync(selectedClient);
+      }
+  else
+            {
+   shifts = await RdsService.GetDistinctShiftsAsync();
+      }
+        }
+  catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading shifts: {ex.Message}");
+            shifts = new List<string>();
+ }
     }
 
-    private string GetSelectedClientDisplay()
+  private async Task LoadCandidates()
     {
-        var client = clients.FirstOrDefault(c => c.ClientMnem == selectedClient);
-   return client != null ? $"{client.Name} ({client.ClientMnem})" : selectedClient;
+     isLoading = true;
+     try
+        {
+            if (!string.IsNullOrEmpty(selectedClient))
+            {
+   if (!string.IsNullOrEmpty(selectedShift))
+          {
+          candidates = await RdsService.GetCandidatesByClientAsync(selectedClient, showDeleted);
+        candidates = candidates.Where(c => c.Shift == selectedShift).ToList();
+   }
+                else
+        {
+            candidates = await RdsService.GetCandidatesByClientAsync(selectedClient, showDeleted);
+   }
+       }
+            else
+  {
+       candidates = await RdsService.GetAllCandidatesAsync(showDeleted);
+       }
+        }
+        catch (Exception ex)
+    {
+   errorMessage = $"Error loading candidates: {ex.Message}";
+     Console.WriteLine(ex.ToString());
+        candidates = new List<RandomDrugScreenPerson>();
+        }
+    finally
+        {
+ isLoading = false;
+   }
     }
 
+    // Client selection handlers
     private async Task OnClientSelected(Client client)
     {
   selectedClient = client?.ClientMnem ?? "";
         selectedShift = "";
-        await LoadShifts();
-  await LoadCandidates();
+    await LoadShifts();
+        await LoadCandidates();
         await UpdateSelectionAvailableCount();
-    }
+}
 
-    private async Task OnClientChanged(ChangeEventArgs e)
-    {
-        selectedClient = e.Value?.ToString() ?? "";
-        selectedShift = ""; // Reset shift when client changes
-  await LoadShifts();
- await LoadCandidates();
-  }
+    private async Task ClearClientSelection()
+  {
+        selectedClient = "";
+     selectedShift = "";
+        candidates = new List<RandomDrugScreenPerson>();
+        shifts = new List<string>();
+        selectionAvailableCount = 0;
+        selectedRandomCandidates = null;
+        
+ StateHasChanged();
+        await Task.CompletedTask;
+ }
 
-    private async Task OnShiftChanged(ChangeEventArgs e)
+    private async Task OnShiftChanged(string newShift)
     {
-  selectedShift = e.Value?.ToString() ?? "";
+  selectedShift = newShift;
         await LoadCandidates();
     }
 
-    private async Task OnShowDeletedChanged(ChangeEventArgs e)
+    private async Task OnShowDeletedChanged(bool newShowDeleted)
     {
-        showDeleted = (bool)(e.Value ?? false);
-  await LoadCandidates();
-  }
+        showDeleted = newShowDeleted;
+        await LoadCandidates();
+    }
 
-    private async Task UpdateSelectionAvailableCount()
+    // Random Selection methods
+    private void ToggleSelectionPanel()
     {
-      try
+        showSelectionPanel = !showSelectionPanel;
+    }
+
+    // Reports methods
+    private void ToggleReportsPanel()
+  {
+        showReportsPanel = !showReportsPanel;
+    }
+
+    private async Task OnReportTypeChanged(string reportType)
+    {
+        selectedReportType = reportType;
+        reportErrorMessage = null;
+        
+        if (!string.IsNullOrEmpty(reportType))
         {
-     if (string.IsNullOrEmpty(selectedClient))
-  {
-       selectionAvailableCount = 0;
-return;
-     }
-
-   List<RandomDrugScreenPerson> availableCandidates;
-       if (!string.IsNullOrEmpty(selectionShift))
-      {
-     availableCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
-            selectionAvailableCount = availableCandidates.Count(c => c.Shift == selectionShift);
-}
-else
-    {
- availableCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
-    selectionAvailableCount = availableCandidates.Count;
-    }
-
-     // Adjust selection count if it exceeds available
-    if (selectionCount > selectionAvailableCount)
-      {
-     selectionCount = Math.Max(1, selectionAvailableCount);
-    }
-   }
-     catch (Exception ex)
- {
-   Console.WriteLine($"Error updating selection available count: {ex.Message}");
-   selectionAvailableCount = 0;
- }
-    await Task.CompletedTask;
-    }
-
-    private async Task OnSelectionShiftChanged(ChangeEventArgs e)
-    {
-        selectionShift = e.Value?.ToString() ?? "";
-  await UpdateSelectionAvailableCount();
-    }
-
-    private bool CanPerformSelection()
- {
-        if (string.IsNullOrEmpty(selectedClient))
-   {
-            selectionValidationMessage = "Please select a client";
-    return false;
- }
-
-        if (selectionCount < 1)
-  {
-   selectionValidationMessage = "Selection count must be at least 1";
-       return false;
+          await LoadReportData();
+      }
+     else
+        {
+  reportData = null;
         }
-
-        if (selectionCount > selectionAvailableCount)
-   {
-       selectionValidationMessage = $"Selection count ({selectionCount}) exceeds available candidates ({selectionAvailableCount})";
-    return false;
-        }
-
-        if (selectionAvailableCount == 0)
-  {
-      selectionValidationMessage = "No candidates available for this client/shift combination";
-            return false;
-        }
-
-        selectionValidationMessage = null;
-        return true;
     }
 
-    private async Task PerformSelection()
+    private async Task OnDaysChanged(int days)
     {
-        if (!CanPerformSelection()) return;
+     daysSinceLastTest = days;
+    if (selectedReportType == "non-selected")
+        {
+            await LoadReportData();
+        }
+    }
 
-   isSelectionProcessing = true;
-  selectionErrorMessage = null;
-        selectedRandomCandidates = null;
+    private async Task LoadReportData()
+    {
+ isReportLoading = true;
+      reportErrorMessage = null;
 
         try
       {
-      selectedRandomCandidates = await RdsService.SelectRandomCandidatesAsync(
-         selectedClient,
-     selectionCount,
-     string.IsNullOrEmpty(selectionShift) ? null : selectionShift);
-
-    // Refresh the candidates list to show updated test dates
-      await LoadCandidates();
-       
-            // Reset selection panel
- selectionCount = 1;
-         selectionShift = "";
-     await UpdateSelectionAvailableCount();
-        }
+          switch (selectedReportType)
+            {
+        case "all-candidates":
+        reportData = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
+     break;
+      
+      case "non-selected":
+ var cutoffDate = DateTime.Now.AddDays(-daysSinceLastTest);
+               var allCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
+  reportData = allCandidates
+    .Where(c => !c.TestDate.HasValue || c.TestDate.Value < cutoffDate)
+         .ToList();
+          break;
+        
+case "client-summary":
+ await LoadClientSummary();
+          break;
+            }
+      }
         catch (Exception ex)
         {
-     selectionErrorMessage = $"Error performing selection: {ex.Message}";
-    Console.WriteLine(ex.ToString());
- }
+   reportErrorMessage = $"Error loading report data: {ex.Message}";
+            Console.WriteLine(ex.ToString());
+        }
         finally
    {
-       isSelectionProcessing = false;
+      isReportLoading = false;
+  }
+    }
+
+    private async Task LoadClientSummary()
+    {
+        try
+        {
+        var allCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, true);
+   var activeCandidates = allCandidates.Where(c => !c.IsDeleted).ToList();
+         var deletedCandidates = allCandidates.Where(c => c.IsDeleted).ToList();
+   
+            var now = DateTime.Now;
+  var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
+            var firstDayOfYear = new DateTime(now.Year, 1, 1);
+            
+  summaryStats = new ReportsPanel.ClientSummaryStats
+         {
+    TotalActiveCandidates = activeCandidates.Count,
+    TotalDeletedCandidates = deletedCandidates.Count,
+       TestedThisMonth = activeCandidates.Count(c => c.TestDate.HasValue && c.TestDate.Value >= firstDayOfMonth),
+        TestedThisYear = activeCandidates.Count(c => c.TestDate.HasValue && c.TestDate.Value >= firstDayOfYear),
+      NeverTested = activeCandidates.Count(c => !c.TestDate.HasValue),
+      AverageDaysSinceLastTest = activeCandidates
+       .Where(c => c.TestDate.HasValue)
+  .Select(c => (now - c.TestDate!.Value).Days)
+     .DefaultIfEmpty(0)
+        .Average()
+  };
+        
+            reportData = activeCandidates;
         }
+      catch (Exception ex)
+        {
+            reportErrorMessage = $"Error loading client summary: {ex.Message}";
+            Console.WriteLine(ex.ToString());
+    }
+    }
+
+    private async Task ExportReportToCsv()
+    {
+        if (reportData == null || !reportData.Any()) return;
+
+        isReportLoading = true;
+        try
+        {
+  var csv = new System.Text.StringBuilder();
+            
+      // Add header based on report type
+        if (selectedReportType == "client-summary")
+            {
+           csv.AppendLine($"Client Summary Report - {selectedClient}");
+csv.AppendLine($"Generated: {DateTime.Now:g}");
+    csv.AppendLine();
+           csv.AppendLine($"Total Active Candidates,{summaryStats.TotalActiveCandidates}");
+  csv.AppendLine($"Total Deleted Candidates,{summaryStats.TotalDeletedCandidates}");
+ csv.AppendLine($"Tested This Month,{summaryStats.TestedThisMonth}");
+                csv.AppendLine($"Tested This Year,{summaryStats.TestedThisYear}");
+      csv.AppendLine($"Never Tested,{summaryStats.NeverTested}");
+         csv.AppendLine($"Average Days Since Last Test,{summaryStats.AverageDaysSinceLastTest:F1}");
+            csv.AppendLine();
+            }
+            
+            csv.AppendLine("Name,Shift,Client,Last Test Date,Days Since Test,Status");
+    
+            foreach (var candidate in reportData)
+        {
+       var daysSinceTest = candidate.TestDate.HasValue 
+       ? (DateTime.Now - candidate.TestDate.Value).Days.ToString()
+       : "Never";
+      
+      csv.AppendLine($"\"{candidate.Name}\",\"{candidate.Shift}\",\"{candidate.ClientMnemonic}\",\"{(candidate.TestDate.HasValue ? candidate.TestDate.Value.ToShortDateString() : "Never")}\",\"{daysSinceTest}\",\"{(candidate.IsDeleted ? "Deleted" : "Active")}\"");
+            }
+
+         var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+   var fileName = $"{GetReportFileName()}_{selectedClient}_{timestamp}.csv";
+
+            await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromText", 
+    csv.ToString(), 
+    fileName, 
+   "text/csv");
+        }
+  catch (Exception ex)
+        {
+            reportErrorMessage = $"Error exporting CSV: {ex.Message}";
+  Console.WriteLine(ex.ToString());
+     }
+        finally
+        {
+      isReportLoading = false;
+  }
+    }
+
+    private async Task GenerateReportPdf()
+    {
+        if (reportData == null || !reportData.Any()) return;
+
+  isReportLoading = true;
+        reportErrorMessage = null;
+ 
+        try
+    {
+            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+  var fileName = $"{GetReportFileName()}_{selectedClient}_{timestamp}.pdf";
+ 
+            // Create PDF using MigraDoc
+       var document = new Document();
+  var section = document.AddSection();
+     
+    // Add title
+            var title = section.AddParagraph();
+      title.Format.Font.Size = 16;
+     title.Format.Font.Bold = true;
+  title.Format.SpaceAfter = "0.5cm";
+         title.AddText(GetReportTitle());
+  
+         // Add generated date
+         var dateInfo = section.AddParagraph();
+   dateInfo.Format.Font.Size = 10;
+            dateInfo.Format.SpaceAfter = "0.5cm";
+       dateInfo.AddText($"Generated: {DateTime.Now:g}");
+     
+// Add summary stats if client summary report
+     if (selectedReportType == "client-summary")
+            {
+     section.AddParagraph($"Total Active Candidates: {summaryStats.TotalActiveCandidates}");
+     section.AddParagraph($"Total Deleted Candidates: {summaryStats.TotalDeletedCandidates}");
+ section.AddParagraph($"Tested This Month: {summaryStats.TestedThisMonth}");
+   section.AddParagraph($"Tested This Year: {summaryStats.TestedThisYear}");
+    section.AddParagraph($"Never Tested: {summaryStats.NeverTested}");
+        section.AddParagraph($"Average Days Since Last Test: {summaryStats.AverageDaysSinceLastTest:F1}");
+  section.AddParagraph(); // Empty line
+        }
+  
+        // Create table
+ var table = section.AddTable();
+       table.Borders.Width = 0.75;
+  
+  // Define columns
+         var column = table.AddColumn("4cm");
+     column.Format.Alignment = ParagraphAlignment.Left;
+ 
+      column = table.AddColumn("2cm");
+            column.Format.Alignment = ParagraphAlignment.Left;
+            
+     column = table.AddColumn("2cm");
+   column.Format.Alignment = ParagraphAlignment.Left;
+   
+      column = table.AddColumn("3cm");
+            column.Format.Alignment = ParagraphAlignment.Left;
+   
+      column = table.AddColumn("2.5cm");
+column.Format.Alignment = ParagraphAlignment.Right;
+     
+     column = table.AddColumn("2cm");
+ column.Format.Alignment = ParagraphAlignment.Center;
+  
+            // Add header row
+ var row = table.AddRow();
+   row.Shading.Color = Colors.LightGray;
+    row.Cells[0].AddParagraph("Name");
+  row.Cells[1].AddParagraph("Shift");
+    row.Cells[2].AddParagraph("Client");
+            row.Cells[3].AddParagraph("Last Test Date");
+     row.Cells[4].AddParagraph("Days Since Test");
+      row.Cells[5].AddParagraph("Status");
+        
+  // Add data rows
+            foreach (var candidate in reportData)
+ {
+ row = table.AddRow();
+        row.Cells[0].AddParagraph(candidate.Name);
+       row.Cells[1].AddParagraph(string.IsNullOrEmpty(candidate.Shift) ? "-" : candidate.Shift);
+          row.Cells[2].AddParagraph(candidate.ClientMnemonic);
+     row.Cells[3].AddParagraph(candidate.TestDate.HasValue ? candidate.TestDate.Value.ToShortDateString() : "Never");
+       
+      var daysSinceTest = candidate.TestDate.HasValue 
+      ? (DateTime.Now - candidate.TestDate.Value).Days.ToString()
+ : "Never";
+      row.Cells[4].AddParagraph(daysSinceTest);
+            row.Cells[5].AddParagraph(candidate.IsDeleted ? "Deleted" : "Active");
+      }
+        
+            // Render PDF
+            var pdfRenderer = new PdfDocumentRenderer(true);
+ pdfRenderer.Document = document;
+        pdfRenderer.RenderDocument();
+          
+     // Save to memory stream
+using var stream = new System.IO.MemoryStream();
+     pdfRenderer.PdfDocument.Save(stream, false);
+    var pdfBytes = stream.ToArray();
+       var base64 = Convert.ToBase64String(pdfBytes);
+     
+      // Download using JavaScript
+     await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromBase64", 
+        base64, 
+         fileName, 
+       "application/pdf");
+}
+      catch (Exception ex)
+        {
+   reportErrorMessage = $"Error generating PDF: {ex.Message}";
+      Console.WriteLine(ex.ToString());
+        }
+        finally
+      {
+   isReportLoading = false;
+  }
+    }
+
+    private string GetReportFileName()
+  {
+        return selectedReportType switch
+        {
+"all-candidates" => "AllCandidates",
+   "non-selected" => $"NonSelectedCandidates_{daysSinceLastTest}Days",
+     "client-summary" => "ClientSummary",
+     _ => "Report"
+    };
+    }
+
+    private string GetReportTitle()
+    {
+        return selectedReportType switch
+        {
+ "all-candidates" => $"All Active Candidates - {selectedClient}",
+            "non-selected" => $"Non-Selected Candidates ({daysSinceLastTest}+ days) - {selectedClient}",
+      "client-summary" => $"Client Summary Report - {selectedClient}",
+       _ => "Report"
+        };
+    }
+
+    private async Task OnSelectionShiftChanged(string newShift)
+    {
+    selectionShift = newShift;
+        await UpdateSelectionAvailableCount();
+    }
+
+    private void OnSelectionCountChanged(int newCount)
+    {
+     selectionCount = newCount;
+    }
+
+    private async Task UpdateSelectionAvailableCount()
+ {
+        try
+        {
+            if (string.IsNullOrEmpty(selectedClient))
+            {
+          selectionAvailableCount = 0;
+ return;
+ }
+
+     List<RandomDrugScreenPerson> availableCandidates;
+     if (!string.IsNullOrEmpty(selectionShift))
+            {
+           availableCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
+     selectionAvailableCount = availableCandidates.Count(c => c.Shift == selectionShift);
+     }
+        else
+      {
+                availableCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
+           selectionAvailableCount = availableCandidates.Count;
+   }
+
+            if (selectionCount > selectionAvailableCount)
+            {
+        selectionCount = Math.Max(1, selectionAvailableCount);
+     }
+ }
+   catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating selection available count: {ex.Message}");
+        selectionAvailableCount = 0;
+        }
+}
+
+    private bool CanPerformSelection()
+    {
+        if (string.IsNullOrEmpty(selectedClient))
+        {
+            selectionValidationMessage = "Please select a client";
+       return false;
+  }
+
+        if (selectionCount < 1)
+        {
+         selectionValidationMessage = "Selection count must be at least 1";
+         return false;
+        }
+
+        if (selectionCount > selectionAvailableCount)
+        {
+ selectionValidationMessage = $"Selection count ({selectionCount}) exceeds available candidates ({selectionAvailableCount})";
+            return false;
+        }
+
+  if (selectionAvailableCount == 0)
+        {
+  selectionValidationMessage = "No candidates available for this client/shift combination";
+            return false;
+    }
+
+        selectionValidationMessage = null;
+        return true;
+  }
+
+    private async Task PerformSelection()
+{
+    if (!CanPerformSelection()) return;
+
+        isSelectionProcessing = true;
+        selectionErrorMessage = null;
+        selectedRandomCandidates = null;
+
+   try
+{
+            selectedRandomCandidates = await RdsService.SelectRandomCandidatesAsync(
+  selectedClient,
+    selectionCount,
+     string.IsNullOrEmpty(selectionShift) ? null : selectionShift);
+
+   await LoadCandidates();
+selectionCount = 1;
+            selectionShift = "";
+            await UpdateSelectionAvailableCount();
+  }
+        catch (Exception ex)
+        {
+            selectionErrorMessage = $"Error performing selection: {ex.Message}";
+    Console.WriteLine(ex.ToString());
+        }
+        finally
+      {
+   isSelectionProcessing = false;
+      }
     }
 
     private async Task ExportSelectionResults()
-{
-if (selectedRandomCandidates == null || !selectedRandomCandidates.Any()) return;
+  {
+        if (selectedRandomCandidates == null || !selectedRandomCandidates.Any()) return;
 
-  try
-     {
- var csv = new System.Text.StringBuilder();
-  csv.AppendLine("Name,Client,Shift,Previous Test Date,Selection Date");
+        try
+        {
+         var csv = new System.Text.StringBuilder();
+        csv.AppendLine("Name,Client,Shift,Previous Test Date,Selection Date");
 
-   foreach (var candidate in selectedRandomCandidates)
- {
-            var prevTestDate = candidate.TestDate.HasValue && candidate.TestDate.Value < DateTime.Now.Date 
-         ? candidate.TestDate.Value.ToShortDateString() 
-  : "Never";
-            csv.AppendLine($"\"{candidate.Name}\",\"{candidate.ClientMnemonic}\",\"{candidate.Shift}\",\"{prevTestDate}\",\"{DateTime.Now.ToShortDateString()}\"");
-      }
+            foreach (var candidate in selectedRandomCandidates)
+            {
+        var prevTestDate = candidate.TestDate.HasValue && candidate.TestDate.Value < DateTime.Now.Date 
+   ? candidate.TestDate.Value.ToShortDateString() 
+         : "Never";
+  csv.AppendLine($"\"{candidate.Name}\",\"{candidate.ClientMnemonic}\",\"{candidate.Shift}\",\"{prevTestDate}\",\"{DateTime.Now.ToShortDateString()}\"");
+            }
 
-  // Generate filename with timestamp
-     var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-      var fileName = $"RandomSelection_{selectedClient}_{timestamp}.csv";
+            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+var fileName = $"RandomSelection_{selectedClient}_{timestamp}.csv";
 
-      // Download using JavaScript interop
-       await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromText", 
-     csv.ToString(), 
-    fileName, 
+        await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromText", 
+      csv.ToString(), 
+  fileName, 
    "text/csv");
-   }
+     }
         catch (Exception ex)
-{
-   errorMessage = $"Error exporting CSV: {ex.Message}";
-  Console.WriteLine(ex.ToString());
- }
-    }
-        private void ClearSelectionResults()
-    {
-    selectedRandomCandidates = null;
+      {
+       errorMessage = $"Error exporting CSV: {ex.Message}";
+            Console.WriteLine(ex.ToString());
+        }
     }
 
-    // Existing Candidate Management Methods
-    private void ShowAddCandidateModal()
+    private void ClearSelectionResults()
     {
+selectedRandomCandidates = null;
+    }
+
+    // Candidate CRUD methods
+    private void ShowAddCandidateModal()
+ {
         editingCandidate = new RandomDrugScreenPerson 
-        { 
-    ClientMnemonic = selectedClient,
-   TestDate = null // Use null instead of DateTime.MinValue
+      { 
+  ClientMnemonic = selectedClient,
+            TestDate = null
     };
         errorMessage = null;
         showModal = true;
-  }
+    }
 
- private void ShowEditCandidateModal(RandomDrugScreenPerson candidate)
+    private void ShowEditCandidateModal(RandomDrugScreenPerson candidate)
     {
         editingCandidate = new RandomDrugScreenPerson
-  {
+        {
             Id = candidate.Id,
-            Name = candidate.Name,
- ClientMnemonic = candidate.ClientMnemonic,
- Shift = candidate.Shift,
-     TestDate = candidate.TestDate,
-       IsDeleted = candidate.IsDeleted
+  Name = candidate.Name,
+       ClientMnemonic = candidate.ClientMnemonic,
+    Shift = candidate.Shift,
+            TestDate = candidate.TestDate,
+            IsDeleted = candidate.IsDeleted
         };
-        errorMessage = null;
-  showModal = true;
-  }
+    errorMessage = null;
+     showModal = true;
+    }
 
     private void CloseModal()
     {
-   showModal = false;
-  editingCandidate = null;
-      errorMessage = null;
+        showModal = false;
+        editingCandidate = null;
+        errorMessage = null;
     }
 
-    private async Task SaveCandidate()
+    private async Task SaveCandidate(RandomDrugScreenPerson candidate)
     {
-    if (editingCandidate == null) return;
+        if (candidate == null) return;
 
-    if (string.IsNullOrWhiteSpace(editingCandidate.Name))
+        if (string.IsNullOrWhiteSpace(candidate.Name))
+    {
+            errorMessage = "Name is required";
+     return;
+ }
+
+        if (string.IsNullOrWhiteSpace(candidate.ClientMnemonic))
         {
-   errorMessage = "Name is required";
-      return;
-      }
-
-        if (string.IsNullOrWhiteSpace(editingCandidate.ClientMnemonic))
-  {
-      errorMessage = "Client is required";
-    return;
+   errorMessage = "Client is required";
+            return;
         }
 
         isSaving = true;
    errorMessage = null;
 
-      try
-  {
-  if (editingCandidate.Id > 0)
-  {
-   await RdsService.UpdateCandidateAsync(editingCandidate);
-    }
-  else
-   {
-   await RdsService.AddCandidateAsync(editingCandidate);
-}
+        try
+        {
+       if (candidate.Id > 0)
+    {
+      await RdsService.UpdateCandidateAsync(candidate);
+      }
+            else
+            {
+     await RdsService.AddCandidateAsync(candidate);
+   }
 
-      CloseModal();
-await LoadCandidates();
-  await UpdateSelectionAvailableCount();
-  }
-      catch (Exception ex)
-     {
-      errorMessage = $"Error saving candidate: {ex.Message}";
-      Console.WriteLine(ex.ToString());
-  }
+ CloseModal();
+            await LoadCandidates();
+         await UpdateSelectionAvailableCount();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error saving candidate: {ex.Message}";
+        Console.WriteLine(ex.ToString());
+     }
+        finally
+        {
+      isSaving = false;
+        }
+    }
+
+    private void ShowDeleteConfirmation(RandomDrugScreenPerson candidate)
+    {
+candidateToDelete = candidate;
+        showDeleteConfirm = true;
+    }
+
+    private void CloseDeleteConfirmation()
+    {
+        showDeleteConfirm = false;
+        candidateToDelete = null;
+    }
+
+    private async Task ConfirmDelete()
+    {
+if (candidateToDelete == null) return;
+
+     isSaving = true;
+   try
+        {
+    await RdsService.DeleteCandidateAsync(candidateToDelete.Id);
+            CloseDeleteConfirmation();
+  await LoadCandidates();
+            await UpdateSelectionAvailableCount();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error deleting candidate: {ex.Message}";
+   Console.WriteLine(ex.ToString());
+        }
         finally
         {
   isSaving = false;
         }
     }
 
-    private void ShowDeleteConfirmation(RandomDrugScreenPerson candidate)
- {
-        candidateToDelete = candidate;
-        showDeleteConfirm = true;
-    }
-
-private void CloseDeleteConfirmation()
-    {
-        showDeleteConfirm = false;
- candidateToDelete = null;
-    }
-
-    private async Task ConfirmDelete()
-    {
-        if (candidateToDelete == null) return;
-
-      isSaving = true;
-        try
-        {
-       await RdsService.DeleteCandidateAsync(candidateToDelete.Id);
-            CloseDeleteConfirmation();
-        await LoadCandidates();
-         await UpdateSelectionAvailableCount();
-        }
-      catch (Exception ex)
-        {
-      errorMessage = $"Error deleting candidate: {ex.Message}";
-       Console.WriteLine(ex.ToString());
-        }
-     finally
-  {
-        isSaving = false;
-    }
-    }
-
     private async Task RestoreCandidate(RandomDrugScreenPerson candidate)
     {
-    try
-     {
- candidate.IsDeleted = false;
+        try
+        {
+     candidate.IsDeleted = false;
             await RdsService.UpdateCandidateAsync(candidate);
-  await LoadCandidates();
+            await LoadCandidates();
             await UpdateSelectionAvailableCount();
-     }
-     catch (Exception ex)
-   {
-      errorMessage = $"Error restoring candidate: {ex.Message}";
-     Console.WriteLine(ex.ToString());
         }
-    }
-
-    private void ToggleSelectionPanel()
-  {
-     showSelectionPanel = !showSelectionPanel;
+        catch (Exception ex)
+        {
+            errorMessage = $"Error restoring candidate: {ex.Message}";
+            Console.WriteLine(ex.ToString());
+     }
     }
 }
