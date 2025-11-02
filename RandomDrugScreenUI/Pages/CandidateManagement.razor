@@ -694,10 +694,12 @@ else
         }
     }
 
-    private void ExportSelectionResults()
-    {
+    private async Task ExportSelectionResults()
+{
 if (selectedRandomCandidates == null || !selectedRandomCandidates.Any()) return;
 
+  try
+     {
  var csv = new System.Text.StringBuilder();
   csv.AppendLine("Name,Client,Shift,Previous Test Date,Selection Date");
 
@@ -709,12 +711,23 @@ if (selectedRandomCandidates == null || !selectedRandomCandidates.Any()) return;
             csv.AppendLine($"\"{candidate.Name}\",\"{candidate.ClientMnemonic}\",\"{candidate.Shift}\",\"{prevTestDate}\",\"{DateTime.Now.ToShortDateString()}\"");
       }
 
-        // TODO: Implement file download using JS Interop
-        Console.WriteLine("CSV Export:");
-  Console.WriteLine(csv.ToString());
-    }
+  // Generate filename with timestamp
+     var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+      var fileName = $"RandomSelection_{selectedClient}_{timestamp}.csv";
 
-    private void ClearSelectionResults()
+      // Download using JavaScript interop
+       await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromText", 
+     csv.ToString(), 
+    fileName, 
+   "text/csv");
+   }
+        catch (Exception ex)
+{
+   errorMessage = $"Error exporting CSV: {ex.Message}";
+  Console.WriteLine(ex.ToString());
+ }
+    }
+        private void ClearSelectionResults()
     {
     selectedRandomCandidates = null;
     }

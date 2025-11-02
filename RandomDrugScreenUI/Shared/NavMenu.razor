@@ -1,33 +1,62 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Random Drug Screen</a>
+        <a class="navbar-brand" href="">Lab Outreach</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-   <span class="navbar-toggler-icon"></span>
-</button>
+     <span class="navbar-toggler-icon"></span>
+        </button>
     </div>
 </div>
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-       <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-     <span class="oi oi-home" aria-hidden="true"></span> Dashboard
-     </NavLink>
-    </div>
-        <div class="nav-item px-3">
- <NavLink class="nav-link" href="candidates">
-   <span class="oi oi-people" aria-hidden="true"></span> Manage Candidates
-    </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="import">
-    <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Import Candidates
-     </NavLink>
-        </div>
-  <div class="nav-item px-3">
-    <NavLink class="nav-link" href="reports">
-     <span class="oi oi-bar-chart" aria-hidden="true"></span> Reports
+         <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+      <span class="oi oi-home" aria-hidden="true"></span> Home
         </NavLink>
+        </div>
+
+<!-- Random Drug Screen Module -->
+      <div class="nav-item px-3 mt-3">
+            <div class="text-muted small px-3 py-2">
+          <strong>RANDOM DRUG SCREEN</strong>
+            </div>
+        </div>
+        <div class="nav-item px-3">
+       <NavLink class="nav-link" href="rds/dashboard">
+         <span class="oi oi-dashboard" aria-hidden="true"></span> RDS Dashboard
+         </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="candidates">
+       <span class="oi oi-people" aria-hidden="true"></span> Manage Candidates
+   </NavLink>
+        </div>
+        <div class="nav-item px-3">
+       <NavLink class="nav-link" href="import">
+       <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Import Candidates
+  </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="reports">
+   <span class="oi oi-bar-chart" aria-hidden="true"></span> Reports
+         </NavLink>
+        </div>
+
+    <!-- Client Viewer Module (Placeholder) -->
+        <div class="nav-item px-3 mt-3">
+            <div class="text-muted small px-3 py-2">
+      <strong>CLIENT VIEWER</strong>
+ </div>
+</div>
+        <div class="nav-item px-3">
+      <NavLink class="nav-link" href="clients">
+    <span class="oi oi-briefcase" aria-hidden="true"></span> Client List
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+ <NavLink class="nav-link" href="client-details">
+      <span class="oi oi-document" aria-hidden="true"></span> Client Details
+            </NavLink>
         </div>
     </nav>
 </div>
@@ -39,6 +68,6 @@
 
     private void ToggleNavMenu()
     {
-        collapseNavMenu = !collapseNavMenu;
+   collapseNavMenu = !collapseNavMenu;
     }
 }

@@ -1,6 +1,7 @@
 @page "/reports"
 @inject IRandomDrugScreenService RdsService
 @inject DictionaryService DictionaryService
+@inject IJSRuntime JSRuntime
 @inject LabBilling.Core.DataAccess.IAppEnvironment AppEnvironment
 @inject LabBilling.Core.UnitOfWork.IUnitOfWork UnitOfWork
 
@@ -325,45 +326,59 @@ Console.WriteLine(ex.ToString());
         };
     }
 
-    private void ExportToCsv()
+    private async Task ExportToCsv()
     {
-        if (reportData == null || !reportData.Any()) return;
+   if (reportData == null || !reportData.Any()) return;
 
-        var csv = new System.Text.StringBuilder();
-        
-        // Header
-  if (selectedReportType == "client-summary")
-      {
-   csv.AppendLine("Name,Shift,Last Test Date,Status");
-        }
-     else
+      try
  {
-         csv.AppendLine("Name,Shift,Client,Last Test Date" + 
-       (selectedReportType == "all-candidates" ? ",Status" : ""));
-        }
-
-        // Data
-        foreach (var candidate in reportData)
-     {
-       var testDate = candidate.TestDate.HasValue ? candidate.TestDate.Value.ToShortDateString() : "Never";
-     var status = candidate.IsDeleted ? "Deleted" : "Active";
-
-    if (selectedReportType == "client-summary")
-        {
-       csv.AppendLine($"\"{candidate.Name}\",\"{candidate.Shift}\",\"{testDate}\",\"{status}\"");
-            }
-   else if (selectedReportType == "all-candidates")
-    {
-       csv.AppendLine($"\"{candidate.Name}\",\"{candidate.Shift}\",\"{candidate.ClientMnemonic}\",\"{testDate}\",\"{status}\"");
+     var csv = new System.Text.StringBuilder();
+            
+ // Header
+ if (selectedReportType == "client-summary")
+            {
+    csv.AppendLine("Name,Shift,Last Test Date,Status");
+   }
+ else
+ {
+       csv.AppendLine("Name,Shift,Client,Last Test Date" + 
+      (selectedReportType == "all-candidates" ? ",Status" : ""));
           }
-         else
-   {
-    csv.AppendLine($"\"{candidate.Name}\",\"{candidate.Shift}\",\"{candidate.ClientMnemonic}\",\"{testDate}\"");
- }
-        }
 
- // TODO: Implement file download using JS Interop
- Console.WriteLine("CSV Export:");
-Console.WriteLine(csv.ToString());
+   // Data
+            foreach (var candidate in reportData)
+            {
+    var testDate = candidate.TestDate.HasValue ? candidate.TestDate.Value.ToShortDateString() : "Never";
+        var status = candidate.IsDeleted ? "Deleted" : "Active";
+
+                if (selectedReportType == "client-summary")
+       {
+     csv.AppendLine($"\"{candidate.Name}\",\"{candidate.Shift}\",\"{testDate}\",\"{status}\"");
+     }
+     else if (selectedReportType == "all-candidates")
+             {
+  csv.AppendLine($"\"{candidate.Name}\",\"{candidate.Shift}\",\"{candidate.ClientMnemonic}\",\"{testDate}\",\"{status}\"");
+   }
+     else
+           {
+     csv.AppendLine($"\"{candidate.Name}\",\"{candidate.Shift}\",\"{candidate.ClientMnemonic}\",\"{testDate}\"");
+           }
+  }
+
+ // Generate filename with timestamp
+          var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+   var fileName = $"{GetReportTitle().Replace(" ", "_").Replace("-", "")}_{timestamp}.csv";
+
+   // Download using JavaScript interop
+   await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromText", 
+      csv.ToString(), 
+     fileName, 
+     "text/csv");
+     }
+        catch (Exception ex)
+  {
+   errorMessage = $"Error exporting CSV: {ex.Message}";
+      Console.WriteLine(ex.ToString());
+        }
     }
 }
