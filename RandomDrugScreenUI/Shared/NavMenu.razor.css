@@ -9,6 +9,15 @@
 
 .navbar-brand {
     font-size: 1.1rem;
+    text-decoration: none;
+}
+
+.navbar-brand:hover {
+  color: white;
+}
+
+.navbar-brand img {
+    flex-shrink: 0;
 }
 
 .oi {

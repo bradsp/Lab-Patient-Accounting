@@ -12,24 +12,24 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
+      <div class="top-row px-4">
     <AuthorizeView>
-       <Authorized>
+     <Authorized>
    <div class="d-flex align-items-center gap-3">
      <span class="text-muted">
         <span class="oi oi-person"></span>
   @context.User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value
-        </span>
+ </span>
       <button class="btn btn-sm btn-outline-secondary" @onclick="HandleLogout">
          <span class="oi oi-account-logout"></span> Logout
      </button>
       </div>
-         </Authorized>
-                <NotAuthorized>
-   <a href="/login">Login</a>
+ </Authorized>
+ <NotAuthorized>
+ <a href="/login">Login</a>
     </NotAuthorized>
-            </AuthorizeView>
-        </div>
+    </AuthorizeView>
+     </div>
 
         <article class="content px-4">
             @Body
