@@ -391,3 +391,387 @@ The modern replacement should focus on:
 5. **Providing Flexibility**: Easy configuration and customization options
 
 By following these specifications, the new application will provide a solid foundation for laboratory form printing operations while positioning the organization for future technological advances.
+
+---
+
+## Form Layout Specifications for Blazor Implementation
+
+### Overview
+The legacy ADDRESS application prints to four distinct form types, each with specific positioning requirements. The application uses a file-based printing approach where content is formatted to temporary files and then sent to printers using raw printer commands. For Blazor implementation, these will be converted to HTML/CSS layouts with precise positioning.
+
+### 1. Requisition Forms Layout (OnPrintReqForm)
+
+#### Form Types Supported:
+- **CLIREQ** (Client Requisition Forms) - Form 0
+- **PTHREQ** (Path Requisition Forms) - Form 1  
+- **CYTREQ** (Cytology Requisition Forms) - Form 2
+- **3PLY** (3-Ply Tractor Forms) - Form 0
+
+#### Print Layout Structure:
+```css
+/* Form positioning starts 3 lines down from top */
+.requisition-form {
+    margin-top: 3em; /* Equivalent to "\n\n\n" */
+    font-family: 'Courier New', monospace; /* Fixed-width font for alignment */
+    font-size: 10pt;
+}
+
+.client-info {
+    margin-left: 50ch; /* 50 character spaces from left margin */
+    line-height: 1.2em;
+}
+```
+
+#### Data Fields Positioning:
+1. **Client Name**: 50 spaces from left margin
+   ```
+   Format: "%50.50s %s" (50 spaces + client name)
+   ```
+
+2. **Client Address**: 50 spaces from left margin
+   ```
+   Format: "%50.50s %s" (50 spaces + full address)
+   ```
+
+3. **City/State/ZIP**: 50 spaces from left margin
+   ```
+   Format: "%50.50s %s" (50 spaces + city_st_zip)
+   ```
+
+4. **Phone Number**: 50 spaces from left margin
+   ```
+   Format: "%50.50s %s" (50 spaces + phone)
+   ```
+
+5. **Fax Number**: 50 spaces from left margin with "FAX" prefix
+   ```
+   Format: "%50.50s FAX %s" (50 spaces + "FAX " + fax number)
+   ```
+
+6. **Client Mnemonic & Code**: 50 spaces from left margin
+   ```
+   Format: "%50.50s %s (%s)" (50 spaces + mnemonic + client_code)
+   With EMR: "%50.50s %s %s (%s)" (50 spaces + mnemonic + client_code + EMR_type)
+   ```
+
+#### Blazor Implementation:
+```html
+<div class="requisition-form">
+    <div class="client-info">
+        <div class="field-line">@($"{new string(' ', 50)} {ClientName}")</div>
+        <div class="field-line">@($"{new string(' ', 50)} {ClientAddress}")</div>
+        <div class="field-line">@($"{new string(' ', 50)} {CityStateZip}")</div>
+        <div class="field-line">@($"{new string(' ', 50)} {Phone}")</div>
+        <div class="field-line">@($"{new string(' ', 50)} FAX {Fax}")</div>
+        <div class="field-line">
+            @if (string.IsNullOrEmpty(EmrType))
+            {
+                @($"{new string(' ', 50)} {ClientMnemonic} ({ClientCode})")
+            }
+            else
+            {
+                @($"{new string(' ', 50)} {ClientMnemonic} {ClientCode} ({EmrType})")
+            }
+        </div>
+    </div>
+</div>
+```
+
+### 2. Chain of Custody Forms Layout (OnPrint_CUSTODY)
+
+#### Form Structure:
+The custody form has two main sections:
+1. **Client Information Section** (top of form)
+2. **Collection Site Information Section** (middle of form)
+3. **Footer Section** with "MCL Courier" (bottom)
+
+#### Print Layout Positioning:
+```css
+.custody-form {
+    margin-top: 6em; /* Equivalent to 6 newlines */
+    font-family: 'Courier New', monospace;
+    font-size: 10pt;
+}
+
+.client-section {
+    width: 100%;
+}
+
+.mro-section {
+    margin-top: 2em;
+}
+
+.collection-site {
+    margin-top: 10em; /* Large gap to collection site section */
+    margin-left: 3ch; /* 3 character indent */
+}
+
+.footer {
+    margin-top: 13em;
+    text-align: center;
+    margin-right: 60ch; /* Right-aligned with 60 char margin */
+}
+```
+
+#### Client Information Section:
+**When MRO is Empty:**
+```
+Line 1: Client Name (left-justified, 50 chars) + "X X X X NONE X X X X" (right side)
+Line 2: Address (left-justified, 50 chars) + "X X X X NONE X X X X" (right side)  
+Line 3: City/State/ZIP (left-justified, 50 chars) + "X X X X NONE X X X X" (right side)
+Line 4: Phone (20 chars) + Fax (30 chars) + "X X X X NONE X X X X" (50 chars)
+Line 5: Client Mnemonic + " (" + Client Code + ")"
+```
+
+**When MRO is Present:**
+```
+Line 1: Client Name (left-justified, 50 chars) + MRO Name (right side)
+Line 2: Address (left-justified, 50 chars) + MRO Address 1 (right side)
+Line 3: City/State/ZIP (left-justified, 50 chars) + MRO Address 2 (right side)  
+Line 4: Phone (20 chars) + Fax (30 chars) + MRO City/State/ZIP (50 chars)
+Line 5: Client Mnemonic + " (" + Client Code + ")"
+```
+
+#### Collection Site Section:
+**Alternative Site Mode:**
+- 10 newlines spacing (or 7 + DAP11 ZT if checked)
+- Name field: 3 spaces indent + 60 character field + 40 character phone field
+- Address line: 3 spaces indent + 20 char address + 15 char city + 2 char state + 9 char zip
+
+**Standard Client Location (when prn_loc = "Y"):**
+- Same formatting as alternative site but uses client data
+- Supports override with alternative site data if provided
+
+#### DAP11 ZT Notation:
+When DAP checkbox is enabled:
+```
+Position: 13 characters from left + "X" + 20 characters + "DAP11 ZT"
+Format: "%13.13s %20.25s\n" ("X", "DAP11 ZT")
+```
+
+#### Blazor Implementation:
+```html
+<div class="custody-form">
+    <!-- Client Information Section -->
+    <div class="client-section">
+        @if (string.IsNullOrEmpty(MroName))
+        {
+            <div class="client-line">@($"{ClientName,-50}{"X X X X NONE X X X X"}")</div>
+            <div class="client-line">@($"{ClientAddress,-50}{"X X X X NONE X X X X"}")</div>
+            <div class="client-line">@($"{CityStateZip,-50}{"X X X X NONE X X X X"}")</div>
+            <div class="client-line">@($"{Phone,-20}{FaxDisplay,-30}{"X X X X NONE X X X X",-50}")</div>
+        }
+        else
+        {
+            <div class="client-line">@($"{ClientName,-50}{MroName}")</div>
+            <div class="client-line">@($"{ClientAddress,-50}{MroAddress1}")</div>
+            <div class="client-line">@($"{CityStateZip,-50}{MroAddress2}")</div>
+            <div class="client-line">@($"{Phone,-20}{FaxDisplay,-30}{MroCityStateZip,-50}")</div>
+        }
+        <div class="client-line">@($"{ClientMnemonic} ({ClientCode})")</div>
+    </div>
+
+    <!-- Collection Site Section -->
+    <div class="collection-site">
+        @if (IsDapEnabled)
+        {
+            <div class="dap-notation">@($"{"X",13} {"DAP11 ZT",25}")</div>
+        }
+        
+        @if (UseAlternativeSite || (PrintLocation == "Y"))
+        {
+            <div class="site-name">@($"   {SiteName,-60} {SitePhone,-40}")</div>
+            <div class="site-address">@($"   {SiteAddress,-20} {SiteCity,-15} {SiteState,-2} {SiteZip,-9}")</div>
+        }
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">MCL Courier</div>
+</div>
+```
+
+### 3. Lab Office Forms Layout (OnBtnLabofficeForm)
+
+#### Form Structure:
+This form prints MCL contact information for toxicology lab forms.
+
+#### Print Layout:
+```css
+.lab-office-form {
+    margin-top: 20em; /* 20 newlines from top */
+    font-family: 'Courier New', monospace;
+    font-size: 10pt;
+}
+
+.lab-info {
+    margin-left: 3ch; /* 3 character indent */
+    line-height: 1.5em;
+}
+
+.lab-footer {
+    margin-top: 13em;
+    text-align: center;
+    margin-right: 60ch;
+}
+```
+
+#### Content Structure:
+```
+Line 1: "   MCL" + (right-aligned) "731 541 7990"
+Line 2: Empty line
+Line 3: "   620 Skyline Drive, JACKSON, TN 38301" + (right-aligned) "731 541 7992"  
+Line 4-16: Empty lines (13 newlines)
+Line 17: "TOX LAB" (right-aligned, 60 characters from right)
+```
+
+#### Blazor Implementation:
+```html
+<div class="lab-office-form">
+    <div class="lab-info">
+        <div class="lab-line">   MCL@(new string(' ', 50))731 541 7990</div>
+        <div class="lab-line"></div>
+        <div class="lab-line">   620 Skyline Drive, JACKSON, TN 38301@(new string(' ', 15))731 541 7992</div>
+    </div>
+    <div class="lab-footer">TOX LAB</div>
+</div>
+```
+
+### 4. ED Lab Forms Layout (OnButtonEdLab)
+
+#### Form Structure:
+Similar to Lab Office forms but with Emergency Department specific information.
+
+#### Print Layout:
+Same CSS structure as Lab Office forms.
+
+#### Content Structure:
+```
+Line 1: "   JMCGH - ED LAB" + (right-aligned) "731 541 4833"
+Line 2: Empty line  
+Line 3: "   620 Skyline Drive, JACKSON, TN 38301" + (spaces for fax - left blank per requirements)
+```
+
+#### Blazor Implementation:
+```html
+<div class="lab-office-form">
+    <div class="lab-info">
+        <div class="lab-line">   JMCGH - ED LAB@(new string(' ', 40))731 541 4833</div>
+        <div class="lab-line"></div>
+        <div class="lab-line">   620 Skyline Drive, JACKSON, TN 38301</div>
+    </div>
+</div>
+```
+
+### 5. CSS Framework for Blazor Implementation
+
+```css
+/* Base form styles */
+.form-container {
+    font-family: 'Courier New', monospace;
+    font-size: 10pt;
+    line-height: 1.2em;
+    white-space: pre;
+    background: white;
+    color: black;
+    padding: 1in;
+    width: 8.5in;
+    min-height: 11in;
+    box-sizing: border-box;
+}
+
+/* Print-specific styles */
+@media print {
+    .form-container {
+        margin: 0;
+        padding: 0.5in;
+        page-break-after: always;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+/* Character spacing utilities */
+.char-1 { margin-left: 1ch; }
+.char-3 { margin-left: 3ch; }
+.char-13 { margin-left: 13ch; }
+.char-20 { margin-left: 20ch; }
+.char-50 { margin-left: 50ch; }
+.char-60 { margin-left: 60ch; }
+
+/* Line spacing utilities */
+.line-1 { margin-top: 1em; }
+.line-2 { margin-top: 2em; }
+.line-3 { margin-top: 3em; }
+.line-6 { margin-top: 6em; }
+.line-7 { margin-top: 7em; }
+.line-10 { margin-top: 10em; }
+.line-13 { margin-top: 13em; }
+.line-20 { margin-top: 20em; }
+
+/* Field width utilities for text formatting */
+.w-2 { width: 2ch; }
+.w-9 { width: 9ch; }
+.w-15 { width: 15ch; }
+.w-20 { width: 20ch; }
+.w-25 { width: 25ch; }
+.w-30 { width: 30ch; }
+.w-40 { width: 40ch; }
+.w-50 { width: 50ch; }
+.w-60 { width: 60ch; }
+```
+
+### 6. Blazor Component Structure Recommendations
+
+#### FormPrintService.cs
+```csharp
+public class FormPrintService
+{
+    public async Task<string> GenerateRequisitionForm(ClientData client, int copies, string formType)
+    public async Task<string> GenerateCustodyForm(ClientData client, AlternativeSite altSite, bool includeDap, int copies)
+    public async Task<string> GenerateLabOfficeForm(int copies)
+    public async Task<string> GenerateEdLabForm(int copies)
+    
+    private string FormatWithSpacing(string text, int width, bool leftAlign = true)
+    private string GenerateSpaces(int count)
+}
+```
+
+#### Print Component Structure
+```razor
+@page "/print-forms"
+@inject FormPrintService PrintService
+
+<div class="print-container">
+    @if (ShowPreview)
+    {
+        <div class="form-preview">
+            @((MarkupString)GeneratedFormHtml)
+        </div>
+    }
+    
+    <div class="print-controls">
+        <button @onclick="PrintForm">Print</button>
+        <button @onclick="ShowPreview">Preview</button>
+    </div>
+</div>
+```
+
+This specification provides the exact positioning and formatting requirements needed to replicate the legacy form layouts in a modern Blazor Server application while maintaining compatibility with the existing pre-printed forms.
+
+---
+
+## Conclusion
+
+The legacy ADDRESS application serves a critical function in the laboratory workflow, and its replacement must maintain all current functionality while providing modern usability and maintainability. The specifications outlined in this document provide a roadmap for developing a robust, secure, and user-friendly replacement that will serve the organization's needs for the next decade and beyond.
+
+The modern replacement should focus on:
+1. **Maintaining Core Functionality**: All current printing capabilities must be preserved
+2. **Improving User Experience**: Modern interface with better usability
+3. **Enhancing Security**: Modern authentication and audit capabilities
+4. **Ensuring Scalability**: Architecture that can grow with organizational needs
+5. **Providing Flexibility**: Easy configuration and customization options
+
+By following these specifications, the new application will provide a solid foundation for laboratory form printing operations while positioning the organization for future technological advances.

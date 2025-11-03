@@ -1,0 +1,23 @@
+@* Lab Office Form Layout Component (TOX LAB) *@
+@* Legacy format: MCL info 20 lines down with footer *@
+
+<div class="form-container lab-office-form">
+    <div class="lab-info line-20">
+        @* Line 1: MCL with phone *@
+        <div class="lab-line">   MCL@(new string(' ', 50))731 541 7990</div>
+
+        @* Line 2: Empty *@
+        <div class="lab-line"></div>
+
+        @* Line 3: Address with fax *@
+        <div class="lab-line">   620 Skyline Drive, JACKSON, TN 38301@(new string(' ', 15))731 541 7992</div>
+    </div>
+
+    @* Footer *@
+    <div class="lab-footer line-13">TOX LAB</div>
+</div>
+
+@code {
+    [Parameter]
+    public int Copies { get; set; } = 1;
+}

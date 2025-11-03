@@ -1,0 +1,144 @@
+@using LabBilling.Core.Models
+
+@* Chain of Custody Form Layout Component *@
+@* Legacy format: Client info + MRO + Collection Site with precise spacing *@
+
+<div class="form-container custody-form">
+    @* Client Information Section - starts 6 lines down *@
+    <div class="client-section line-6">
+        @if (!HasMro)
+        {
+            @* No MRO - use "X X X X NONE X X X X" on right side *@
+            var noneMarker = "X X X X NONE X X X X";
+            <div class="client-line">@FormatDualColumn(Client?.Name ?? "", noneMarker)</div>
+            <div class="client-line">@FormatDualColumn(BuildFullAddress(), noneMarker)</div>
+            <div class="client-line">@FormatDualColumn(BuildCityStateZip(), noneMarker)</div>
+            <div class="client-line">@FormatDualColumn(BuildPhoneFax(), noneMarker)</div>
+        }
+        else
+        {
+            @* With MRO information *@
+            <div class="client-line">@FormatDualColumn(Client?.Name ?? "", Client?.MroName ?? "")</div>
+            <div class="client-line">@FormatDualColumn(BuildFullAddress(), Client?.MroStreetAddress1 ?? "")</div>
+            <div class="client-line">@FormatDualColumn(BuildCityStateZip(), Client?.MroStreetAddress2 ?? "")</div>
+            <div class="client-line">@FormatDualColumn(BuildPhoneFax(), BuildMroCityStateZip())</div>
+        }
+
+        @* Client Mnemonic line *@
+        <div class="client-line">@($"{Client?.ClientMnem ?? ""} ({Client?.FacilityNo ?? ""})")</div>
+    </div>
+
+    @* Collection Site Section *@
+    <div class="collection-site @(IncludeDap ? "line-7" : "line-10")">
+        @if (IncludeDap)
+        {
+            <div class="dap-notation">@FormatDapNotation()</div>
+        }
+
+        @if (UseCollectionSite)
+        {
+            var siteName = AlternativeSite?.Name ?? Client?.Name ?? "";
+            var sitePhone = AlternativeSite?.Phone ?? Client?.Phone ?? "";
+            <div class="site-name">   @($"{siteName,-60} {sitePhone,-40}")</div>
+
+            var siteAddress = AlternativeSite?.Address ?? Client?.StreetAddress1 ?? "";
+            var siteCity = AlternativeSite?.City ?? Client?.City ?? "";
+            var siteState = AlternativeSite?.State ?? Client?.State ?? "";
+            var siteZip = AlternativeSite?.Zip ?? Client?.ZipCode ?? "";
+            <div class="site-address">   @($"{siteAddress,-20} {siteCity,-15} {siteState,-2} {siteZip,-9}")</div>
+        }
+    </div>
+
+    @* Footer - MCL Courier *@
+    <div class="footer line-13">MCL Courier</div>
+</div>
+
+@code {
+    [Parameter]
+    public Client? Client { get; set; }
+
+    [Parameter]
+    public AlternativeSiteData? AlternativeSite { get; set; }
+
+    [Parameter]
+    public bool IncludeDap { get; set; }
+
+    public class AlternativeSiteData
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public string City { get; set; } = string.Empty;
+        public string State { get; set; } = string.Empty;
+        public string Zip { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+    }
+
+    private bool HasMro => !string.IsNullOrWhiteSpace(Client?.MroName);
+    private bool UseCollectionSite => AlternativeSite != null || Client?.prn_loc == "Y";
+
+    private string FormatDualColumn(string leftText, string rightText)
+    {
+        return $"{leftText,-50}{rightText}";
+    }
+
+    private string BuildFullAddress()
+    {
+        if (Client == null) return "";
+
+        var addr1 = Client.StreetAddress1?.Trim() ?? "";
+        var addr2 = Client.StreetAddress2?.Trim() ?? "";
+
+        if (string.IsNullOrWhiteSpace(addr1) && string.IsNullOrWhiteSpace(addr2))
+            return "";
+
+        if (string.IsNullOrWhiteSpace(addr2))
+            return addr1;
+
+        if (string.IsNullOrWhiteSpace(addr1))
+            return addr2;
+
+        return $"{addr1} {addr2}";
+    }
+
+    private string BuildCityStateZip()
+    {
+        if (Client == null) return "";
+
+        var parts = new[] {
+  Client.City?.Trim(),
+            Client.State?.Trim(),
+        Client.ZipCode?.Trim()
+        }.Where(p => !string.IsNullOrWhiteSpace(p));
+
+        return string.Join(" ", parts);
+    }
+
+    private string BuildMroCityStateZip()
+    {
+        if (Client == null) return "";
+
+        var parts = new[] {
+Client.MroCity?.Trim(),
+Client.MroState?.Trim(),
+   Client.MroZipCode?.Trim()
+        }.Where(p => !string.IsNullOrWhiteSpace(p));
+
+        return string.Join(" ", parts);
+    }
+
+    private string BuildPhoneFax()
+    {
+        if (Client == null) return "";
+
+        var phone = Client.Phone ?? "";
+        var fax = !string.IsNullOrWhiteSpace(Client.Fax) ? $"FAX {Client.Fax}" : "";
+
+        return $"{phone,-20}{fax,-30}";
+    }
+
+    private string FormatDapNotation()
+    {
+        // 13 characters from left + "X" + 20 characters + "DAP11 ZT"
+        return $"{new string(' ', 13)}X{new string(' ', 20)}DAP11 ZT";
+    }
+}

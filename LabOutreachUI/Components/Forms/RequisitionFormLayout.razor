@@ -1,0 +1,95 @@
+@using LabBilling.Core.Models
+
+@* Requisition Form Layout Component (CLIREQ, PTHREQ, CYTREQ) *@
+@* Legacy format: 3 lines from top, 50 character left margin *@
+
+<div class="form-container requisition-form">
+    <div class="client-info line-3">
+        @* Client Name - 50 spaces from left *@
+        <div class="field-line">@FormatLine(Client?.Name ?? "", 50)</div>
+
+        @* Full Address - 50 spaces from left *@
+        <div class="field-line">@FormatLine(BuildFullAddress(), 50)</div>
+
+        @* City/State/ZIP - 50 spaces from left *@
+        <div class="field-line">@FormatLine(BuildCityStateZip(), 50)</div>
+
+        @* Phone - 50 spaces from left *@
+        @if (!string.IsNullOrWhiteSpace(Client?.Phone))
+        {
+            <div class="field-line">@FormatLine(Client.Phone, 50)</div>
+        }
+
+        @* Fax with FAX prefix - 50 spaces from left *@
+        @if (!string.IsNullOrWhiteSpace(Client?.Fax))
+        {
+            <div class="field-line">@FormatLine($"FAX {Client.Fax}", 50)</div>
+        }
+
+        @* Client Mnemonic and Code with optional EMR *@
+        <div class="field-line">@FormatLine(BuildMnemonicLine(), 50)</div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Client? Client { get; set; }
+
+    [Parameter]
+    public string FormType { get; set; } = "CLIREQ";
+
+    private string FormatLine(string text, int leftSpaces)
+    {
+        return $"{new string(' ', leftSpaces)}{text}";
+    }
+
+    private string BuildFullAddress()
+    {
+        if (Client == null) return "";
+
+        var addr1 = Client.StreetAddress1?.Trim() ?? "";
+        var addr2 = Client.StreetAddress2?.Trim() ?? "";
+
+        if (string.IsNullOrWhiteSpace(addr1) && string.IsNullOrWhiteSpace(addr2))
+            return "";
+
+        if (string.IsNullOrWhiteSpace(addr2))
+            return addr1;
+
+        if (string.IsNullOrWhiteSpace(addr1))
+            return addr2;
+
+        return $"{addr1} {addr2}";
+    }
+
+    private string BuildCityStateZip()
+    {
+        if (Client == null) return "";
+
+        var parts = new[] {
+            Client.City?.Trim(),
+ Client.State?.Trim(),
+     Client.ZipCode?.Trim()
+    }.Where(p => !string.IsNullOrWhiteSpace(p));
+
+        return string.Join(" ", parts);
+    }
+
+    private string BuildMnemonicLine()
+    {
+        if (Client == null) return "";
+
+        var mnem = Client.ClientMnem ?? "";
+        var code = Client.FacilityNo ?? "";
+        var emr = Client.ElectronicBillingType ?? "";
+
+        if (string.IsNullOrWhiteSpace(emr))
+        {
+            return $"{mnem} ({code})";
+        }
+        else
+        {
+            return $"{mnem} {code} ({emr})";
+        }
+    }
+}

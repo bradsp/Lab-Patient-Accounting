@@ -3,7 +3,6 @@ using LabBilling.Core.Services;
 using LabBilling.Core.UnitOfWork;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using LabOutreachUI.Authentication;
 using LabOutreachUI.Services;
@@ -12,6 +11,7 @@ using LabOutreachUI.Authorization;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using NLog;
 using NLog.Web;
 
@@ -31,15 +31,35 @@ try
 
     logger.Info("Configuring IIS Integration");
 
-    // Configure IIS Integration and Windows Authentication
-    builder.Services.Configure<IISOptions>(options =>
-    {
-        options.AutomaticAuthentication = true;
-        options.AuthenticationDisplayName = "Windows";
-    });
+    // Check if we should use Windows Authentication (Production) or Development Authentication
+    var useWindowsAuth = builder.Configuration.GetValue<bool>("AppSettings:UseWindowsAuthentication", true);
+    var isDevelopment = builder.Environment.IsDevelopment();
 
-    // Add authentication - use default scheme, IIS will handle Windows auth
-    builder.Services.AddAuthentication(IISDefaults.AuthenticationScheme);
+    logger.Info($"Environment: {builder.Environment.EnvironmentName}, UseWindowsAuth: {useWindowsAuth}");
+    if (useWindowsAuth && !isDevelopment)
+    {
+        // Production mode with Windows Authentication
+        logger.Info("Configuring Windows Authentication for Production");
+
+        // Configure IIS Integration and Windows Authentication
+        builder.Services.Configure<IISOptions>(options =>
+        {
+            options.AutomaticAuthentication = true;
+            options.AuthenticationDisplayName = "Windows";
+        });
+
+        // Add authentication - use IIS default scheme
+        builder.Services.AddAuthentication(IISDefaults.AuthenticationScheme);
+    }
+    else
+    {
+        // Development mode with simulated authentication
+        logger.Info("Configuring Development Authentication");
+
+        builder.Services.AddAuthentication("Development")
+            .AddScheme<AuthenticationSchemeOptions, DevelopmentAuthenticationHandler>(
+           "Development", options => { });
+    }
 
     // Add authorization services with database user policy
     builder.Services.AddAuthorization(options =>
@@ -148,6 +168,8 @@ try
     // Register services
     builder.Services.AddScoped<IRandomDrugScreenService, RandomDrugScreenService>();
     builder.Services.AddScoped<DictionaryService>();
+    builder.Services.AddScoped<RequisitionPrintingService>();
+    builder.Services.AddScoped<FormPrintService>();
     builder.Services.AddScoped<IUnitOfWork>(sp =>
     {
         var appEnv = sp.GetRequiredService<IAppEnvironment>();
