@@ -7,7 +7,11 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using LabOutreachUI.Authentication;
 using LabOutreachUI.Services;
+using LabOutreachUI.Middleware;
+using LabOutreachUI.Authorization;
 using Microsoft.AspNetCore.Components.Server.Circuits;
+using Microsoft.AspNetCore.Server.IISIntegration;
+using Microsoft.AspNetCore.Authorization;
 using NLog;
 using NLog.Web;
 
@@ -19,23 +23,54 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    logger.Info("Starting application configuration");
+
     // Add NLog for logging
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
 
+    logger.Info("Configuring IIS Integration");
+
+    // Configure IIS Integration and Windows Authentication
+    builder.Services.Configure<IISOptions>(options =>
+    {
+        options.AutomaticAuthentication = true;
+        options.AuthenticationDisplayName = "Windows";
+    });
+
+    // Add authentication - use default scheme, IIS will handle Windows auth
+    builder.Services.AddAuthentication(IISDefaults.AuthenticationScheme);
+
+    // Add authorization services with database user policy
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("DatabaseUser", policy =>
+           policy.Requirements.Add(new DatabaseUserRequirement()));
+
+        // Set as fallback policy - all pages require DatabaseUser by default
+        options.FallbackPolicy = new AuthorizationPolicyBuilder()
+         .RequireAuthenticatedUser()
+       .AddRequirements(new DatabaseUserRequirement())
+        .Build();
+    });
+
+    // Register the authorization handler
+    builder.Services.AddScoped<IAuthorizationHandler, DatabaseUserAuthorizationHandler>();
+
+    logger.Info("Adding Razor Pages and Blazor services");
+
     // Add services to the container.
     builder.Services.AddRazorPages();
-    builder.Services.AddServerSideBlazor();
+    builder.Services.AddServerSideBlazor(options =>
+    {
+        options.DetailedErrors = true; // Enable for debugging
+    });
 
     // Add HttpContextAccessor for accessing Windows Authentication context
     builder.Services.AddHttpContextAccessor();
 
-    // Register the UserCircuitHandler - MUST be scoped as CircuitHandler only
-    builder.Services.AddScoped<CircuitHandler>(sp =>
-    {
-        var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-        return new UserCircuitHandler(httpContextAccessor);
-    });
+    // DO NOT register custom authentication provider - use built-in
+    // The middleware will handle Windows user validation
 
     // Configure HSTS options for production
     builder.Services.AddHsts(options =>
@@ -44,13 +79,6 @@ try
         options.IncludeSubDomains = true;
         options.MaxAge = TimeSpan.FromDays(365);
     });
-
-    // Add authentication services
-    builder.Services.AddAuthenticationCore();
-    builder.Services.AddScoped<ProtectedSessionStorage>();
-    builder.Services.AddScoped<CustomAuthenticationStateProvider>();
-    builder.Services.AddScoped<AuthenticationStateProvider>(provider =>
-        provider.GetRequiredService<CustomAuthenticationStateProvider>());
 
     // Configure AppEnvironment as SCOPED (per-request) to use the actual authenticated user
     builder.Services.AddScoped<IAppEnvironment>(sp =>
@@ -135,7 +163,7 @@ try
         app.UseHsts();
     }
 
-    // Enforce HTTPS redirection
+    // Enable HTTPS redirection - IIS binding should be configured
     app.UseHttpsRedirection();
 
     app.UseStaticFiles();
@@ -144,8 +172,16 @@ try
 
     // Add authentication middleware
     app.UseAuthentication();
+  
+    // Add custom middleware to validate Windows user against database
+    app.UseWindowsAuthenticationMiddleware();
+    
+    // Add status code pages to handle 403 (Forbidden)
+    app.UseStatusCodePagesWithReExecute("/AccessDeniedPage");
+    
     app.UseAuthorization();
 
+    // Map Blazor Hub - authorization handled by fallback policy
     app.MapBlazorHub();
     app.MapFallbackToPage("/_Host");
 

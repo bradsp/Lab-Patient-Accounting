@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Components.Server.Circuits;
+using Microsoft.AspNetCore.Components;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using LabOutreachUI.Services;
@@ -22,6 +23,7 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     private readonly ProtectedSessionStorage _sessionStorage;
     private readonly IServiceProvider _serviceProvider;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly PersistentComponentState _applicationState;
     private readonly ILogger<CustomAuthenticationStateProvider> _logger;
     private ClaimsPrincipal _anonymous = new(new ClaimsIdentity());
     private Task<AuthenticationState>? _authenticationStateTask;
@@ -31,11 +33,13 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         ProtectedSessionStorage sessionStorage,
         IServiceProvider serviceProvider,
         IHttpContextAccessor httpContextAccessor,
+        PersistentComponentState applicationState,
         ILogger<CustomAuthenticationStateProvider> logger)
     {
         _sessionStorage = sessionStorage;
         _serviceProvider = serviceProvider;
         _httpContextAccessor = httpContextAccessor;
+        _applicationState = applicationState;
         _logger = logger;
     }
 
@@ -79,28 +83,38 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
                 }
             }
 
-            // Try to get Windows user from HttpContext or UserCircuitHandler
+            // Try to get Windows user from various sources
             string? windowsUsername = null;
 
-            // First attempt: HttpContext (available during initial connection)
-            if (_httpContextAccessor.HttpContext?.User?.Identity?.Name != null)
+            // Source 1: Try to get from PersistentComponentState (captured during initial HTTP request)
+            if (_applicationState.TryTakeFromJson<string>("WindowsUsername", out var persistedUsername))
+            {
+                windowsUsername = persistedUsername;
+                _logger.LogInformation("Windows user from PersistentComponentState: {UserName}", windowsUsername);
+            }
+
+            // Source 2: HttpContext (available during initial connection)
+            if (string.IsNullOrEmpty(windowsUsername) && _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == true)
             {
                 windowsUsername = _httpContextAccessor.HttpContext.User.Identity.Name;
                 _logger.LogInformation("Windows user from HttpContext: {UserName}", windowsUsername);
             }
-            else
+   
+            // Source 3: Try to get from UserCircuitHandler (after circuit is established)
+            if (string.IsNullOrEmpty(windowsUsername))
             {
-                // Second attempt: Try to get from UserCircuitHandler (after circuit is established)
                 try
                 {
-                    var circuitHandler = _serviceProvider.GetServices<CircuitHandler>()
-       .OfType<UserCircuitHandler>()
-           .FirstOrDefault();
+                    var circuitHandler = _serviceProvider.GetService<UserCircuitHandler>();
 
                     if (circuitHandler?.WindowsUsername != null)
                     {
                         windowsUsername = circuitHandler.WindowsUsername;
                         _logger.LogInformation("Windows user from CircuitHandler: {UserName}", windowsUsername);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("CircuitHandler found but no Windows username available");
                     }
                 }
                 catch (Exception ex)
@@ -137,20 +151,22 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
                     var identity = new ClaimsIdentity(claims, "Windows");
                     var claimsPrincipal = new ClaimsPrincipal(identity);
 
+                    // Cache the authentication state
+                    var authState = new AuthenticationState(claimsPrincipal);
+                    _authenticationStateTask = Task.FromResult(authState);
+                    _hasAttemptedAuth = true;
+
                     // Save to session storage for subsequent requests
                     try
                     {
                         await _sessionStorage.SetAsync("UserSession", userSession);
                         _logger.LogInformation("Session saved for {UserName}", user.UserName);
-                        _hasAttemptedAuth = true;
                     }
                     catch (InvalidOperationException ex)
                     {
-                        _logger.LogDebug(ex, "Could not save session (pre-render phase)");
-                    }
+                        _logger.LogDebug(ex, "Could not save session (JavaScript not available yet)");
+ }
 
-                    var authState = new AuthenticationState(claimsPrincipal);
-                    _authenticationStateTask = Task.FromResult(authState);
                     return authState;
                 }
                 else
@@ -160,7 +176,7 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
             }
             else
             {
-                _logger.LogWarning("No Windows user available from HttpContext or CircuitHandler");
+                _logger.LogWarning("No Windows user available from any source");
             }
         }
         catch (Exception ex)

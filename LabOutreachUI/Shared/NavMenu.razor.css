@@ -21,8 +21,8 @@
 }
 
 .oi {
-    width: 2rem;
-    font-size: 1.1rem;
+ width: 2rem;
+ font-size: 1.1rem;
     vertical-align: text-top;
     top: -2px;
 }
@@ -37,7 +37,7 @@
     }
 
     .nav-item:last-of-type {
-        padding-bottom: 1rem;
+     padding-bottom: 1rem;
     }
 
     .nav-item ::deep a {
@@ -46,7 +46,7 @@
         height: 3rem;
         display: flex;
         align-items: center;
-        line-height: 3rem;
+      line-height: 3rem;
     }
 
 .nav-item ::deep a.active {
@@ -61,16 +61,16 @@
 
 @media (min-width: 641px) {
     .navbar-toggler {
-        display: none;
+     display: none;
     }
 
     .collapse {
         /* Never collapse the sidebar for wide screens */
-        display: block;
+        display: block !important;
     }
     
     .nav-scrollable {
-        /* Allow sidebar to scroll for tall menus */
+    /* Allow sidebar to scroll for tall menus */
         height: calc(100vh - 3.5rem);
         overflow-y: auto;
     }
