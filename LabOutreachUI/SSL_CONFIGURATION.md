@@ -1,7 +1,7 @@
 # SSL/HTTPS Configuration Guide
 
 ## Overview
-The RandomDrugScreenUI application is now configured to use HTTPS/SSL to ensure secure communication when handling patient information (PHI). This is required for HIPAA compliance.
+The LabOutreachUI application is now configured to use HTTPS/SSL to ensure secure communication when handling patient information (PHI). This is required for HIPAA compliance.
 
 ## Development Environment
 

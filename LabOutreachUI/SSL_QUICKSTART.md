@@ -17,7 +17,7 @@ In Visual Studio:
 
 Or from command line:
 ```bash
-cd RandomDrugScreenUI
+cd LabOutreachUI
 dotnet run --launch-profile https
 ```
 

@@ -25,7 +25,7 @@ This document outlines the plan for implementing the Random Drug Screen function
    - Async methods provided alongside synchronous versions
 
 4. **Blazor Server Project Structure**:
-   - Already set up in `RandomDrugScreenUI` project
+   - Already set up in `LabOutreachUI` project
    - Basic scaffolding with Program.cs, App.razor, _Imports.razor
 
 ## Implementation Components
@@ -98,7 +98,7 @@ public class RandomDrugScreenPersonRepository : RepositoryBase<RandomDrugScreenP
 }
 ```
 
-### 2. Blazor UI Components (RandomDrugScreenUI)
+### 2. Blazor UI Components (LabOutreachUI)
 
 #### 2.1 Configuration Updates
 
@@ -163,7 +163,7 @@ var app = builder.Build();
 #### 2.2 Page Components
 
 ##### 2.2.1 Index/Home Page
-**Location**: `RandomDrugScreenUI\Pages\Index.razor`
+**Location**: `LabOutreachUI\Pages\Index.razor`
 
 **Features**:
 - Dashboard overview
@@ -172,7 +172,7 @@ var app = builder.Build();
 - Client statistics
 
 ##### 2.2.2 Candidate Management Page
-**Location**: `RandomDrugScreenUI\Pages\CandidateManagement.razor`
+**Location**: `LabOutreachUI\Pages\CandidateManagement.razor`
 
 **Features**:
 - Client dropdown selector (populated from DictionaryService)
@@ -191,7 +191,7 @@ var app = builder.Build();
 - Confirmation dialogs
 
 ##### 2.2.3 Random Selection Page
-**Location**: `RandomDrugScreenUI\Pages\RandomSelection.razor`
+**Location**: `LabOutreachUI\Pages\RandomSelection.razor`
 
 **Features**:
 - Client selection dropdown
@@ -211,7 +211,7 @@ var app = builder.Build();
 - Client must be selected
 
 ##### 2.2.4 Import Candidates Page
-**Location**: `RandomDrugScreenUI\Pages\ImportCandidates.razor`
+**Location**: `LabOutreachUI\Pages\ImportCandidates.razor`
 
 **Features**:
 - Client selection
@@ -228,7 +228,7 @@ var app = builder.Build();
 - Tab-delimited text files
 
 ##### 2.2.5 Reporting Page
-**Location**: `RandomDrugScreenUI\Pages\Reports.razor`
+**Location**: `LabOutreachUI\Pages\Reports.razor`
 
 **Features**:
 - Report type selector:
@@ -245,7 +245,7 @@ var app = builder.Build();
 #### 2.3 Shared Components
 
 ##### Navigation Menu
-**Location**: `RandomDrugScreenUI\Shared\NavMenu.razor`
+**Location**: `LabOutreachUI\Shared\NavMenu.razor`
 
 Update to include:
 - Dashboard
@@ -256,7 +256,7 @@ Update to include:
 - Settings (if needed)
 
 ##### MainLayout
-**Location**: `RandomDrugScreenUI\Shared\MainLayout.razor`
+**Location**: `LabOutreachUI\Shared\MainLayout.razor`
 
 - Standard layout with navigation sidebar
 - Header with application title
@@ -265,7 +265,7 @@ Update to include:
 ### 3. Data Models & DTOs
 
 #### 3.1 View Models (if needed)
-**Location**: `RandomDrugScreenUI\Models\`
+**Location**: `LabOutreachUI\Models\`
 
 ```csharp
 public class CandidateViewModel

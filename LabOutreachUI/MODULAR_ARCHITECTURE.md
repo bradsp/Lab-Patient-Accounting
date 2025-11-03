@@ -52,7 +52,7 @@ The home page now serves as a module selector showing:
 ### 5. File Structure
 
 ```
-RandomDrugScreenUI/
+LabOutreachUI/
 ??? Pages/
 ?   ??? Index.razor (Home/Module Selector)
 ?   ??? RDS/

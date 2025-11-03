@@ -6,7 +6,7 @@ Added comprehensive reporting functionality to the Candidate Management page wit
 ## Components Created
 
 ### ReportsPanel.razor
-Location: `RandomDrugScreenUI/Components/RandomDrugScreen/ReportsPanel.razor`
+Location: `LabOutreachUI/Components/RandomDrugScreen/ReportsPanel.razor`
 
 **Features:**
 - Collapsible panel design consistent with existing UI
@@ -139,7 +139,7 @@ private ReportsPanel.ClientSummaryStats summaryStats = new();
 
 ## File Structure
 ```
-RandomDrugScreenUI/
+LabOutreachUI/
 ??? Components/
 ?   ??? RandomDrugScreen/
 ?       ??? ClientSelectionPanel.razor

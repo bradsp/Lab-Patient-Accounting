@@ -214,7 +214,7 @@ Complete documentation available in:
 
 **Using CsvHelper utility:**
 ```csharp
-using RandomDrugScreenUI.Utilities;
+using LabOutreachUI.Utilities;
 
 // Simple escaping
 var field = CsvHelper.EscapeField("Smith, John");

@@ -84,7 +84,7 @@ User access is controlled through the `emp` table with the following fields:
 ## Application Components
 
 ### 1. CustomAuthenticationStateProvider
-Location: `RandomDrugScreenUI/Authentication/CustomAuthenticationStateProvider.cs`
+Location: `LabOutreachUI/Authentication/CustomAuthenticationStateProvider.cs`
 
 **Responsibilities:**
 - Manages authentication state for Blazor
@@ -99,7 +99,7 @@ Location: `RandomDrugScreenUI/Authentication/CustomAuthenticationStateProvider.c
 - `GetCurrentUser()` - Retrieves current authenticated user
 
 ### 2. Login Page
-Location: `RandomDrugScreenUI/Pages/Login.razor`
+Location: `LabOutreachUI/Pages/Login.razor`
 
 A standard login form with:
 - Username and password fields
@@ -109,7 +109,7 @@ A standard login form with:
 - Return URL support for deep linking
 
 ### 3. AuthenticationWrapper
-Location: `RandomDrugScreenUI/Shared/AuthenticationWrapper.razor`
+Location: `LabOutreachUI/Shared/AuthenticationWrapper.razor`
 
 **Responsibilities:**
 - Checks authentication on app startup
@@ -118,7 +118,7 @@ Location: `RandomDrugScreenUI/Shared/AuthenticationWrapper.razor`
 - Shows loading indicator during auth check
 
 ### 4. Updated MainLayout
-Location: `RandomDrugScreenUI/Shared/MainLayout.razor`
+Location: `LabOutreachUI/Shared/MainLayout.razor`
 
 **Additions:**
 - Displays current user's name

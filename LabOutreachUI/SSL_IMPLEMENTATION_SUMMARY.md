@@ -1,7 +1,7 @@
 # SSL/HTTPS Implementation Summary
 
 ## Overview
-Successfully configured SSL/HTTPS support for the RandomDrugScreenUI Blazor application to ensure secure handling of Protected Health Information (PHI) in compliance with HIPAA requirements.
+Successfully configured SSL/HTTPS support for the LabOutreachUI Blazor application to ensure secure handling of Protected Health Information (PHI) in compliance with HIPAA requirements.
 
 ## Changes Made
 
@@ -173,7 +173,7 @@ Expected output: `A valid HTTPS certificate is already present.`
 
 #### Step 3: Run Application
 ```bash
-cd RandomDrugScreenUI
+cd LabOutreachUI
 dotnet run --launch-profile https
 ```
 
@@ -226,7 +226,7 @@ Or in Visual Studio:
 
 3. **Configure Site Binding**
    ```
-   - Site: RandomDrugScreenUI
+   - Site: LabOutreachUI
    - Type: https
    - IP Address: All Unassigned
    - Port: 443
@@ -530,15 +530,15 @@ Document these items:
 
 ## Files Modified
 
-1. ? `RandomDrugScreenUI/Program.cs`
-2. ? `RandomDrugScreenUI/Properties/launchSettings.json`
-3. ? `RandomDrugScreenUI/appsettings.json`
-4. ? `RandomDrugScreenUI/appsettings.Production.json`
+1. ? `LabOutreachUI/Program.cs`
+2. ? `LabOutreachUI/Properties/launchSettings.json`
+3. ? `LabOutreachUI/appsettings.json`
+4. ? `LabOutreachUI/appsettings.Production.json`
 
 ## Files Created
 
-1. ? `RandomDrugScreenUI/SSL_CONFIGURATION.md`
-2. ? `RandomDrugScreenUI/SSL_IMPLEMENTATION_SUMMARY.md`
+1. ? `LabOutreachUI/SSL_CONFIGURATION.md`
+2. ? `LabOutreachUI/SSL_IMPLEMENTATION_SUMMARY.md`
 
 ## Support Resources
 

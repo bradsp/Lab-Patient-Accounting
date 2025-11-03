@@ -6,7 +6,7 @@ A reusable, searchable autocomplete component has been implemented to replace st
 ## Component: `AutocompleteInput<TItem>`
 
 ### Location
-`RandomDrugScreenUI\Shared\AutocompleteInput.razor`
+`LabOutreachUI\Shared\AutocompleteInput.razor`
 
 ### Features
 - ? **Generic Component**: Works with any data type
@@ -112,7 +112,7 @@ This means users can search by:
 ## Styling
 
 ### CSS File
-`RandomDrugScreenUI\Shared\AutocompleteInput.razor.css`
+`LabOutreachUI\Shared\AutocompleteInput.razor.css`
 
 ### Key Styles
 - **Dropdown positioning**: Absolute positioning below input

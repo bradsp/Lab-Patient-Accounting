@@ -96,11 +96,11 @@ CLIENT VIEWER MODULE
 ## File Structure
 
 ```
-RandomDrugScreenUI/Pages/Clients/
+LabOutreachUI/Pages/Clients/
 ??? ClientList.razor        - Single-page client viewer with search and details
 ??? RequisitionForms.razor  - Placeholder for requisition forms
 
-RandomDrugScreenUI/Shared/
+LabOutreachUI/Shared/
 ??? AutocompleteInput.razor - Shared autocomplete component
 ```
 

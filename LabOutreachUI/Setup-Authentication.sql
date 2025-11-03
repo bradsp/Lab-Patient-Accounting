@@ -160,7 +160,7 @@ WHERE name = 'username';
 -- ============================================================================
 -- Use this C# code to generate password hashes:
 /*
-using RandomDrugScreenUI.Utilities;
+using LabOutreachUI.Utilities;
 
 var password = "mypassword123";
 var hash = PasswordHasher.HashPassword(password);
