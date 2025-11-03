@@ -1,0 +1,117 @@
+@page "/requisition-forms/{ClientMnem}"
+@inject NavigationManager NavigationManager
+
+<PageTitle>Requisition Forms - @ClientMnem</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/clients">Client Viewer</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Requisition Forms</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Requisition Forms</h1>
+        <p class="lead text-muted">
+            <span class="badge bg-primary">@ClientMnem</span>
+        </p>
+    </div>
+    <div>
+        <a href="/clients" class="btn btn-outline-secondary">
+            <span class="oi oi-arrow-left"></span> Back to Client Viewer
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <span class="oi oi-document"></span> Test Requisition Forms
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h4 class="alert-heading"><span class="oi oi-info"></span> Feature Under Development</h4>
+                    <p>
+                        The Requisition Forms management module is currently under development. This feature will allow you to:
+                    </p>
+                    <ul>
+                        <li>View all available test requisition forms for this client</li>
+                        <li>Download printable PDF versions of requisition forms</li>
+                        <li>Manage custom requisition forms specific to client needs</li>
+                        <li>Track form versions and updates</li>
+                        <li>Generate QR codes for digital requisition submission</li>
+                        <li>Configure form fields and test panels</li>
+                    </ul>
+                    <hr>
+                    <p class="mb-0">
+                        <strong>Expected Release:</strong> TBD |
+                        <strong>Status:</strong> In Planning
+                    </p>
+                </div>
+
+                <div class="text-center mt-4 mb-4">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'%3E%3C/path%3E%3Cpolyline points='14 2 14 8 20 8'%3E%3C/polyline%3E%3Cline x1='16' y1='13' x2='8' y2='13'%3E%3C/line%3E%3Cline x1='16' y1='17' x2='8' y2='17'%3E%3C/line%3E%3Cpolyline points='10 9 9 9 8 9'%3E%3C/polyline%3E%3C/svg%3E"
+                         alt="Document icon"
+                         class="mb-3" />
+                    <p class="text-muted">Requisition form management will appear here</p>
+                </div>
+
+                <!-- Preview of Planned Features -->
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <span class="oi oi-document display-4 text-primary"></span>
+                                <h5 class="card-title mt-3">Form Library</h5>
+                                <p class="card-text text-muted">
+                                    Access all available requisition forms
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <span class="oi oi-cloud-download display-4 text-success"></span>
+                                <h5 class="card-title mt-3">PDF Download</h5>
+                                <p class="card-text text-muted">
+                                    Download printable PDF forms
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <span class="oi oi-wrench display-4 text-info"></span>
+                                <h5 class="card-title mt-3">Custom Forms</h5>
+                                <p class="card-text text-muted">
+                                    Create client-specific forms
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <a href="/clients" class="btn btn-secondary">
+                        <span class="oi oi-arrow-left"></span> Back to Client Viewer
+                    </a>
+                    <a href="/" class="btn btn-outline-primary">
+                        <span class="oi oi-home"></span> Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? ClientMnem { get; set; }
+}

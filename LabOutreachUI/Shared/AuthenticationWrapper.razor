@@ -1,0 +1,12 @@
+@using LabOutreachUI.Authentication
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+
+<CascadingAuthenticationState>
+    @ChildContent
+</CascadingAuthenticationState>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

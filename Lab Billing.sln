@@ -32,9 +32,9 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Lab PA Database", "Lab PA D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab PA WinForms UI", "Lab PA WinForms UI\Lab PA WinForms UI.csproj", "{ED4EDC70-4C69-4B69-94BB-9D0954730B69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomDrugScreenUI", "RandomDrugScreenUI\RandomDrugScreenUI.csproj", "{F087ABEC-F82A-4144-88A6-D440D946CFC3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataGridViewGrouper", "..\#Utilities\DataGridViewGrouper\DataGridViewGrouper\DataGridViewGrouper.csproj", "{DAD6DDA8-324C-54A8-F85E-24563407C529}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabOutreachUI", "LabOutreachUI\LabOutreachUI.csproj", "{E28A0262-1673-7DEE-396D-CE304E247951}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -136,14 +136,6 @@ Global
 		{ED4EDC70-4C69-4B69-94BB-9D0954730B69}.Release|Any CPU.Build.0 = Release|x64
 		{ED4EDC70-4C69-4B69-94BB-9D0954730B69}.Release|x64.ActiveCfg = Release|x64
 		{ED4EDC70-4C69-4B69-94BB-9D0954730B69}.Release|x64.Build.0 = Release|x64
-		{F087ABEC-F82A-4144-88A6-D440D946CFC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F087ABEC-F82A-4144-88A6-D440D946CFC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F087ABEC-F82A-4144-88A6-D440D946CFC3}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F087ABEC-F82A-4144-88A6-D440D946CFC3}.Debug|x64.Build.0 = Debug|Any CPU
-		{F087ABEC-F82A-4144-88A6-D440D946CFC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F087ABEC-F82A-4144-88A6-D440D946CFC3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F087ABEC-F82A-4144-88A6-D440D946CFC3}.Release|x64.ActiveCfg = Release|Any CPU
-		{F087ABEC-F82A-4144-88A6-D440D946CFC3}.Release|x64.Build.0 = Release|Any CPU
 		{DAD6DDA8-324C-54A8-F85E-24563407C529}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{DAD6DDA8-324C-54A8-F85E-24563407C529}.Debug|Any CPU.Build.0 = Debug|x64
 		{DAD6DDA8-324C-54A8-F85E-24563407C529}.Debug|x64.ActiveCfg = Debug|x64
@@ -152,6 +144,14 @@ Global
 		{DAD6DDA8-324C-54A8-F85E-24563407C529}.Release|Any CPU.Build.0 = Release|x64
 		{DAD6DDA8-324C-54A8-F85E-24563407C529}.Release|x64.ActiveCfg = Release|x64
 		{DAD6DDA8-324C-54A8-F85E-24563407C529}.Release|x64.Build.0 = Release|x64
+		{E28A0262-1673-7DEE-396D-CE304E247951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E28A0262-1673-7DEE-396D-CE304E247951}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E28A0262-1673-7DEE-396D-CE304E247951}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E28A0262-1673-7DEE-396D-CE304E247951}.Debug|x64.Build.0 = Debug|Any CPU
+		{E28A0262-1673-7DEE-396D-CE304E247951}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E28A0262-1673-7DEE-396D-CE304E247951}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E28A0262-1673-7DEE-396D-CE304E247951}.Release|x64.ActiveCfg = Release|Any CPU
+		{E28A0262-1673-7DEE-396D-CE304E247951}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

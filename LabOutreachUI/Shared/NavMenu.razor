@@ -1,0 +1,66 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="">
+            <img src="logoicon2.png" alt="Lab Logo" style="height: 28px; width: auto;" />
+            <span>Lab Outreach</span>
+        </a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        <!-- Random Drug Screen Module -->
+        <div class="nav-item px-3 mt-3">
+            <div class="text-muted small px-3 py-2">
+                <strong>RANDOM DRUG SCREEN</strong>
+            </div>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="rds/dashboard">
+                <span class="oi oi-dashboard" aria-hidden="true"></span> RDS Dashboard
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="candidates">
+                <span class="oi oi-people" aria-hidden="true"></span> Manage Candidates
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="import">
+                <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Import Candidates
+            </NavLink>
+        </div>
+
+        <!-- Client Viewer Module -->
+        <div class="nav-item px-3 mt-3">
+            <div class="text-muted small px-3 py-2">
+                <strong>CLIENT VIEWER</strong>
+            </div>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="clients">
+                <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Search Clients
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
