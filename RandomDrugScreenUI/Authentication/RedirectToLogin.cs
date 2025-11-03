@@ -15,17 +15,30 @@ public class RedirectToLogin : ComponentBase
     [CascadingParameter]
     protected Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    private bool hasCheckedAuth = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (AuthenticationStateTask != null)
+        if (firstRender && !hasCheckedAuth && AuthenticationStateTask != null)
         {
-         var authState = await AuthenticationStateTask;
-    var user = authState.User;
+            hasCheckedAuth = true;
+
+            var authState = await AuthenticationStateTask;
+            var user = authState.User;
+
+            Console.WriteLine($"[RedirectToLogin] Checking authentication...");
+            Console.WriteLine($"[RedirectToLogin] User: {user?.Identity?.Name ?? "NULL"}");
+            Console.WriteLine($"[RedirectToLogin] IsAuthenticated: {user?.Identity?.IsAuthenticated}");
 
             if (!user.Identity?.IsAuthenticated ?? true)
-          {
-        var returnUrl = Uri.EscapeDataString(NavigationManager.Uri);
-           NavigationManager.NavigateTo($"/login?returnUrl={returnUrl}");
+            {
+                Console.WriteLine($"[RedirectToLogin] User not authenticated, redirecting to /login");
+                var returnUrl = Uri.EscapeDataString(NavigationManager.Uri);
+                NavigationManager.NavigateTo($"/login?returnUrl={returnUrl}", forceLoad: true);
+            }
+            else
+            {
+                Console.WriteLine($"[RedirectToLogin] User is authenticated, no redirect needed");
             }
         }
     }

@@ -1,0 +1,155 @@
+@page "/auth-diagnostics"
+@using Microsoft.AspNetCore.Components.Authorization
+@using RandomDrugScreenUI.Authentication
+@using LabBilling.Core.DataAccess
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IAppEnvironment AppEnvironment
+
+<PageTitle>Authentication Diagnostics</PageTitle>
+
+<h3>Authentication Diagnostics</h3>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h5>IIS / HttpContext Information</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <tr>
+                <th>HttpContext Available:</th>
+                <td><strong class="@(HttpContextAccessor.HttpContext != null ? "text-success" : "text-danger")">@(HttpContextAccessor.HttpContext != null ? "Yes ?" : "No ?")</strong></td>
+            </tr>
+            @if (HttpContextAccessor.HttpContext != null)
+            {
+                <tr>
+                    <th>User Identity Name:</th>
+                    <td><strong class="text-primary">@(HttpContextAccessor.HttpContext.User?.Identity?.Name ?? "NULL")</strong></td>
+                </tr>
+                <tr>
+                    <th>Is Authenticated:</th>
+                    <td>@(HttpContextAccessor.HttpContext.User?.Identity?.IsAuthenticated ?? false)</td>
+                </tr>
+                <tr>
+                    <th>Authentication Type:</th>
+                    <td>@(HttpContextAccessor.HttpContext.User?.Identity?.AuthenticationType ?? "NULL")</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h5>Blazor AuthenticationState</h5>
+    </div>
+    <div class="card-body">
+        <AuthorizeView>
+            <Authorized>
+                <div class="alert alert-success">
+                    <strong>? Authenticated</strong>
+                </div>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>User Name (from claims):</th>
+                        <td>@context.User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value</td>
+                    </tr>
+                    <tr>
+                        <th>Full Name:</th>
+                        <td>@context.User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value</td>
+                    </tr>
+                    <tr>
+                        <th>Access Level:</th>
+                        <td>@context.User.FindFirst("Access")?.Value</td>
+                    </tr>
+                    <tr>
+                        <th>Is Administrator:</th>
+                        <td>@context.User.IsInRole("Administrator")</td>
+                    </tr>
+                </table>
+
+                <h6 class="mt-3">All Claims:</h6>
+                <ul>
+                    @foreach (var claim in context.User.Claims)
+                    {
+                        <li><strong>@claim.Type:</strong> @claim.Value</li>
+                    }
+                </ul>
+            </Authorized>
+            <NotAuthorized>
+                <div class="alert alert-warning">
+                    <strong>Not Authorized</strong> - User is not authenticated in Blazor
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h5>AppEnvironment Information</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <tr>
+                <th>User Property:</th>
+                <td><strong class="text-info">@AppEnvironment.User</strong></td>
+            </tr>
+            <tr>
+                <th>Database Name:</th>
+                <td>@AppEnvironment.DatabaseName</td>
+            </tr>
+            <tr>
+                <th>Server Name:</th>
+                <td>@AppEnvironment.ServerName</td>
+            </tr>
+            <tr>
+                <th>Integrated Authentication:</th>
+                <td>@AppEnvironment.IntegratedAuthentication</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h5>Test Actions</h5>
+    </div>
+    <div class="card-body">
+        <button class="btn btn-primary" @onclick="TestDatabaseQuery">Test Database Query</button>
+        @if (!string.IsNullOrEmpty(databaseTestResult))
+        {
+            <div class="alert @(databaseTestSuccess ? "alert-success" : "alert-danger") mt-2">
+                @databaseTestResult
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private string databaseTestResult = "";
+    private bool databaseTestSuccess = false;
+
+    private async Task TestDatabaseQuery()
+    {
+        try
+        {
+            var authState = await ((CustomAuthenticationStateProvider)AuthStateProvider).GetCurrentUser();
+            if (authState != null)
+            {
+                databaseTestResult = $"Successfully retrieved user: {authState.UserName} ({authState.FullName})";
+                databaseTestSuccess = true;
+            }
+            else
+            {
+                databaseTestResult = "GetCurrentUser() returned null";
+                databaseTestSuccess = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            databaseTestResult = $"Error: {ex.Message}";
+            databaseTestSuccess = false;
+        }
+    }
+}
