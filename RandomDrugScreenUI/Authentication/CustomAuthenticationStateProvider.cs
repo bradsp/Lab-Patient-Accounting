@@ -4,6 +4,7 @@ using LabBilling.Core.UnitOfWork;
 using LabBilling.Core.DataAccess;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace RandomDrugScreenUI.Authentication;
@@ -11,69 +12,114 @@ namespace RandomDrugScreenUI.Authentication;
 /// <summary>
 /// Custom authentication state provider for the Random Drug Screen application.
 /// Integrates with existing AuthenticationService without modifying it.
+/// Supports both Windows Authentication (automatic) and username/password login.
 /// </summary>
 public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 {
     private readonly ProtectedSessionStorage _sessionStorage;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private ClaimsPrincipal _anonymous = new ClaimsPrincipal(new ClaimsIdentity());
 
     public CustomAuthenticationStateProvider(
-        ProtectedSessionStorage sessionStorage,
-        IServiceProvider serviceProvider)
+      ProtectedSessionStorage sessionStorage,
+      IServiceProvider serviceProvider,
+        IHttpContextAccessor httpContextAccessor)
     {
-    _sessionStorage = sessionStorage;
+        _sessionStorage = sessionStorage;
         _serviceProvider = serviceProvider;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-     try
-        {
-       // Try to get user from session storage
-            var userSessionResult = await _sessionStorage.GetAsync<UserSessionInfo>("UserSession");
+        try
+     {
+ // First, check if we have a session (manual login or previous Windows auth)
+   var userSessionResult = await _sessionStorage.GetAsync<UserSessionInfo>("UserSession");
             
             if (userSessionResult.Success && userSessionResult.Value != null)
-            {
-             var userSession = userSessionResult.Value;
-   var claims = CreateClaimsFromUser(userSession);
+          {
+       var userSession = userSessionResult.Value;
+          var claims = CreateClaimsFromUser(userSession);
        var identity = new ClaimsIdentity(claims, "CustomAuth");
-         var claimsPrincipal = new ClaimsPrincipal(identity);
-           return await Task.FromResult(new AuthenticationState(claimsPrincipal));
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+       return await Task.FromResult(new AuthenticationState(claimsPrincipal));
           }
-        }
-        catch
- {
-            // Session storage not available yet or error reading it
-        }
 
-      return await Task.FromResult(new AuthenticationState(_anonymous));
+            // If no session, check if Windows Authentication provided a user
+            var httpContext = _httpContextAccessor.HttpContext;
+    if (httpContext?.User?.Identity?.IsAuthenticated == true)
+            {
+          var windowsUsername = httpContext.User.Identity.Name;
+
+        if (!string.IsNullOrEmpty(windowsUsername))
+           {
+         Console.WriteLine($"Windows user detected: {windowsUsername}");
+      
+  // Try to authenticate this Windows user with your app
+    var authenticated = await AuthenticateIntegrated(windowsUsername);
+   
+         if (authenticated)
+    {
+        Console.WriteLine($"Successfully authenticated Windows user: {windowsUsername}");
+  
+             // User is now authenticated, re-get the state
+        var newSessionResult = await _sessionStorage.GetAsync<UserSessionInfo>("UserSession");
+        if (newSessionResult.Success && newSessionResult.Value != null)
+  {
+         var userSession = newSessionResult.Value;
+        var claims = CreateClaimsFromUser(userSession);
+     var identity = new ClaimsIdentity(claims, "CustomAuth");
+   var claimsPrincipal = new ClaimsPrincipal(identity);
+  return await Task.FromResult(new AuthenticationState(claimsPrincipal));
+  }
+            }
+          else
+  {
+       Console.WriteLine($"Failed to authenticate Windows user: {windowsUsername}");
+        }
+    }
+     }
+        }
+        catch (Exception ex)
+        {
+            // Log the error but continue
+     Console.WriteLine($"Error in GetAuthenticationStateAsync: {ex.Message}");
+       Console.WriteLine($"Stack trace: {ex.StackTrace}");
+      }
+
+        return await Task.FromResult(new AuthenticationState(_anonymous));
     }
 
     /// <summary>
     /// Authenticates a user using Windows/Integrated authentication
- /// </summary>
+    /// </summary>
     public async Task<bool> AuthenticateIntegrated(string username)
-  {
+    {
         try
-        {
-         using var scope = _serviceProvider.CreateScope();
+    {
+  using var scope = _serviceProvider.CreateScope();
       var uowSystem = scope.ServiceProvider.GetRequiredService<IUnitOfWorkSystem>();
-          var authService = new AuthenticationService(uowSystem);
+  var authService = new AuthenticationService(uowSystem);
 
           var user = authService.AuthenticateIntegrated(username);
 
-        if (user == null || user.Access == UserStatus.None)
-            {
-        return false;
-   }
-
-     await SetAuthenticatedUser(user);
-   return true;
-        }
-        catch
+      if (user == null || user.Access == UserStatus.None)
         {
-            return false;
+                Console.WriteLine($"AuthenticateIntegrated failed: User not found or no access for {username}");
+         return false;
+            }
+
+            await SetAuthenticatedUser(user);
+         Console.WriteLine($"AuthenticateIntegrated succeeded for {username}");
+         return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in AuthenticateIntegrated: {ex.Message}");
+    Console.WriteLine($"Stack trace: {ex.StackTrace}");
+   return false;
         }
     }
 
@@ -83,25 +129,25 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     public async Task<(bool success, string errorMessage)> Authenticate(string username, string password)
     {
         try
- {
-            using var scope = _serviceProvider.CreateScope();
-     var uowSystem = scope.ServiceProvider.GetRequiredService<IUnitOfWorkSystem>();
+        {
+   using var scope = _serviceProvider.CreateScope();
+       var uowSystem = scope.ServiceProvider.GetRequiredService<IUnitOfWorkSystem>();
      var authService = new AuthenticationService(uowSystem);
 
             var (isAuthenticated, user) = authService.Authenticate(username, password);
 
-          if (!isAuthenticated || user == null)
-            {
-     return (false, "Invalid username or password");
+   if (!isAuthenticated || user == null)
+ {
+                return (false, "Invalid username or password");
+       }
+
+   if (user.Access == UserStatus.None)
+  {
+          return (false, "User account is not authorized");
             }
 
-        if (user.Access == UserStatus.None)
-            {
-       return (false, "User account is not authorized");
-          }
-
-  await SetAuthenticatedUser(user);
-         return (true, string.Empty);
+    await SetAuthenticatedUser(user);
+            return (true, string.Empty);
         }
         catch (Exception ex)
         {
@@ -109,82 +155,82 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         }
     }
 
-  /// <summary>
+ /// <summary>
     /// Logs out the current user
     /// </summary>
- public async Task Logout()
+    public async Task Logout()
     {
-    await _sessionStorage.DeleteAsync("UserSession");
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(_anonymous)));
+  await _sessionStorage.DeleteAsync("UserSession");
+ NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(_anonymous)));
     }
 
     /// <summary>
     /// Gets the current authenticated user account
-/// </summary>
+    /// </summary>
     public async Task<UserAccount?> GetCurrentUser()
     {
-        try
-        {
-  var userSessionResult = await _sessionStorage.GetAsync<UserSessionInfo>("UserSession");
-            
-    if (userSessionResult.Success && userSessionResult.Value != null)
-   {
-     var userSession = userSessionResult.Value;
-    
-    // Retrieve full user account from database
-                using var scope = _serviceProvider.CreateScope();
-       var uowSystem = scope.ServiceProvider.GetRequiredService<IUnitOfWorkSystem>();
-        return uowSystem.UserAccountRepository.GetByUsername(userSession.UserName);
-            }
-  }
-   catch
-        {
-      // Error retrieving user
-     }
+ try
+     {
+     var userSessionResult = await _sessionStorage.GetAsync<UserSessionInfo>("UserSession");
+     
+     if (userSessionResult.Success && userSessionResult.Value != null)
+      {
+    var userSession = userSessionResult.Value;
 
-  return null;
- }
+      // Retrieve full user account from database
+                using var scope = _serviceProvider.CreateScope();
+            var uowSystem = scope.ServiceProvider.GetRequiredService<IUnitOfWorkSystem>();
+     return uowSystem.UserAccountRepository.GetByUsername(userSession.UserName);
+            }
+        }
+ catch
+        {
+            // Error retrieving user
+        }
+
+    return null;
+    }
 
     private async Task SetAuthenticatedUser(UserAccount user)
     {
-        var userSession = new UserSessionInfo
-      {
-            UserName = user.UserName,
-        FullName = user.FullName,
-     IsAdministrator = user.IsAdministrator,
-          CanEditDictionary = user.CanEditDictionary,
-  Access = user.Access
-   };
+      var userSession = new UserSessionInfo
+        {
+    UserName = user.UserName,
+            FullName = user.FullName,
+            IsAdministrator = user.IsAdministrator,
+            CanEditDictionary = user.CanEditDictionary,
+            Access = user.Access
+  };
 
         await _sessionStorage.SetAsync("UserSession", userSession);
 
-   var claims = CreateClaimsFromUser(userSession);
-  var identity = new ClaimsIdentity(claims, "CustomAuth");
+        var claims = CreateClaimsFromUser(userSession);
+        var identity = new ClaimsIdentity(claims, "CustomAuth");
         var claimsPrincipal = new ClaimsPrincipal(identity);
 
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
+   NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
     }
 
     private List<Claim> CreateClaimsFromUser(UserSessionInfo userSession)
     {
- var claims = new List<Claim>
-    {
-            new Claim(ClaimTypes.Name, userSession.UserName),
-  new Claim(ClaimTypes.GivenName, userSession.FullName ?? userSession.UserName),
-     new Claim("Access", userSession.Access ?? UserStatus.None)
+   var claims = new List<Claim>
+        {
+          new Claim(ClaimTypes.Name, userSession.UserName),
+            new Claim(ClaimTypes.GivenName, userSession.FullName ?? userSession.UserName),
+            new Claim("Access", userSession.Access ?? UserStatus.None)
         };
 
         if (userSession.IsAdministrator)
         {
-            claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
-        }
+    claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
+}
 
         if (userSession.CanEditDictionary)
         {
-            claims.Add(new Claim("Permission", "EditDictionary"));
+         claims.Add(new Claim("Permission", "EditDictionary"));
         }
 
-  return claims;
+        return claims;
     }
 }
 
@@ -194,8 +240,8 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 public class UserSessionInfo
 {
     public string UserName { get; set; } = string.Empty;
-    public string? FullName { get; set; }
+public string? FullName { get; set; }
     public bool IsAdministrator { get; set; }
-    public bool CanEditDictionary { get; set; }
+public bool CanEditDictionary { get; set; }
     public string? Access { get; set; }
 }

@@ -13,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
+// Add HttpContextAccessor for accessing Windows Authentication context
+builder.Services.AddHttpContextAccessor();
+
 // Configure HSTS options for production
 builder.Services.AddHsts(options =>
 {
@@ -125,5 +128,15 @@ var config = app.Services.GetRequiredService<IConfiguration>();
         Console.WriteLine("Users will be automatically authenticated using Windows credentials.");
     }
 }
+
+app.MapGet("/auth-test", (HttpContext context) =>
+{
+    return Results.Json(new
+    {
+        IsAuthenticated = context.User.Identity?.IsAuthenticated ?? false,
+        Username = context.User.Identity?.Name ?? "Anonymous",
+        AuthType = context.User.Identity?.AuthenticationType ?? "None"
+    });
+});
 
 app.Run();
