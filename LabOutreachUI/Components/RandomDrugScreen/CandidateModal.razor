@@ -76,6 +76,8 @@
     [Parameter] public EventCallback OnCancel { get; set; }
 
     private AutocompleteInput<Client>? clientAutocomplete;
+    private bool hasSetInitialValue = false;
+    private string? lastClientMnemonic = null;
 
     // Template for autocomplete items
     private RenderFragment<Client> clientItemTemplate = client => __builder =>
@@ -87,29 +89,46 @@
         </div>
     };
 
-    protected override async Task OnParametersSetAsync()
+    protected override void OnParametersSet()
     {
-      // When editing a candidate, set the initial value in the autocomplete
-        if (IsVisible && Candidate != null && !string.IsNullOrEmpty(Candidate.ClientMnemonic) && clientAutocomplete != null)
+        // Reset flag when parameters change (e.g., modal opens/closes or candidate changes)
+        if (!IsVisible)
+        {
+          hasSetInitialValue = false;
+            lastClientMnemonic = null;
+        }
+        else if (Candidate != null && Candidate.ClientMnemonic != lastClientMnemonic)
+     {
+   hasSetInitialValue = false;
+    lastClientMnemonic = Candidate.ClientMnemonic;
+    }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+   // Set the initial value after the component is fully rendered
+        if (IsVisible && !hasSetInitialValue && Candidate != null && !string.IsNullOrEmpty(Candidate.ClientMnemonic) && clientAutocomplete != null)
         {
        var selectedClient = Clients.FirstOrDefault(c => c.ClientMnem == Candidate.ClientMnemonic);
        if (selectedClient != null)
          {
-     await Task.Delay(10); // Small delay to ensure component is rendered
-        clientAutocomplete.SetValue($"{selectedClient.Name} ({selectedClient.ClientMnem})");
+   clientAutocomplete.SetValue($"{selectedClient.Name} ({selectedClient.ClientMnem})");
+            hasSetInitialValue = true;
         }
       }
-    }
+        
+  await base.OnAfterRenderAsync(firstRender);
+  }
 
     private async Task HandleSave()
     {
-        if (Candidate != null)
-        {
+  if (Candidate != null)
+  {
             await OnSave.InvokeAsync(Candidate);
         }
     }
 
-    private async Task HandleCancel()
+ private async Task HandleCancel()
     {
         await OnCancel.InvokeAsync();
     }
