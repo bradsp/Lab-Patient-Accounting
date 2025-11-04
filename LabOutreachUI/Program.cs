@@ -65,7 +65,11 @@ try
     builder.Services.AddAuthorization(options =>
     {
         options.AddPolicy("DatabaseUser", policy =>
-           policy.Requirements.Add(new DatabaseUserRequirement()));
+   policy.Requirements.Add(new DatabaseUserRequirement()));
+
+        // Add Random Drug Screen policy
+        options.AddPolicy("RandomDrugScreen", policy =>
+           policy.Requirements.Add(new RandomDrugScreenRequirement()));
 
         // Set as fallback policy - all pages require DatabaseUser by default
         options.FallbackPolicy = new AuthorizationPolicyBuilder()
@@ -74,8 +78,9 @@ try
         .Build();
     });
 
-    // Register the authorization handler
+    // Register the authorization handlers
     builder.Services.AddScoped<IAuthorizationHandler, DatabaseUserAuthorizationHandler>();
+    builder.Services.AddScoped<IAuthorizationHandler, RandomDrugScreenAuthorizationHandler>();
 
     logger.Info("Adding Razor Pages and Blazor services");
 

@@ -66,6 +66,33 @@
                         <th>Is Administrator:</th>
                         <td>@context.User.IsInRole("Administrator")</td>
                     </tr>
+                    <tr>
+                        <th>Database Validated:</th>
+                        <td><strong class="@(context.User.FindFirst("DbUserValidated")?.Value == "true" ? "text-success" : "text-danger")">@context.User.FindFirst("DbUserValidated")?.Value</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Can Access RDS:</th>
+                        <td><strong class="@(context.User.FindFirst("CanAccessRandomDrugScreen")?.Value == "True" ? "text-success" : "text-danger")">@context.User.FindFirst("CanAccessRandomDrugScreen")?.Value</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Is Administrator (claim):</th>
+                        <td><strong class="@(context.User.FindFirst("IsAdministrator")?.Value == "True" ? "text-success" : "text-secondary")">@context.User.FindFirst("IsAdministrator")?.Value</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Expected RDS Access:</th>
+                        <td>
+                            @{
+                                var isAdmin = context.User.FindFirst("IsAdministrator")?.Value == "True";
+                                var canAccessRds = context.User.FindFirst("CanAccessRandomDrugScreen")?.Value == "True";
+                                var shouldHaveAccess = isAdmin || canAccessRds;
+                            }
+                            <strong class="@(shouldHaveAccess ? "text-success" : "text-danger")">
+                                @(shouldHaveAccess ? "? GRANTED" : "? DENIED")
+                                @if (isAdmin) { <text>(via Administrator role)</text> }
+                                @if (canAccessRds && !isAdmin) { <text>(via CanAccessRandomDrugScreen permission)</text> }
+                            </strong>
+                        </td>
+                    </tr>
                 </table>
 
                 <h6 class="mt-3">All Claims:</h6>

@@ -40,6 +40,7 @@ public partial class UserSecurity : Form
             CanSubmitBilling.Enabled = false;
             IsAdministrator.Enabled = false;
             canImpersonateUserCheckBox.Enabled = false;
+            CanAccessRandomDrugScreen.Enabled = false;
             Reserved5.Enabled = false;
             Reserved6.Enabled = false;
 
@@ -81,7 +82,8 @@ public partial class UserSecurity : Form
             CanEditDictionary = CanEditDictionaries.Checked,
             CanSubmitBilling = CanSubmitBilling.Checked,
             IsAdministrator = IsAdministrator.Checked,
-            CanImpersonate = canImpersonateUserCheckBox.Checked
+            CanImpersonate = canImpersonateUserCheckBox.Checked,
+            CanAccessRandomDrugScreen = CanAccessRandomDrugScreen.Checked
         };
 
         return editedEmp;
@@ -202,6 +204,7 @@ public partial class UserSecurity : Form
         CanSubmitBilling.Checked = false;
         IsAdministrator.Checked = false;
         canImpersonateUserCheckBox.Checked = false;
+        CanAccessRandomDrugScreen.Checked = false;
         ModDateTime.Text = "";
         ModUser.Text = "";
         ModProgram.Text = "";
@@ -245,6 +248,7 @@ public partial class UserSecurity : Form
             CanSubmitBilling.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.CanSubmitBilling)].Value);
             IsAdministrator.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.IsAdministrator)].Value);
             canImpersonateUserCheckBox.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.CanImpersonate)].Value);
+            CanAccessRandomDrugScreen.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.CanAccessRandomDrugScreen)].Value);
 
             ModDateTime.Text = UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.LastModifiedDate)].Value.ToString();
             ModUser.Text = UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.LastModifiedBy)].Value?.ToString();

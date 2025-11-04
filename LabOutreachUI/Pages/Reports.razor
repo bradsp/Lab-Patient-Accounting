@@ -1,4 +1,5 @@
 @page "/reports"
+@attribute [Authorize(Policy = "RandomDrugScreen")]
 @inject IRandomDrugScreenService RdsService
 @inject DictionaryService DictionaryService
 @inject IJSRuntime JSRuntime

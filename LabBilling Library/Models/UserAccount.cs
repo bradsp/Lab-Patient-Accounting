@@ -32,6 +32,8 @@ public sealed class UserAccount : IBaseEntity
     public bool IsAdministrator { get; set; }
     [PetaPoco.Column("impersonate")]
     public bool CanImpersonate { get; set; }
+    [PetaPoco.Column("access_random_drug_screen")]
+    public bool CanAccessRandomDrugScreen { get; set; }
     [PetaPoco.Column("reserve5")]
     public bool reserve5 { get; set; }
     [PetaPoco.Column("reserve6")]

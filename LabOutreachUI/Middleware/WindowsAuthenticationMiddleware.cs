@@ -48,24 +48,29 @@ public class WindowsAuthenticationMiddleware
           dbUser.UserName, dbUser.Access);
 
     // Create new ClaimsIdentity with database user info
-    var claims = new List<System.Security.Claims.Claim>
- {
-          new System.Security.Claims.Claim(ClaimTypes.Name, dbUser.UserName),
-    new System.Security.Claims.Claim(ClaimTypes.GivenName, dbUser.FullName ?? dbUser.UserName),
-      new System.Security.Claims.Claim("Access", dbUser.Access ?? UserStatus.None),
-     new System.Security.Claims.Claim("DbUserValidated", "true"),
-          new System.Security.Claims.Claim("DbUserName", dbUser.UserName)
-       };
+       var claims = new List<System.Security.Claims.Claim>
+        {
+                new System.Security.Claims.Claim(ClaimTypes.Name, dbUser.UserName),
+ new System.Security.Claims.Claim(ClaimTypes.GivenName, dbUser.FullName ?? dbUser.UserName),
+             new System.Security.Claims.Claim("Access", dbUser.Access ?? UserStatus.None),
+         new System.Security.Claims.Claim("DbUserValidated", "true"),
+   new System.Security.Claims.Claim("DbUserName", dbUser.UserName),
+     new System.Security.Claims.Claim("IsAdministrator", dbUser.IsAdministrator.ToString()),
+           new System.Security.Claims.Claim("CanAccessRandomDrugScreen", dbUser.CanAccessRandomDrugScreen.ToString())
+        };
 
-             if (dbUser.IsAdministrator)
-           {
+    _logger.LogInformation("[WindowsAuthMiddleware] Setting claims - IsAdmin: {IsAdmin}, CanAccessRDS: {CanAccessRDS}",
+    dbUser.IsAdministrator, dbUser.CanAccessRandomDrugScreen);
+
+   if (dbUser.IsAdministrator)
+     {
    claims.Add(new System.Security.Claims.Claim(ClaimTypes.Role, "Administrator"));
-          }
+    }
 
-               if (dbUser.CanEditDictionary)
-          {
-      claims.Add(new System.Security.Claims.Claim("Permission", "EditDictionary"));
-           }
+          if (dbUser.CanEditDictionary)
+        {
+ claims.Add(new System.Security.Claims.Claim("Permission", "EditDictionary"));
+   }
 
              // Append claims to existing identity
           var identity = new ClaimsIdentity(claims, "DatabaseAuthorization");

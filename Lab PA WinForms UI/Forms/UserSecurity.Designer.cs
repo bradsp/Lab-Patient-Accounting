@@ -40,6 +40,7 @@
             this.CanEditBadDebt = new System.Windows.Forms.CheckBox();
             this.CanSubmitBilling = new System.Windows.Forms.CheckBox();
             this.CanChangeAccountFinCode = new System.Windows.Forms.CheckBox();
+            this.CanAccessRandomDrugScreen = new System.Windows.Forms.CheckBox();
             this.CanAddCharges = new System.Windows.Forms.CheckBox();
             this.CanAddAccountAdjustments = new System.Windows.Forms.CheckBox();
             this.IsAdministrator = new System.Windows.Forms.CheckBox();
@@ -177,6 +178,16 @@
             this.CanChangeAccountFinCode.TabIndex = 12;
             this.CanChangeAccountFinCode.Text = "Can Change Account FinCode";
             this.CanChangeAccountFinCode.UseVisualStyleBackColor = true;
+            // 
+            // CanAccessRandomDrugScreen
+            // 
+            this.CanAccessRandomDrugScreen.AutoSize = true;
+            this.CanAccessRandomDrugScreen.Location = new System.Drawing.Point(15, 270);
+            this.CanAccessRandomDrugScreen.Name = "CanAccessRandomDrugScreen";
+            this.CanAccessRandomDrugScreen.Size = new System.Drawing.Size(173, 17);
+            this.CanAccessRandomDrugScreen.TabIndex = 25;
+            this.CanAccessRandomDrugScreen.Text = "Can Access Random Drug Screen";
+            this.CanAccessRandomDrugScreen.UseVisualStyleBackColor = true;
             // 
             // CanAddCharges
             // 
@@ -383,6 +394,7 @@
             this.Controls.Add(this.CanSubmitBilling);
             this.Controls.Add(this.CanEditBadDebt);
             this.Controls.Add(this.CanEditDictionaries);
+            this.Controls.Add(this.CanAccessRandomDrugScreen);
             this.Controls.Add(this.AccessLevelCombo);
             this.Controls.Add(this.AccessLevelLabel);
             this.Controls.Add(this.Password);
@@ -416,6 +428,7 @@
         private System.Windows.Forms.CheckBox CanEditBadDebt;
         private System.Windows.Forms.CheckBox CanSubmitBilling;
         private System.Windows.Forms.CheckBox CanChangeAccountFinCode;
+        private System.Windows.Forms.CheckBox CanAccessRandomDrugScreen;
         private System.Windows.Forms.CheckBox CanAddCharges;
         private System.Windows.Forms.CheckBox CanAddAccountAdjustments;
         private System.Windows.Forms.CheckBox IsAdministrator;
