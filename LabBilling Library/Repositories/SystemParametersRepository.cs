@@ -87,38 +87,74 @@ namespace LabBilling.Core.DataAccess
                         var defaultValue = ApplicationParameters.GetDefaultValue(property.Name) ?? "";
 
                         SaveParameter(property.Name, defaultValue, category, description, property.PropertyType.Name);
+                        
+                        // Re-fetch the parameter after saving
+                        value = GetParameter(property.Name);
+                    }
+
+                    if (value == null || string.IsNullOrEmpty(value.Value))
+                    {
+                        // Skip setting the property if value is still null or empty
+                        continue;
                     }
 
                     object v = null;
                     //need to do data type conversion
 
                     if (property.PropertyType == typeof(string))
-                        v = value?.Value ?? null;
+                        v = value.Value;
                     else if(property.PropertyType == typeof(double))
-                        v = Convert.ToDouble(value?.Value.ToString());
+                    {
+                        if (double.TryParse(value.Value, out double doubleResult))
+                            v = doubleResult;
+                        else
+                            v = 0.0;
+                    }
                     else if (property.PropertyType == typeof(int))
-                        v = Convert.ToInt32(value?.Value.ToString());
+                    {
+                        if (int.TryParse(value.Value, out int intResult))
+                            v = intResult;
+                        else
+                            v = 0;
+                    }
                     else if (property.PropertyType == typeof(Int16))
-                        v = Convert.ToInt16(value?.Value.ToString());
+                    {
+                        if (Int16.TryParse(value.Value, out Int16 int16Result))
+                            v = int16Result;
+                        else
+                            v = (Int16)0;
+                    }
                     else if (property.PropertyType == typeof(Int32))
-                        v = Convert.ToInt32(value?.Value.ToString());
+                    {
+                        if (Int32.TryParse(value.Value, out Int32 int32Result))
+                            v = int32Result;
+                        else
+                            v = 0;
+                    }
                     else if (property.PropertyType == typeof(DateTime))
                     {
-                        DateTime temp = DateTime.MinValue;
-                        bool v1 = DateTime.TryParse(value?.Value.ToString(), out temp);
-                        v = temp;
+                        if (DateTime.TryParse(value.Value, out DateTime dateResult))
+                            v = dateResult;
+                        else
+                            v = DateTime.MinValue;
                     }
                     else if (property.PropertyType == typeof(bool))
-                        v = Convert.ToBoolean(value?.Value);
-                    else v = value?.Value;
+                    {
+                        if (bool.TryParse(value.Value, out bool boolResult))
+                            v = boolResult;
+                        else
+                            v = false;
+                    }
+                    else 
+                        v = value.Value;
 
 
-
-                    property.SetValue(parameters, v);
+                    if (v != null)
+                        property.SetValue(parameters, v);
                 }
                 catch (Exception ex)
                 {
-                    throw new ApplicationException("Error loading parameters.", ex);
+                    Log.Instance.Error($"Error loading parameter {property.Name}: {ex.Message}", ex);
                 }            
             }
 

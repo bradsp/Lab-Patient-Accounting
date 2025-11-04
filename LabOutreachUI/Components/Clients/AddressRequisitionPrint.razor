@@ -8,19 +8,19 @@
 <div class="card">
     <div class="card-header bg-primary text-white">
         <h5 class="mb-0">
-            <span class="oi oi-document"></span> Print Requisition Forms
+          <span class="oi oi-document"></span> Print Requisition Forms
         </h5>
     </div>
     <div class="card-body">
         @if (client == null)
         {
-            <div class="alert alert-warning">
-                <span class="oi oi-warning"></span> Loading client information...
-            </div>
+     <div class="alert alert-warning">
+       <span class="oi oi-warning"></span> Loading client information...
+     </div>
         }
-        else
+     else
         {
-            <!-- Client Information Display -->
+   <!-- Client Information Display -->
             <div class="row mb-4">
                 <div class="col-md-12">
                     <div class="card bg-light">
@@ -125,64 +125,139 @@
 
             <!-- Print Configuration -->
             <div class="row mb-4">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="mb-0">Print Configuration</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Form Type <span class="text-danger">*</span></label>
-                                    <select class="form-select" @bind="selectedFormType">
-                                        <option value="">-- Select Form Type --</option>
-                                        @foreach (var formType in Enum.GetValues<RequisitionPrintingService.FormType>())
-                                        {
-                                            <option value="@formType">@GetFormTypeDisplay(formType)</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Quantity <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" min="1" max="999" @bind="quantity" />
-                                </div>
-                            </div>
+    <div class="col-md-12">
+        <div class="card">
+    <div class="card-header">
+     <h6 class="mb-0">Print Configuration</h6>
+                 </div>
+    <div class="card-body">
+      <!-- Printing Method Selection -->
+               <div class="row mb-3">
+        <div class="col-md-12">
+     <label class="form-label">Printing Method <span class="text-danger">*</span></label>
+        <div class="btn-group w-100" role="group">
+        <input type="radio" class="btn-check" id="browserPrint" 
+  checked="@(printingMethod == "Browser")" @onchange="@(() => printingMethod = "Browser")" name="printMethod" />
+<label class="btn btn-outline-primary" for="browserPrint">
+         <span class="oi oi-monitor"></span> Browser Print (Standard)
+  </label>
+        
+     <input type="radio" class="btn-check" id="dotMatrixPrint" 
+ checked="@(printingMethod == "DotMatrix")" @onchange="@(() => printingMethod = "DotMatrix")" name="printMethod" />
+    <label class="btn btn-outline-success" for="dotMatrixPrint">
+     <span class="oi oi-print"></span> Dot-Matrix (3-Ply Pin-Fed)
+     </label>
+      </div>
+      <small class="form-text text-muted">
+ @if (printingMethod == "DotMatrix")
+   {
+      <span class="text-success">
+    <strong>Dot-Matrix Mode:</strong> Sends raw PCL5 commands directly to printer. 
+           Optimized for 3-ply pin-fed forms. Requires properly configured dot-matrix printer.
+     </span>
+     }
+  else
+   {
+          <span>
+<strong>Browser Print:</strong> Uses standard web browser printing. 
+     Works with any printer but may have positioning issues on pin-fed forms.
+       </span>
+     }
+       </small>
+      </div>
+  </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-9">
-                                    <label class="form-label">Printer <span class="text-danger">*</span></label>
-                                    <select class="form-select" @bind="selectedPrinter">
-                                        <option value="">-- Select Printer --</option>
-                                        @foreach (var printer in availablePrinters)
-                                        {
-                                            <option value="@printer">@printer</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
+  <div class="row mb-3">
+      <div class="col-md-6">
+          <label class="form-label">Form Type <span class="text-danger">*</span></label>
+         <select class="form-select" @bind="selectedFormType">
+  <option value="">-- Select Form Type --</option>
+      @foreach (var formType in GetSupportedFormTypes())
+      {
+               <option value="@formType">@GetFormTypeDisplay(formType)</option>
+  }
+     </select>
+        @if (printingMethod == "DotMatrix" && !IsDotMatrixSupported(selectedFormType))
+             {
+    <small class="text-warning">
+      <span class="oi oi-warning"></span> This form type is not optimized for dot-matrix printing. 
+            Consider using Browser Print method.
+      </small>
+      }
+   </div>
+         <div class="col-md-3">
+      <label class="form-label">Quantity <span class="text-danger">*</span></label>
+       <input type="number" class="form-control" min="1" max="999" @bind="quantity" />
+     </div>
+</div>
 
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="addDapNotation" @bind="addDapNotation" />
-                                        <label class="form-check-label" for="addDapNotation">
-                                            Add DAP11 ZT notation
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="cutForms" @bind="cutForms" />
-                                        <label class="form-check-label" for="cutForms">
-                                            Cut forms after printing (if supported)
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+       <div class="row mb-3">
+  <div class="col-md-9">
+<label class="form-label">Printer <span class="text-danger">*</span></label>
+    <select class="form-select" @bind="selectedPrinter">
+          <option value="">-- Select Printer --</option>
+                @foreach (var printer in availablePrinters)
+     {
+  <option value="@printer">@printer</option>
+           }
+   </select>
+            @if (printingMethod == "DotMatrix" && !string.IsNullOrEmpty(selectedPrinter))
+    {
+        <small class="form-text text-muted">
+         <span class="oi oi-info"></span> Ensure this is a dot-matrix printer configured for pin-fed forms.
+       </small>
+}
+            </div>
+           <div class="col-md-3 d-flex align-items-end">
+       @if (printingMethod == "DotMatrix")
+             {
+          <button class="btn btn-outline-info w-100" @onclick="HandleAlignmentTest" 
+  disabled="@(string.IsNullOrEmpty(selectedPrinter) || isProcessing)">
+      <span class="oi oi-target"></span> Test Alignment
+ </button>
+         }
+           </div>
+       </div>
+
+             <div class="row">
+            <div class="col-md-12">
+     @if (printingMethod == "Browser")
+           {
+   <div class="form-check">
+               <input type="checkbox" class="form-check-input" id="addDapNotation" @bind="addDapNotation" />
+       <label class="form-check-label" for="addDapNotation">
+    Add DAP11 ZT notation
+         </label>
+      </div>
+   <div class="form-check">
+       <input type="checkbox" class="form-check-input" id="cutForms" @bind="cutForms" />
+  <label class="form-check-label" for="cutForms">
+         Cut forms after printing (if supported)
+ </label>
+          </div>
+     }
+            else
+           {
+     <div class="alert alert-info mb-0">
+   <small>
+    <strong>Dot-Matrix Print Settings:</strong>
+      <ul class="mb-0">
+           <li>Forms will be printed at 10 pitch (10 chars/inch)</li>
+           <li>6 lines per inch vertical spacing</li>
+  <li>3 lines from top, 50 characters from left margin</li>
+  <li>Automatic form feed after each page</li>
+        </ul>
+     </small>
+   </div>
+       }
+        </div>
+         </div>
+        </div>
+            </div>
+          </div>
             </div>
 
-            <!-- Validation Messages -->
+   <!-- Validation Messages -->
             @if (validationErrors.Count > 0)
             {
                 <div class="alert alert-danger">
@@ -241,25 +316,28 @@
 
             <!-- Action Buttons -->
             <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-primary btn-lg me-2" @onclick="HandlePrintPreview" disabled="@isProcessing">
-                        <span class="oi oi-eye"></span> Preview
-                    </button>
-                    <button class="btn btn-success btn-lg me-2" @onclick="HandlePrint" disabled="@isProcessing">
-                        @if (isProcessing)
-                        {
-                            <span class="spinner-border spinner-border-sm me-2"></span>
-                        }
-                        else
-                        {
-                            <span class="oi oi-print"></span>
-                        }
-                        Print
-                    </button>
-                    <button class="btn btn-outline-secondary btn-lg" @onclick="HandleClearAll">
-                        <span class="oi oi-reload"></span> Clear All
-                    </button>
-                </div>
+    <div class="col-md-12">
+          @if (printingMethod == "Browser")
+          {
+     <button class="btn btn-primary btn-lg me-2" @onclick="HandlePrintPreview" disabled="@isProcessing">
+               <span class="oi oi-eye"></span> Preview
+          </button>
+             }
+        <button class="btn btn-success btn-lg me-2" @onclick="HandlePrint" disabled="@isProcessing">
+            @if (isProcessing)
+   {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
+          else
+                {
+   <span class="oi oi-print"></span>
+       }
+               @(printingMethod == "DotMatrix" ? "Print to Dot-Matrix" : "Print")
+            </button>
+            <button class="btn btn-outline-secondary btn-lg" @onclick="HandleClearAll">
+   <span class="oi oi-reload"></span> Clear All
+        </button>
+       </div>
             </div>
         }
     </div>
@@ -311,6 +389,8 @@
     private string? previewHtml;
     private bool showPreview = false;
     private RequisitionPrintingService.FormType currentFormType;
+
+    private string printingMethod = "Browser"; // "Browser" or "DotMatrix"
 
     protected override async Task OnInitializedAsync()
     {
@@ -377,136 +457,291 @@
         StateHasChanged();
     }
 
-    private async Task HandlePrint()
+    private async Task HandleAlignmentTest()
     {
-        if (!ValidateForm()) return;
+        if (string.IsNullOrEmpty(selectedPrinter) || PrintingService == null)
+        {
+            validationErrors.Add("Please select a printer first");
+            return;
+   }
 
-        isProcessing = true;
+    isProcessing = true;
+      validationErrors.Clear();
+  successMessage = null;
+
         try
         {
-            if (PrintingService == null || client == null || JSRuntime == null) return;
+            bool success = PrintingService.PrintAlignmentTest(selectedPrinter);
 
-            // Validate client data
-            var (isValid, errors) = await PrintingService.ValidateClientForPrinting(ClientMnemonic, UnitOfWork);
-            if (!isValid)
-            {
-                validationErrors.AddRange(errors);
-                return;
+   if (success)
+       {
+   successMessage = $"Alignment test pattern sent to {selectedPrinter}. Check the printed output to verify form positioning.";
             }
-
-            // Get current user
-            string userName = "Unknown";
-            if (AuthenticationStateProvider != null)
+   else
             {
-                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                userName = authState.User?.Identity?.Name ?? "Unknown";
-            }
-
-            // Parse form type
-            if (!Enum.TryParse<RequisitionPrintingService.FormType>(selectedFormType, out var formType))
-            {
-                validationErrors.Add("Invalid form type selected");
-                return;
-            }
-
-            // Generate the form HTML for printing
-            string formHtml = GenerateFormHtml(formType);
-
-            // Record the print job
-            var success = await PrintingService.RecordPrintJobAsync(
-       ClientMnemonic,
-                client.Name,
-        formType,
-      quantity,
-       selectedPrinter!,
-       userName
- );
-
-            if (success)
-            {
-                successMessage = $"Print job recorded successfully! {quantity} {GetFormTypeDisplay(formType)} form(s) sent to {selectedPrinter}";
-
-                // Trigger browser print with the generated HTML
-            await PrintFormHtml(formHtml, formType.ToString());
-   }
-            else
-          {
-    validationErrors.Add("Failed to record print job. Please try again.");
-         }
+           validationErrors.Add($"Failed to print alignment test: {RawPrinterHelper.GetLastErrorMessage()}");
+      }
         }
         catch (Exception ex)
-    {
-            validationErrors.Add($"An error occurred: {ex.Message}");
+ {
+            validationErrors.Add($"Alignment test error: {ex.Message}");
         }
         finally
-     {
+        {
       isProcessing = false;
         }
     }
 
-    private string GenerateFormHtml(RequisitionPrintingService.FormType formType)
+    private async Task HandlePrint()
     {
-      if (FormPrintService == null || client == null)
-            return "<html><body>Error: Unable to generate form</body></html>";
+  if (!ValidateForm()) return;
+
+ isProcessing = true;
+        validationErrors.Clear();
+        successMessage = null;
 
         try
         {
-        string formContent = formType switch
-  {
-          RequisitionPrintingService.FormType.CLIREQ or
-      RequisitionPrintingService.FormType.PTHREQ or
-            RequisitionPrintingService.FormType.CYTREQ =>
-   FormPrintService.GenerateRequisitionForm(client, quantity, formType.ToString()),
+    if (PrintingService == null || client == null) return;
+
+            // Get current user
+  string userName = "Unknown";
+    if (AuthenticationStateProvider != null)
+            {
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+  userName = authState.User?.Identity?.Name ?? "Unknown";
+            }
+
+// Parse form type
+       if (!Enum.TryParse<RequisitionPrintingService.FormType>(selectedFormType, out var formType))
+     {
+  validationErrors.Add("Invalid form type selected");
+  return;
+       }
+
+            if (printingMethod == "DotMatrix")
+            {
+    await HandleDotMatrixPrint(formType, userName);
+            }
+      else
+    {
+  await HandleBrowserPrint(formType, userName);
+            }
+        }
+        catch (Exception ex)
+   {
+       validationErrors.Add($"An error occurred: {ex.Message}");
+      }
+        finally
+        {
+      isProcessing = false;
+        }
+    }
+
+    private async Task HandleDotMatrixPrint(RequisitionPrintingService.FormType formType, string userName)
+    {
+        if (PrintingService == null || client == null) return;
+
+        // Check if form type is supported for dot-matrix
+        if (!IsDotMatrixSupported(selectedFormType))
+        {
+    validationErrors.Add("This form type is not supported for dot-matrix printing. Please use Browser Print method.");
+            return;
+        }
+
+        // Validate client data
+    var (isValid, errors) = await PrintingService.ValidateClientForPrinting(ClientMnemonic, UnitOfWork);
+    if (!isValid)
+        {
+      validationErrors.AddRange(errors);
+    return;
+      }
+
+        // Print directly to dot-matrix printer
+        var (success, message) = await PrintingService.PrintToDotMatrixAsync(
+  ClientMnemonic,
+            selectedPrinter!,
+        formType,
+       quantity,
+      userName
+        );
+
+        if (success)
+     {
+            successMessage = message;
+        }
+        else
+        {
+ validationErrors.Add(message);
+    }
+    }
+
+    private async Task HandleBrowserPrint(RequisitionPrintingService.FormType formType, string userName)
+    {
+        if (PrintingService == null || client == null || JSRuntime == null) return;
+
+  // Validate client data
+        var (isValid, errors) = await PrintingService.ValidateClientForPrinting(ClientMnemonic, UnitOfWork);
+   if (!isValid)
+        {
+   validationErrors.AddRange(errors);
+  return;
+        }
+
+        // Generate the form HTML for printing
+        string formHtml = GenerateFormHtml(formType);
+
+        // Record the print job
+    var recordSuccess = await PrintingService.RecordPrintJobAsync(
+     ClientMnemonic,
+            client.Name,
+      formType,
+       quantity,
+            selectedPrinter!,
+          userName
+ );
+
+        if (recordSuccess)
+   {
+        successMessage = $"Print job recorded successfully! {quantity} {GetFormTypeDisplay(formType)} form(s) sent to {selectedPrinter}";
+
+            // Trigger browser print with the generated HTML
+            await PrintFormHtml(formHtml, formType.ToString());
+      }
+        else
+        {
+            validationErrors.Add("Failed to record print job. Please try again.");
+ }
+    }
+
+    private bool IsDotMatrixSupported(string? formTypeStr)
+    {
+        if (string.IsNullOrEmpty(formTypeStr)) return false;
+
+     // Dot-matrix printing currently supports requisition forms only
+        return formTypeStr == "CLIREQ" || 
+ formTypeStr == "PTHREQ" || 
+        formTypeStr == "CYTREQ";
+    }
+
+    private IEnumerable<RequisitionPrintingService.FormType> GetSupportedFormTypes()
+    {
+ var allTypes = Enum.GetValues<RequisitionPrintingService.FormType>();
+
+        if (printingMethod == "DotMatrix")
+        {
+     // Only show dot-matrix compatible forms
+            return allTypes.Where(ft => 
+    ft == RequisitionPrintingService.FormType.CLIREQ ||
+         ft == RequisitionPrintingService.FormType.PTHREQ ||
+                ft == RequisitionPrintingService.FormType.CYTREQ);
+        }
+
+    return allTypes;
+    }
+
+    private void HandleClearAll()
+    {
+        useAlternativeSite = false;
+      ClearAlternativeSite();
+    selectedFormType = null;
+        quantity = 1;
+        selectedPrinter = PrintingService?.GetDefaultPrinter();
+        printingMethod = "Browser";
+      addDapNotation = false;
+        cutForms = false;
+    validationErrors.Clear();
+        successMessage = null;
+        showPreview = false;
+    }
+
+    private void ClearAlternativeSite()
+    {
+        alternativeSiteName = string.Empty;
+        alternativeSiteAddress = string.Empty;
+        alternativeSiteCity = string.Empty;
+        alternativeSiteState = string.Empty;
+        alternativeSiteZip = string.Empty;
+        alternativeSitePhone = string.Empty;
+    }
+
+    private string GetFormTypeDisplay(RequisitionPrintingService.FormType formType)
+    {
+        return formType switch
+        {
+            RequisitionPrintingService.FormType.CLIREQ => "Client Requisition Forms",
+            RequisitionPrintingService.FormType.PTHREQ => "Path Requisition Forms",
+            RequisitionPrintingService.FormType.CYTREQ => "Cytology Requisition Forms",
+            RequisitionPrintingService.FormType.CUSTODY => "Chain of Custody Forms",
+        RequisitionPrintingService.FormType.LABOFFICE => "Lab Office Forms (TOX LAB)",
+  RequisitionPrintingService.FormType.EDLAB => "ED Lab Forms",
+            RequisitionPrintingService.FormType.EHS => "EHS Forms",
+ _ => formType.ToString()
+};
+    }
+
+    private string GenerateFormHtml(RequisitionPrintingService.FormType formType)
+    {
+     if (FormPrintService == null || client == null)
+       return "<html><body>Error: Unable to generate form</body></html>";
+
+  try
+        {
+       string formContent = formType switch
+          {
+      RequisitionPrintingService.FormType.CLIREQ or
+   RequisitionPrintingService.FormType.PTHREQ or
+         RequisitionPrintingService.FormType.CYTREQ =>
+        FormPrintService.GenerateRequisitionForm(client, quantity, formType.ToString()),
 
       RequisitionPrintingService.FormType.CUSTODY =>
-            FormPrintService.GenerateCustodyForm(client, GetAlternativeSiteForService(), addDapNotation, quantity),
+   FormPrintService.GenerateCustodyForm(client, GetAlternativeSiteForService(), addDapNotation, quantity),
 
-       RequisitionPrintingService.FormType.LABOFFICE =>
-         FormPrintService.GenerateLabOfficeForm(quantity),
+ RequisitionPrintingService.FormType.LABOFFICE =>
+           FormPrintService.GenerateLabOfficeForm(quantity),
 
-     RequisitionPrintingService.FormType.EDLAB =>
-    FormPrintService.GenerateEdLabForm(quantity),
+RequisitionPrintingService.FormType.EDLAB =>
+         FormPrintService.GenerateEdLabForm(quantity),
 
-_ => "<div class='form-container'><p>Unsupported form type</p></div>"
-            };
+    _ => "<div class='form-container'><p>Unsupported form type</p></div>"
+       };
 
-            // Wrap with complete HTML document including stylesheets
-            return BuildCompleteHtmlDocument(formContent);
-    }
-    catch (Exception ex)
-    {
-            return $"<html><body><p>Error generating form: {ex.Message}</p></body></html>";
+    // Wrap with complete HTML document including stylesheets
+          return BuildCompleteHtmlDocument(formContent);
         }
+        catch (Exception ex)
+        {
+  return $"<html><body><p>Error generating form: {ex.Message}</p></body></html>";
+   }
     }
 
     private string BuildCompleteHtmlDocument(string formContent)
     {
-    return $@"
+   return $@"
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-    <meta charset='utf-8' />
+  <meta charset='utf-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
     <title>Requisition Form Print</title>
     <link rel='stylesheet' href='/css/bootstrap/bootstrap.min.css' />
-  <link rel='stylesheet' href='/css/requisition-forms.css' />
+    <link rel='stylesheet' href='/css/requisition-forms.css' />
     <style>
-     body {{
-margin: 0;
-       padding: 0;
-   background: white;
-        }}
-        
-   @media print {{
-     body > *:not(.form-container) {{
-display: none !important;
-          }}
-  
-            .form-container {{
-        margin: 0;
-        padding: 0.5in;
-                page-break-after: always;
-       }}
+   body {{
+      margin: 0;
+    padding: 0;
+     background: white;
+    }}
+
+  @media print {{
+        body > *:not(.form-container) {{
+       display: none !important;
+ }}
+      .form-container {{
+      margin: 0;
+    padding: 0.5in;
+ page-break-after: always;
+      }}
         }}
     </style>
 </head>
@@ -518,85 +753,46 @@ display: none !important;
 
     private async Task PrintFormHtml(string html, string formType)
     {
-   try
-      {
+        try
+        {
             if (JSRuntime == null) return;
 
-            // Call JavaScript print helper
+    // Call JavaScript print helper
       await JSRuntime.InvokeVoidAsync("requisitionPrintHelper.printForm", html, formType);
-    }
+ }
         catch (Exception ex)
         {
-    validationErrors.Add($"Print error: {ex.Message}");
-        }
+  validationErrors.Add($"Print error: {ex.Message}");
+   }
     }
 
-    private FormPrintService.AlternativeSite? GetAlternativeSiteForService()
+  private FormPrintService.AlternativeSite? GetAlternativeSiteForService()
     {
-        if (!useAlternativeSite) return null;
+  if (!useAlternativeSite) return null;
 
-        return new FormPrintService.AlternativeSite
-        {
-Name = alternativeSiteName,
+  return new FormPrintService.AlternativeSite
+     {
+   Name = alternativeSiteName,
        Address = alternativeSiteAddress,
-     City = alternativeSiteCity,
+          City = alternativeSiteCity,
         State = alternativeSiteState,
-         Zip = alternativeSiteZip,
-            Phone = alternativeSitePhone
+        Zip = alternativeSiteZip,
+     Phone = alternativeSitePhone
         };
     }
 
     private CustodyFormLayout.AlternativeSiteData? GetAlternativeSiteData()
     {
-    if (!useAlternativeSite) return null;
+        if (!useAlternativeSite) return null;
 
-   return new CustodyFormLayout.AlternativeSiteData
-        {
-Name = alternativeSiteName,
+  return new CustodyFormLayout.AlternativeSiteData
+  {
+       Name = alternativeSiteName,
       Address = alternativeSiteAddress,
-  City = alternativeSiteCity,
-            State = alternativeSiteState,
+    City = alternativeSiteCity,
+         State = alternativeSiteState,
      Zip = alternativeSiteZip,
-         Phone = alternativeSitePhone
-        };
-    }
-
-    private void HandleClearAll()
-    {
-useAlternativeSite = false;
-        ClearAlternativeSite();
-    selectedFormType = null;
-        quantity = 1;
-   selectedPrinter = PrintingService?.GetDefaultPrinter();
-   addDapNotation = false;
-        cutForms = false;
-        validationErrors.Clear();
-        successMessage = null;
-        showPreview = false;
-    }
-
-    private void ClearAlternativeSite()
-    {
-        alternativeSiteName = string.Empty;
-    alternativeSiteAddress = string.Empty;
- alternativeSiteCity = string.Empty;
-    alternativeSiteState = string.Empty;
-        alternativeSiteZip = string.Empty;
-alternativeSitePhone = string.Empty;
-    }
-
-    private string GetFormTypeDisplay(RequisitionPrintingService.FormType formType)
-    {
-        return formType switch
-        {
-       RequisitionPrintingService.FormType.CLIREQ => "Client Requisition Forms",
-        RequisitionPrintingService.FormType.PTHREQ => "Path Requisition Forms",
-    RequisitionPrintingService.FormType.CYTREQ => "Cytology Requisition Forms",
-    RequisitionPrintingService.FormType.CUSTODY => "Chain of Custody Forms",
-    RequisitionPrintingService.FormType.LABOFFICE => "Lab Office Forms (TOX LAB)",
-     RequisitionPrintingService.FormType.EDLAB => "ED Lab Forms",
-  RequisitionPrintingService.FormType.EHS => "EHS Forms",
-            _ => formType.ToString()
-   };
+            Phone = alternativeSitePhone
+    };
     }
 }

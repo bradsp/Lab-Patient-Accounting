@@ -5,14 +5,14 @@
 
 /* Base form container styles */
 .form-container {
-    font-family: 'Courier New', Courier, monospace;
+  font-family: 'Courier New', Courier, monospace;
     font-size: 10pt;
-    line-height: 1.2em;
+    line-height: 1.0;
     white-space: pre;
     background: white;
     color: black;
-    padding: 1in;
-    width: 8.5in;
+    padding: 0.25in 1in 1in 1in;
+ width: 8.5in;
     min-height: 11in;
     box-sizing: border-box;
 }
@@ -20,11 +20,22 @@
 /* Requisition form specific styles */
 .requisition-form .client-info {
     font-family: 'Courier New', Courier, monospace;
+    line-height: 1.0;
+    margin: 0;
+    padding: 0;
+}
+
+.requisition-form .client-info.line-3 {
+    margin-top: 0 !important;
 }
 
 .requisition-form .field-line {
     font-family: 'Courier New', Courier, monospace;
     white-space: pre;
+    line-height: 1.0;
+    margin: 0;
+    padding: 0;
+    display: block;
 }
 
 /* Custody form specific styles */
@@ -183,11 +194,21 @@
 
 /* Print-specific styles */
 @media print {
-    .form-container {
+ .form-container {
         margin: 0;
-        padding: 0.5in;
+        padding: 0.25in 0.5in 0.5in 0.5in;
         page-break-after: always;
-        box-shadow: none;
+   box-shadow: none;
+    }
+    
+    .requisition-form .client-info.line-3 {
+        margin-top: 0 !important;
+    }
+    
+    .requisition-form .field-line {
+        line-height: 1.0 !important;
+   margin: 0 !important;
+        padding: 0 !important;
     }
 
     body {
@@ -196,12 +217,12 @@
     }
 
         /* Hide everything except the form */
-        body > *:not(.form-container) {
-            display: none !important;
+ body > *:not(.form-container) {
+        display: none !important;
         }
 
     .print-preview-container {
-        background: white;
+     background: white;
         padding: 0;
         border: none;
     }
@@ -211,10 +232,10 @@
     .client-line,
     .lab-line,
     .site-name,
-    .site-address {
+  .site-address {
         font-family: 'Courier New', Courier, monospace !important;
-        white-space: pre !important;
-    }
+     white-space: pre !important;
+ }
 }
 
 /* Screen display - show border around form */
