@@ -145,10 +145,19 @@
 <div class="row mt-4">
     <div class="col-md-12">
      <div class="alert alert-light border">
-       <h6><span class="oi oi-info"></span> System Information</h6>
+  <div class="d-flex justify-content-between align-items-center">
+     <div>
+         <h6><span class="oi oi-info"></span> System Information</h6>
 <p class="mb-1"><strong>Environment:</strong> @GetEnvironment()</p>
      <p class="mb-1"><strong>Version:</strong> 1.0.0</p>
-            <p class="mb-0"><strong>Last Updated:</strong> @DateTime.Now.ToString("MMMM yyyy")</p>
+      <p class="mb-0"><strong>Last Updated:</strong> @DateTime.Now.ToString("MMMM yyyy")</p>
+    </div>
+             <div>
+           <a href="/help" class="btn btn-outline-primary">
+       <span class="oi oi-book"></span> Help & Documentation
+     </a>
+      </div>
+   </div>
         </div>
     </div>
 </div>

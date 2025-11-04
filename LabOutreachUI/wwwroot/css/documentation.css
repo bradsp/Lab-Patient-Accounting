@@ -1,0 +1,208 @@
+/* Documentation Page Styles */
+
+.document-content {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #333;
+}
+
+.document-content h1 {
+  color: #0d6efd;
+  border-bottom: 3px solid #0d6efd;
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.document-content h2 {
+    color: #0c5ab5;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.3rem;
+    margin-top: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.document-content h3 {
+    color: #495057;
+    margin-top: 1.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.document-content h4 {
+    color: #6c757d;
+    margin-top: 1.2rem;
+    margin-bottom: 0.6rem;
+}
+
+.document-content p {
+    margin-bottom: 1rem;
+}
+
+.document-content ul,
+.document-content ol {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+}
+
+.document-content li {
+    margin-bottom: 0.5rem;
+}
+
+.document-content pre {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+
+.document-content code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.document-content pre code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+}
+
+.document-content blockquote {
+    font-style: italic;
+    margin: 1.5rem 0;
+}
+
+.document-content table {
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.document-content table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.document-content table td,
+.document-content table th {
+    padding: 0.75rem;
+    vertical-align: top;
+}
+
+.document-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5rem auto;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.document-content hr {
+    margin: 2rem 0;
+    border-top: 2px solid #dee2e6;
+}
+
+.document-content a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.document-content a:hover {
+    color: #0a58ca;
+    text-decoration: underline;
+}
+
+/* Sidebar Sticky */
+.sticky-top {
+    position: sticky;
+    z-index: 1020;
+}
+
+/* Active link styling */
+.list-group-item.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Print styles */
+@media print {
+    .col-md-3,
+    .card-header,
+    .card-footer,
+    .alert {
+        display: none;
+    }
+
+    .col-md-9 {
+        width: 100%;
+        max-width: 100%;
+      flex: 0 0 100%;
+    }
+
+    .document-content {
+     font-size: 11pt;
+    }
+
+    .document-content h1 {
+        page-break-after: avoid;
+    }
+
+    .document-content pre {
+        page-break-inside: avoid;
+     border: 1px solid #000;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .document-content {
+        font-size: 0.95rem;
+    }
+
+    .document-content h1 {
+        font-size: 1.75rem;
+    }
+
+    .document-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .document-content pre {
+        font-size: 0.8rem;
+    }
+}
+
+/* Code block syntax highlighting placeholders */
+.document-content .language-sql,
+.document-content .language-csharp,
+.document-content .language-json {
+    color: #212529;
+}
+
+/* Task list styling */
+.document-content input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+/* Warning/Info boxes from markdown */
+.document-content > p:has(> strong:first-child) {
+    padding: 0.75rem 1rem;
+    border-left: 4px solid #0d6efd;
+    background-color: #f8f9fa;
+    margin-bottom: 1rem;
+}
+
+/* Table of Contents styling */
+.document-content nav ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.document-content nav ul li {
+    margin-bottom: 0.25rem;
+}
+
+.document-content nav ul ul {
+    padding-left: 1.5rem;
+}
