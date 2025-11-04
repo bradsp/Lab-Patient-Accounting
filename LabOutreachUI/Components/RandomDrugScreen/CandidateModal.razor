@@ -22,7 +22,8 @@
 
                         <div class="mb-3">
                             <label for="candidateClient" class="form-label">Client *</label>
-                            <AutocompleteInput TItem="Client"
+                            <AutocompleteInput @ref="clientAutocomplete" 
+                                               TItem="Client"
                                                Items="@Clients"
                                                SearchProperty="@(c => $"{c.Name} ({c.ClientMnem})")"
                                                ValueProperty="@(c => c.ClientMnem)"
@@ -74,6 +75,8 @@
     [Parameter] public EventCallback<RandomDrugScreenPerson> OnSave { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
 
+    private AutocompleteInput<Client>? clientAutocomplete;
+
     // Template for autocomplete items
     private RenderFragment<Client> clientItemTemplate = client => __builder =>
     {
@@ -83,6 +86,20 @@
             <small class="text-muted">@client.ClientMnem</small>
         </div>
     };
+
+    protected override async Task OnParametersSetAsync()
+    {
+      // When editing a candidate, set the initial value in the autocomplete
+        if (IsVisible && Candidate != null && !string.IsNullOrEmpty(Candidate.ClientMnemonic) && clientAutocomplete != null)
+        {
+       var selectedClient = Clients.FirstOrDefault(c => c.ClientMnem == Candidate.ClientMnemonic);
+       if (selectedClient != null)
+         {
+     await Task.Delay(10); // Small delay to ensure component is rendered
+        clientAutocomplete.SetValue($"{selectedClient.Name} ({selectedClient.ClientMnem})");
+        }
+      }
+    }
 
     private async Task HandleSave()
     {
