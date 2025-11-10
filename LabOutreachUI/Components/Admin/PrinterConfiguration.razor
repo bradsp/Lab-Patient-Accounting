@@ -1,0 +1,299 @@
+﻿@page "/admin/printer-configuration"
+@using LabBilling.Core.Models
+@using LabBilling.Core.Services
+@using LabBilling.Core.DataAccess
+@using LabBilling.Core.UnitOfWork
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IAppEnvironment AppEnvironment
+@inject RequisitionPrintingService PrintingService
+@inject AuthenticationStateProvider AuthStateProvider
+
+<div class="container-fluid mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <span class="oi oi-cog"></span> Network Printer Configuration
+            </h4>
+        </div>
+        <div class="card-body">
+            <!-- Configuration Help -->
+            <div class="alert alert-info">
+                <h5 class="alert-heading"><span class="oi oi-info"></span> Network Printer Setup for IIS Deployment</h5>
+                <p>
+                    When running on an IIS server, the application must use network-shared printers (UNC paths)
+                    instead of locally installed printers. Client PC printers must be shared on the network.
+                </p>
+                <p class="mb-0">
+                    <strong>UNC Path Format:</strong> <code>\\COMPUTER-NAME\PrinterShareName</code> or <code>\\192.168.1.100\PrinterShareName</code>
+                </p>
+            </div>
+
+            <!-- Current Configuration Display -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <h5>Current Printer Configuration</h5>
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Form Type</th>
+                                <th>Configured Printer (UNC Path)</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Client Requisition (CLIREQ)</td>
+                                <td>
+                                    <code>@(AppEnvironment.ApplicationParameters.DefaultClientRequisitionPrinter ?? "Not Configured")</code>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(AppEnvironment.ApplicationParameters.DefaultClientRequisitionPrinter))
+                                    {
+                                        <button class="btn btn-sm btn-outline-primary" @onclick="() => TestPrinterConnection(AppEnvironment.ApplicationParameters.DefaultClientRequisitionPrinter)">
+                                            <span class="oi oi-check"></span> Test
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning">Not Set</span>
+                                    }
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" @onclick="() => PrintAlignmentTest(AppEnvironment.ApplicationParameters.DefaultClientRequisitionPrinter)">
+                                        <span class="oi oi-target"></span> Alignment Test
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Pathology Requisition (PTHREQ)</td>
+                                <td>
+                                    <code>@(AppEnvironment.ApplicationParameters.DefaultPathologyReqPrinter ?? "Not Configured")</code>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(AppEnvironment.ApplicationParameters.DefaultPathologyReqPrinter))
+                                    {
+                                        <button class="btn btn-sm btn-outline-primary" @onclick="() => TestPrinterConnection(AppEnvironment.ApplicationParameters.DefaultPathologyReqPrinter)">
+                                            <span class="oi oi-check"></span> Test
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning">Not Set</span>
+                                    }
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" @onclick="() => PrintAlignmentTest(AppEnvironment.ApplicationParameters.DefaultPathologyReqPrinter)">
+                                        <span class="oi oi-target"></span> Alignment Test
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Cytology Requisition (CYTREQ)</td>
+                                <td>
+                                    <code>@(AppEnvironment.ApplicationParameters.DefaultCytologyRequisitionPrinter ?? "Not Configured")</code>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(AppEnvironment.ApplicationParameters.DefaultCytologyRequisitionPrinter))
+                                    {
+                                        <button class="btn btn-sm btn-outline-primary" @onclick="() => TestPrinterConnection(AppEnvironment.ApplicationParameters.DefaultCytologyRequisitionPrinter)">
+                                            <span class="oi oi-check"></span> Test
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning">Not Set</span>
+                                    }
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" @onclick="() => PrintAlignmentTest(AppEnvironment.ApplicationParameters.DefaultCytologyRequisitionPrinter)">
+                                        <span class="oi oi-target"></span> Alignment Test
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Available Network Printers -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <h5>Available Network Printers</h5>
+                    <p class="text-muted">Printers configured in system parameters or discovered on the network</p>
+                    @if (availablePrinters.Count > 0)
+                    {
+                        <ul class="list-group">
+                            @foreach (var printer in availablePrinters)
+                            {
+                                <li class="list-group-item">
+                                    <code>@printer</code>
+                                    <span class="float-end">
+                                        @if (printer.StartsWith(@"\\"))
+                                        {
+                                            <span class="badge bg-success me-2">Network UNC</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning me-2">Local Printer</span>
+                                        }
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <span class="oi oi-warning"></span> No printers found. Please configure network printers in System Parameters.
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Test Results -->
+            @if (testResults.Count > 0)
+            {
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h5>Test Results</h5>
+                        <div class="list-group">
+                            @foreach (var result in testResults)
+                            {
+                                <div class="list-group-item @(result.Success ? "list-group-item-success" : "list-group-item-danger")">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">
+                                            @if (result.Success)
+                                            {
+                                                <span class="oi oi-check text-success"></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="oi oi-x text-danger"></span>
+                                            }
+                                            @result.PrinterName
+                                        </h6>
+                                        <small>@result.Timestamp.ToString("HH:mm:ss")</small>
+                                    </div>
+                                    <p class="mb-1">@result.Message</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Configuration Instructions -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Configuration Instructions</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>1. Share Printer on Client PC</h6>
+                            <ul>
+                                <li>On the client PC with the dot-matrix printer: Settings → Devices → Printers</li>
+                                <li>Select printer → Manage → Printer Properties → Sharing tab</li>
+                                <li>Enable "Share this printer" and set a share name (e.g., "DotMatrixReq")</li>
+                                <li>Note the UNC path: <code>\\CLIENT-PC-NAME\DotMatrixReq</code></li>
+                            </ul>
+
+                            <h6>2. Grant Server Access</h6>
+                            <ul>
+                                <li>On the shared printer: Printer Properties → Security tab</li>
+                                <li>Add IIS application pool identity with "Print" permission</li>
+                                <li>Ensure firewall allows File and Printer Sharing (ports 139, 445)</li>
+                            </ul>
+
+                            <h6>3. Update System Parameters</h6>
+                            <ul>
+                                <li>Go to System Settings → Parameters → Environment category</li>
+                                <li>Update printer parameters with UNC paths</li>
+                                <li>Or update directly in database:</li>
+                            </ul>
+                            <pre class="bg-light p-2"><code>UPDATE dbo.system_parms 
+SET parm_value = '\\CLIENT-PC\DotMatrixReq'
+WHERE key_name = 'DefaultClientRequisitionPrinter';</code></pre>
+
+                            <h6>4. Test Configuration</h6>
+                            <ul>
+                                <li>Use the "Test" buttons above to verify connectivity</li>
+                                <li>Use "Alignment Test" to print test pattern and verify form positioning</li>
+                            </ul>
+
+                            <div class="alert alert-warning mt-3">
+                                <strong>Important:</strong> Changes to system parameters require application restart to take effect.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<string> availablePrinters = new();
+    private List<TestResult> testResults = new();
+
+    protected override void OnInitialized()
+    {
+        LoadAvailablePrinters();
+    }
+
+    private void LoadAvailablePrinters()
+    {
+        availablePrinters = PrintingService.GetAvailablePrinters();
+    }
+
+    private async Task TestPrinterConnection(string? printerPath)
+    {
+        if (string.IsNullOrEmpty(printerPath))
+        {
+            AddTestResult(printerPath ?? "Unknown", false, "Printer path is not configured");
+            return;
+        }
+
+        var (isValid, message) = PrintingService.ValidatePrinterAccess(printerPath);
+        AddTestResult(printerPath, isValid, message);
+    }
+
+    private void PrintAlignmentTest(string? printerPath)
+    {
+        if (string.IsNullOrEmpty(printerPath))
+        {
+            AddTestResult(printerPath ?? "Unknown", false, "Printer path is not configured");
+            return;
+        }
+
+        bool success = PrintingService.PrintAlignmentTest(printerPath);
+        AddTestResult(printerPath, success,
+   success ? "Alignment test sent to printer. Check output." : "Failed to send alignment test.");
+    }
+
+    private void AddTestResult(string printerName, bool success, string message)
+    {
+        testResults.Insert(0, new TestResult
+        {
+            PrinterName = printerName,
+            Success = success,
+            Message = message,
+            Timestamp = DateTime.Now
+        });
+
+        // Keep only last 10 results
+        if (testResults.Count > 10)
+        {
+            testResults.RemoveAt(testResults.Count - 1);
+        }
+    }
+
+    private class TestResult
+    {
+        public string PrinterName { get; set; } = string.Empty;
+        public bool Success { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public DateTime Timestamp { get; set; }
+    }
+}

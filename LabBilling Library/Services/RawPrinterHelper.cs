@@ -37,7 +37,7 @@ public static class RawPrinterHelper
     [DllImport("winspool.Drv", EntryPoint = "StartPagePrinter", SetLastError = true, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
     public static extern bool StartPagePrinter(IntPtr hPrinter);
 
-  [DllImport("winspool.Drv", EntryPoint = "EndPagePrinter", SetLastError = true, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
+    [DllImport("winspool.Drv", EntryPoint = "EndPagePrinter", SetLastError = true, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
     public static extern bool EndPagePrinter(IntPtr hPrinter);
 
     [DllImport("winspool.Drv", EntryPoint = "WritePrinter", SetLastError = true, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
@@ -45,7 +45,7 @@ public static class RawPrinterHelper
 
     /// <summary>
     /// Sends raw data (PCL5 commands, text, etc.) directly to the specified printer.
-/// Bypasses Windows GDI for direct hardware control.
+    /// Bypasses Windows GDI for direct hardware control.
     /// </summary>
     /// <param name="printerName">Name of the printer as it appears in Windows</param>
     /// <param name="dataToSend">Raw byte array containing PCL5 commands and data</param>
@@ -54,58 +54,58 @@ public static class RawPrinterHelper
     public static bool SendBytesToPrinter(string printerName, byte[] dataToSend, string documentName = "Raw Print Job")
     {
         IntPtr hPrinter = IntPtr.Zero;
-  DOCINFOA di = new DOCINFOA();
+        DOCINFOA di = new DOCINFOA();
         bool success = false;
 
         di.pDocName = documentName;
         di.pDataType = "RAW"; // RAW data type bypasses Windows print processor
 
-     try
+        try
         {
-         // Open the printer
-      if (!OpenPrinter(printerName.Normalize(), out hPrinter, IntPtr.Zero))
+            // Open the printer
+            if (!OpenPrinter(printerName.Normalize(), out hPrinter, IntPtr.Zero))
             {
-  return false;
-     }
+                return false;
+            }
 
             // Start a document
-     if (!StartDocPrinter(hPrinter, 1, di))
-      {
-       return false;
-      }
+            if (!StartDocPrinter(hPrinter, 1, di))
+            {
+                return false;
+            }
 
-        // Start a page
-  if (!StartPagePrinter(hPrinter))
-   {
-         return false;
- }
+            // Start a page
+            if (!StartPagePrinter(hPrinter))
+            {
+                return false;
+            }
 
             // Write the data
-     IntPtr pUnmanagedBytes = Marshal.AllocCoTaskMem(dataToSend.Length);
-          Marshal.Copy(dataToSend, 0, pUnmanagedBytes, dataToSend.Length);
+            IntPtr pUnmanagedBytes = Marshal.AllocCoTaskMem(dataToSend.Length);
+            Marshal.Copy(dataToSend, 0, pUnmanagedBytes, dataToSend.Length);
 
-   int bytesWritten = 0;
-        success = WritePrinter(hPrinter, pUnmanagedBytes, dataToSend.Length, out bytesWritten);
+            int bytesWritten = 0;
+            success = WritePrinter(hPrinter, pUnmanagedBytes, dataToSend.Length, out bytesWritten);
 
-         Marshal.FreeCoTaskMem(pUnmanagedBytes);
+            Marshal.FreeCoTaskMem(pUnmanagedBytes);
 
             // End the page
             EndPagePrinter(hPrinter);
 
             // End the document
             EndDocPrinter(hPrinter);
-    }
+        }
         finally
-   {
-   // Close the printer handle
+        {
+            // Close the printer handle
             if (hPrinter != IntPtr.Zero)
-  {
-         ClosePrinter(hPrinter);
-   }
-    }
+            {
+                ClosePrinter(hPrinter);
+            }
+        }
 
         return success;
-  }
+    }
 
     /// <summary>
     /// Sends a string directly to the printer.
@@ -118,12 +118,12 @@ public static class RawPrinterHelper
     /// <returns>True if successful</returns>
     public static bool SendStringToPrinter(string printerName, string stringToSend, string documentName = "Text Print Job", Encoding encoding = null)
     {
-    encoding ??= Encoding.ASCII; // Default to ASCII for dot-matrix printers
-    byte[] bytes = encoding.GetBytes(stringToSend);
+        encoding ??= Encoding.ASCII; // Default to ASCII for dot-matrix printers
+        byte[] bytes = encoding.GetBytes(stringToSend);
         return SendBytesToPrinter(printerName, bytes, documentName);
     }
 
- /// <summary>
+    /// <summary>
     /// Gets the last Win32 error message for debugging printer communication issues.
     /// </summary>
     /// <returns>Error message string</returns>

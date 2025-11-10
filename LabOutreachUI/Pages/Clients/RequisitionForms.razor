@@ -8,28 +8,24 @@
         <li class="breadcrumb-item"><a href="/">Home</a></li>
         <li class="breadcrumb-item"><a href="/clients">Client Viewer</a></li>
         <li class="breadcrumb-item active" aria-current="page">Requisition Forms</li>
-    </ol>
+ </ol>
 </nav>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h1>Requisition Forms</h1>
-        <p class="lead text-muted">
+<div class="d-flex justify-content-between align-items-center mb-3">
+<div>
+        <h3 class="mb-1">Requisition Forms</h3>
+        <div>
             <span class="badge bg-primary">@ClientMnem</span>
-        </p>
+        </div>
     </div>
     <div>
-        <a href="/clients" class="btn btn-outline-secondary">
-            <span class="oi oi-arrow-left"></span> Back to Client Viewer
+        <a href="/clients" class="btn btn-sm btn-outline-secondary">
+     <span class="oi oi-arrow-left"></span> Back to Clients
         </a>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <AddressRequisitionPrint ClientMnemonic="@ClientMnem" />
-    </div>
-</div>
+<AddressRequisitionPrint ClientMnemonic="@ClientMnem" />
 
 @code {
     [Parameter]

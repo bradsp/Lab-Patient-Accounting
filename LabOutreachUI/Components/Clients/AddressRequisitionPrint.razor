@@ -1,369 +1,221 @@
 @using LabBilling.Core.Models
 @using LabBilling.Core.Services
 @using LabBilling.Core.UnitOfWork
+@using LabBilling.Logging
 @using Microsoft.AspNetCore.Components.Authorization
 @using LabOutreachUI.Components.Forms
-@using Microsoft.JSInterop
 
 <div class="card">
-    <div class="card-header bg-primary text-white">
+    <div class="card-header bg-primary text-white py-2">
         <h5 class="mb-0">
           <span class="oi oi-document"></span> Print Requisition Forms
         </h5>
-    </div>
+  </div>
     <div class="card-body">
-        @if (client == null)
-        {
-     <div class="alert alert-warning">
-       <span class="oi oi-warning"></span> Loading client information...
-     </div>
+     @if (client == null)
+{
+  <div class="alert alert-warning py-2">
+   <small><span class="oi oi-warning"></span> Loading client information...</small>
+   </div>
         }
      else
-        {
+    {
    <!-- Client Information Display -->
-            <div class="row mb-4">
-                <div class="col-md-12">
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <h6 class="card-title">Client Information</h6>
-                            <dl class="row mb-0">
-                                <dt class="col-sm-3">Client:</dt>
-                                <dd class="col-sm-9">
-                                    <strong>@client.Name</strong>
-                                    <span class="badge bg-secondary ms-2">@client.ClientMnem</span>
-                                </dd>
-
-                                <dt class="col-sm-3">Address:</dt>
-                                <dd class="col-sm-9">
-                                    @if (!string.IsNullOrWhiteSpace(client.StreetAddress1))
-                                    {
-                                        <div>@client.StreetAddress1</div>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(client.StreetAddress2))
-                                    {
-                                        <div>@client.StreetAddress2</div>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(client.City) || !string.IsNullOrWhiteSpace(client.State))
-                                    {
-                                        <div>@client.City, @client.State @client.ZipCode</div>
-                                    }
-                                </dd>
-
-                                @if (!string.IsNullOrWhiteSpace(client.Phone))
-                                {
-                                    <dt class="col-sm-3">Phone:</dt>
-                                    <dd class="col-sm-9">@client.Phone</dd>
-                                }
-
-                                @if (!string.IsNullOrWhiteSpace(client.Fax))
-                                {
-                                    <dt class="col-sm-3">Fax:</dt>
-                                    <dd class="col-sm-9">@client.Fax</dd>
-                                }
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Alternative Collection Site -->
-            <div class="row mb-4">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="mb-0">
-                                <input type="checkbox" class="form-check-input me-2" id="useAltSite"
-                                       @bind="useAlternativeSite" @bind:event="onchange" />
-                                <label class="form-check-label" for="useAltSite">
-                                    Use Alternative Collection Site
-                                </label>
-                            </h6>
-                        </div>
-                        @if (useAlternativeSite)
-                        {
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Site Name</label>
-                                        <input type="text" class="form-control" @bind="alternativeSiteName" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Phone</label>
-                                        <input type="text" class="form-control" @bind="alternativeSitePhone" />
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label">Address</label>
-                                        <input type="text" class="form-control" @bind="alternativeSiteAddress" />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <label class="form-label">City</label>
-                                        <input type="text" class="form-control" @bind="alternativeSiteCity" />
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label">State</label>
-                                        <input type="text" class="form-control" maxlength="2" @bind="alternativeSiteState" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">ZIP</label>
-                                        <input type="text" class="form-control" @bind="alternativeSiteZip" />
-                                    </div>
-                                    <div class="col-md-2 d-flex align-items-end">
-                                        <button class="btn btn-outline-secondary w-100" @onclick="ClearAlternativeSite">
-                                            <span class="oi oi-x"></span> Clear
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <!-- Print Configuration -->
-            <div class="row mb-4">
-    <div class="col-md-12">
-        <div class="card">
-    <div class="card-header">
-     <h6 class="mb-0">Print Configuration</h6>
-                 </div>
-    <div class="card-body">
-      <!-- Printing Method Selection -->
-               <div class="row mb-3">
-        <div class="col-md-12">
-     <label class="form-label">Printing Method <span class="text-danger">*</span></label>
-        <div class="btn-group w-100" role="group">
-        <input type="radio" class="btn-check" id="browserPrint" 
-  checked="@(printingMethod == "Browser")" @onchange="@(() => printingMethod = "Browser")" name="printMethod" />
-<label class="btn btn-outline-primary" for="browserPrint">
-         <span class="oi oi-monitor"></span> Browser Print (Standard)
-  </label>
-        
-     <input type="radio" class="btn-check" id="dotMatrixPrint" 
- checked="@(printingMethod == "DotMatrix")" @onchange="@(() => printingMethod = "DotMatrix")" name="printMethod" />
-    <label class="btn btn-outline-success" for="dotMatrixPrint">
-     <span class="oi oi-print"></span> Dot-Matrix (3-Ply Pin-Fed)
-     </label>
+     <div class="card bg-light mb-3">
+    <div class="card-body py-2">
+                <div class="row g-2">
+ <div class="col-md-6">
+          <strong class="small">Client:</strong>
+ <div>@client.Name <span class="badge bg-secondary">@client.ClientMnem</span></div>
       </div>
-      <small class="form-text text-muted">
- @if (printingMethod == "DotMatrix")
-   {
-      <span class="text-success">
-    <strong>Dot-Matrix Mode:</strong> Sends raw PCL5 commands directly to printer. 
-           Optimized for 3-ply pin-fed forms. Requires properly configured dot-matrix printer.
-     </span>
-     }
-  else
-   {
-          <span>
-<strong>Browser Print:</strong> Uses standard web browser printing. 
-     Works with any printer but may have positioning issues on pin-fed forms.
-       </span>
-     }
-       </small>
-      </div>
-  </div>
-
-  <div class="row mb-3">
       <div class="col-md-6">
-          <label class="form-label">Form Type <span class="text-danger">*</span></label>
-         <select class="form-select" @bind="selectedFormType">
-  <option value="">-- Select Form Type --</option>
-      @foreach (var formType in GetSupportedFormTypes())
-      {
-               <option value="@formType">@GetFormTypeDisplay(formType)</option>
+      <strong class="small">Address:</strong>
+        <div class="small">
+       @if (!string.IsNullOrWhiteSpace(client.StreetAddress1))
+     {
+   <div>@client.StreetAddress1</div>
+   @if (!string.IsNullOrWhiteSpace(client.StreetAddress2))
+         {
+           <div>@client.StreetAddress2</div>
   }
-     </select>
-        @if (printingMethod == "DotMatrix" && !IsDotMatrixSupported(selectedFormType))
-             {
-    <small class="text-warning">
-      <span class="oi oi-warning"></span> This form type is not optimized for dot-matrix printing. 
-            Consider using Browser Print method.
-      </small>
+       <div>@client.City, @client.State @client.ZipCode</div>
+          }
+ else
+  {
+       <span class="text-muted">Address not available</span>
+   }
+     </div>
+   </div>
+           </div>
+      <div class="row g-2 mt-1">
+       @if (!string.IsNullOrWhiteSpace(client.Phone))
+  {
+      <div class="col-md-3">
+ <strong class="small">Phone:</strong> <span class="small">@client.Phone</span>
+       </div>
+         }
+   @if (!string.IsNullOrWhiteSpace(client.Fax))
+       {
+    <div class="col-md-3">
+   <strong class="small">Fax:</strong> <span class="small">@client.Fax</span>
+      </div>
+      }
+  </div>
+   </div>
+        </div>
+
+ <!-- Print Configuration -->
+   <div class="card">
+    <div class="card-header bg-secondary text-white py-2">
+     <h6 class="mb-0">Print Configuration</h6>
+ </div>
+    <div class="card-body py-2">
+      <!-- Print Method Info -->
+         <div class="alert alert-info mb-2 py-2">
+   <small>
+       <strong><span class="oi oi-print"></span> Dot-Matrix Text Printing</strong><br/>
+     Forms sent as plain text directly to dot-matrix printer, optimized for 3-ply pin-fed forms.
+    </small>
+ </div>
+
+  <div class="row g-2 mb-2">
+    <div class="col-md-6">
+        <label class="form-label small mb-1">Form Type <span class="text-danger">*</span></label>
+    <select class="form-select form-select-sm" @bind="selectedFormType" @bind:after="OnFormTypeChanged">
+  <option value="">-- Select Form Type --</option>
+   @foreach (var formType in GetSupportedFormTypes())
+    {
+  <option value="@formType">@GetFormTypeDisplay(formType)</option>
+  }
+ </select>
+  @if (!string.IsNullOrEmpty(selectedFormType) && PrintingService != null && 
+       Enum.TryParse<RequisitionPrintingService.FormType>(selectedFormType, out var currentType))
+  {
+   <small class="text-muted d-block mt-1">
+    <span class="oi oi-info"></span> 
+ Default printer: <code>@(PrintingService.GetPrinterForFormType(currentType) ?? "Not configured")</code>
+     </small>
       }
    </div>
-         <div class="col-md-3">
-      <label class="form-label">Quantity <span class="text-danger">*</span></label>
-       <input type="number" class="form-control" min="1" max="999" @bind="quantity" />
-     </div>
+   <div class="col-md-3">
+      <label class="form-label small mb-1">Quantity <span class="text-danger">*</span></label>
+  <input type="number" class="form-control form-control-sm" min="1" max="999" @bind="quantity" />
+ </div>
 </div>
 
-       <div class="row mb-3">
+       <div class="row g-2 mb-2">
   <div class="col-md-9">
-<label class="form-label">Printer <span class="text-danger">*</span></label>
-    <select class="form-select" @bind="selectedPrinter">
-          <option value="">-- Select Printer --</option>
-                @foreach (var printer in availablePrinters)
+<label class="form-label small mb-1">Printer <span class="text-danger">*</span></label>
+  <select class="form-select form-select-sm" @bind="selectedPrinter">
+  <option value="">-- Select Printer --</option>
+      @foreach (var printer in availablePrinters)
      {
   <option value="@printer">@printer</option>
-           }
+       }
    </select>
-            @if (printingMethod == "DotMatrix" && !string.IsNullOrEmpty(selectedPrinter))
+    @if (!string.IsNullOrEmpty(selectedPrinter))
     {
         <small class="form-text text-muted">
-         <span class="oi oi-info"></span> Ensure this is a dot-matrix printer configured for pin-fed forms.
+     <span class="oi oi-info"></span> Ensure this is a dot-matrix printer configured for pin-fed forms.
        </small>
 }
-            </div>
-           <div class="col-md-3 d-flex align-items-end">
-       @if (printingMethod == "DotMatrix")
-             {
-          <button class="btn btn-outline-info w-100" @onclick="HandleAlignmentTest" 
-  disabled="@(string.IsNullOrEmpty(selectedPrinter) || isProcessing)">
-      <span class="oi oi-target"></span> Test Alignment
- </button>
-         }
-           </div>
-       </div>
-
-             <div class="row">
-            <div class="col-md-12">
-     @if (printingMethod == "Browser")
-           {
-   <div class="form-check">
-               <input type="checkbox" class="form-check-input" id="addDapNotation" @bind="addDapNotation" />
-       <label class="form-check-label" for="addDapNotation">
-    Add DAP11 ZT notation
-         </label>
+   @if (availablePrinters.Count == 0)
+  {
+     <div class="alert alert-warning mt-2 mb-0 py-1">
+     <small>
+  <span class="oi oi-warning"></span> 
+     <strong>No printers configured.</strong> Please configure network printer paths in System Parameters:
+      <ul class="mb-0 mt-1 small">
+ <li><code>DefaultClientRequisitionPrinter</code> - for CLIREQ forms</li>
+      <li><code>DefaultPathologyReqPrinter</code> - for PTHREQ forms</li>
+<li><code>DefaultCytologyRequisitionPrinter</code> - for CYTREQ forms</li>
+    </ul>
+  <span class="small">Use UNC paths like: <code>\\\\COMPUTER-NAME\\PrinterShare</code></span>
+      </small>
+     </div>
+        }
       </div>
-   <div class="form-check">
-       <input type="checkbox" class="form-check-input" id="cutForms" @bind="cutForms" />
-  <label class="form-check-label" for="cutForms">
-         Cut forms after printing (if supported)
- </label>
-          </div>
-     }
-            else
-           {
-     <div class="alert alert-info mb-0">
-   <small>
+    <div class="col-md-3 d-flex align-items-end">
+    <button class="btn btn-sm btn-outline-info w-100" @onclick="HandleAlignmentTest" 
+  disabled="@(string.IsNullOrEmpty(selectedPrinter) || isProcessing)">
+<span class="oi oi-target"></span> Test Alignment
+ </button>
+       </div>
+ </div>
+
+   <div class="alert alert-info mb-0 py-2">
+ <small>
     <strong>Dot-Matrix Print Settings:</strong>
-      <ul class="mb-0">
-           <li>Forms will be printed at 10 pitch (10 chars/inch)</li>
-           <li>6 lines per inch vertical spacing</li>
-  <li>3 lines from top, 50 characters from left margin</li>
-  <li>Automatic form feed after each page</li>
-        </ul>
+      <ul class="mb-0 small">
+  <li>Plain text format (no escape codes)</li>
+ <li>5 blank lines from top of form</li>
+  <li>60 characters (spaces) from left margin</li>
+  <li>Form feed character after each page</li>
+  </ul>
      </small>
    </div>
-       }
-        </div>
-         </div>
-        </div>
-            </div>
-          </div>
-            </div>
+   </div>
+  </div>
 
    <!-- Validation Messages -->
-            @if (validationErrors.Count > 0)
-            {
-                <div class="alert alert-danger">
-                    <h6 class="alert-heading">
-                        <span class="oi oi-warning"></span> Please correct the following errors:
-                    </h6>
-                    <ul class="mb-0">
-                        @foreach (var error in validationErrors)
-                        {
-                            <li>@error</li>
-                        }
-                    </ul>
-                </div>
-            }
-
-            @if (!string.IsNullOrEmpty(successMessage))
-            {
-                <div class="alert alert-success">
-                    <span class="oi oi-check"></span> @successMessage
-                </div>
-            }
-
-            <!-- Print Preview Section -->
-            @if (showPreview && !string.IsNullOrEmpty(previewHtml))
-            {
-                <div class="card mb-4">
-                    <div class="card-header bg-info text-white">
-                        <h6 class="mb-0">
-                            <span class="oi oi-eye"></span> Print Preview
-                        </h6>
-                    </div>
-                    <div class="card-body print-preview-container">
-                        @if (currentFormType == RequisitionPrintingService.FormType.CLIREQ ||
-                                        currentFormType == RequisitionPrintingService.FormType.PTHREQ ||
-                                        currentFormType == RequisitionPrintingService.FormType.CYTREQ)
-                        {
-                            <RequisitionFormLayout Client="@client" FormType="@selectedFormType" />
-                        }
-                        else if (currentFormType == RequisitionPrintingService.FormType.CUSTODY)
-                        {
-                            <CustodyFormLayout Client="@client"
-                                               AlternativeSite="@GetAlternativeSiteData()"
-                                               IncludeDap="@addDapNotation" />
-                        }
-                        else if (currentFormType == RequisitionPrintingService.FormType.LABOFFICE)
-                        {
-                            <LabOfficeFormLayout Copies="@quantity" />
-                        }
-                        else if (currentFormType == RequisitionPrintingService.FormType.EDLAB)
-                        {
-                            <EdLabFormLayout Copies="@quantity" />
-                        }
-                    </div>
-                </div>
-            }
-
-            <!-- Action Buttons -->
-            <div class="row">
-    <div class="col-md-12">
-          @if (printingMethod == "Browser")
-          {
-     <button class="btn btn-primary btn-lg me-2" @onclick="HandlePrintPreview" disabled="@isProcessing">
-               <span class="oi oi-eye"></span> Preview
-          </button>
-             }
-        <button class="btn btn-success btn-lg me-2" @onclick="HandlePrint" disabled="@isProcessing">
-            @if (isProcessing)
-   {
-            <span class="spinner-border spinner-border-sm me-2"></span>
-          }
-          else
-                {
-   <span class="oi oi-print"></span>
+    @if (validationErrors.Count > 0)
+       {
+   <div class="alert alert-danger py-2 mt-2">
+ <h6 class="small mb-1">
+  <span class="oi oi-warning"></span> Please correct the following errors:
+      </h6>
+        <ul class="mb-0 small">
+    @foreach (var error in validationErrors)
+     {
+ <li>@error</li>
        }
-               @(printingMethod == "DotMatrix" ? "Print to Dot-Matrix" : "Print")
-            </button>
-            <button class="btn btn-outline-secondary btn-lg" @onclick="HandleClearAll">
+        </ul>
+ </div>
+     }
+
+   @if (!string.IsNullOrEmpty(successMessage))
+  {
+    <div class="alert alert-success py-2 mt-2">
+<small><span class="oi oi-check"></span> @successMessage</small>
+      </div>
+    }
+
+  <!-- Action Buttons -->
+  <div class="d-flex gap-2 mt-3">
+     <button class="btn btn-success" @onclick="HandlePrint" disabled="@isProcessing">
+      @if (isProcessing)
+   {
+<span class="spinner-border spinner-border-sm me-2"></span>
+   }
+     else
+{
+   <span class="oi oi-print"></span>
+     }
+    Print Forms
+   </button>
+   <button class="btn btn-outline-secondary" @onclick="HandleClearAll">
    <span class="oi oi-reload"></span> Clear All
         </button>
-       </div>
-            </div>
-        }
-    </div>
+  </div>
+  }
+ </div>
 </div>
 
 @code {
     [Parameter]
     public string ClientMnemonic { get; set; } = string.Empty;
 
-    [Inject]
+ [Inject]
     private DictionaryService? DictionaryService { get; set; }
 
     [Inject]
     private IUnitOfWork? UnitOfWork { get; set; }
 
-    [Inject]
+[Inject]
     private RequisitionPrintingService? PrintingService { get; set; }
 
     [Inject]
     private AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
-
-    [Inject]
-    private IJSRuntime? JSRuntime { get; set; }
-
-    [Inject]
-    private FormPrintService? FormPrintService { get; set; }
 
     private Client? client;
     private List<string> availablePrinters = new();
@@ -371,119 +223,145 @@
     private string? successMessage;
     private bool isProcessing = false;
 
-    // Form fields
-    private bool useAlternativeSite = false;
-    private string alternativeSiteName = string.Empty;
-    private string alternativeSiteAddress = string.Empty;
-    private string alternativeSiteCity = string.Empty;
-    private string alternativeSiteState = string.Empty;
-    private string alternativeSiteZip = string.Empty;
-    private string alternativeSitePhone = string.Empty;
-
     private string? selectedFormType;
     private int quantity = 1;
     private string? selectedPrinter;
-    private bool addDapNotation = false;
-    private bool cutForms = false;
-
-    private string? previewHtml;
-    private bool showPreview = false;
-    private RequisitionPrintingService.FormType currentFormType;
-
-    private string printingMethod = "Browser"; // "Browser" or "DotMatrix"
 
     protected override async Task OnInitializedAsync()
     {
         await LoadClientData();
-        LoadPrinters();
+  LoadPrinters();
     }
 
     private async Task LoadClientData()
-    {
+ {
         if (!string.IsNullOrEmpty(ClientMnemonic) && DictionaryService != null && UnitOfWork != null)
         {
             client = DictionaryService.GetClient(ClientMnemonic, UnitOfWork);
-        }
+}
     }
 
     private void LoadPrinters()
     {
-        if (PrintingService != null)
-        {
-            availablePrinters = PrintingService.GetAvailablePrinters();
-            selectedPrinter = PrintingService.GetDefaultPrinter();
+      try
+    {
+       Log.Instance.Debug($"LoadPrinters() called for client {ClientMnemonic}");
+      
+     if (PrintingService == null)
+    {
+      Log.Instance.Error("PrintingService is null in LoadPrinters()");
+           availablePrinters = new List<string>();
+   return;
+         }
+
+  // Get printers from RequisitionPrintingService which reads from system parameters
+      availablePrinters = PrintingService.GetAvailablePrinters();
+     
+        Log.Instance.Info($"LoadPrinters() received {availablePrinters.Count} printer(s) from PrintingService");
+       
+  if (availablePrinters.Count > 0)
+      {
+     Log.Instance.Debug($"Available printers: {string.Join(", ", availablePrinters)}");
+      }
+   else
+    {
+   Log.Instance.Warn("No printers returned from PrintingService.GetAvailablePrinters()");
+  }
+     
+     // Add emulator option for development
+#if DEBUG
+         if (!availablePrinters.Contains("*** PCL5 EMULATOR (Development) ***"))
+   {
+       availablePrinters.Insert(0, "*** PCL5 EMULATOR (Development) ***");
+      Log.Instance.Debug("Added development emulator option");
+     }
+#endif
+
+     // Set default printer
+       string defaultPrinter = PrintingService.GetDefaultPrinter();
+  Log.Instance.Debug($"Default printer from service: '{defaultPrinter ?? "(null)"}'");
+  selectedPrinter = defaultPrinter;
         }
+  catch (Exception ex)
+  {
+       Log.Instance.Error($"Error in LoadPrinters(): {ex.Message}", ex);
+     availablePrinters = new List<string>();
+   }
     }
 
     private bool ValidateForm()
     {
         validationErrors.Clear();
-        successMessage = null;
+    successMessage = null;
 
-        if (string.IsNullOrEmpty(selectedFormType))
-        {
+    if (string.IsNullOrEmpty(selectedFormType))
+    {
             validationErrors.Add("Please select a form type");
-        }
+   }
 
-        if (quantity < 1 || quantity > 999)
-        {
+      if (quantity < 1 || quantity > 999)
+      {
             validationErrors.Add("Quantity must be between 1 and 999");
-        }
+      }
 
         if (string.IsNullOrEmpty(selectedPrinter))
         {
-            validationErrors.Add("Please select a printer");
+          validationErrors.Add("Please select a printer");
         }
 
         if (client == null)
-        {
+      {
             validationErrors.Add("Client information is not available");
-        }
+  }
 
-        return validationErrors.Count == 0;
-    }
-
-    private async Task HandlePrintPreview()
-    {
-        if (!ValidateForm()) return;
-
-        if (!Enum.TryParse<RequisitionPrintingService.FormType>(selectedFormType, out currentFormType))
-        {
-            validationErrors.Add("Invalid form type selected");
-            return;
-        }
-
-        showPreview = true;
-        StateHasChanged();
+  return validationErrors.Count == 0;
     }
 
     private async Task HandleAlignmentTest()
     {
-        if (string.IsNullOrEmpty(selectedPrinter) || PrintingService == null)
-        {
+  if (string.IsNullOrEmpty(selectedPrinter) || PrintingService == null)
+ {
             validationErrors.Add("Please select a printer first");
-            return;
-   }
+        return;
+        }
 
-    isProcessing = true;
-      validationErrors.Clear();
-  successMessage = null;
+        isProcessing = true;
+        validationErrors.Clear();
+        successMessage = null;
 
         try
         {
-            bool success = PrintingService.PrintAlignmentTest(selectedPrinter);
-
-   if (success)
-       {
-   successMessage = $"Alignment test pattern sent to {selectedPrinter}. Check the printed output to verify form positioning.";
-            }
-   else
+ // Check if using emulator
+          if (selectedPrinter.Contains("EMULATOR"))
             {
-           validationErrors.Add($"Failed to print alignment test: {RawPrinterHelper.GetLastErrorMessage()}");
+         var (success, message, filePath) = PrintingService.PrintAlignmentTestToEmulator();
+      
+              if (success)
+       {
+   successMessage = message;
+        }
+                else
+       {
+   validationErrors.Add(message);
       }
         }
+      else
+  {
+            // Real printer
+      bool success = PrintingService.PrintAlignmentTest(selectedPrinter);
+
+        if (success)
+      {
+         successMessage = $"Alignment test pattern sent to {selectedPrinter}. Check the printed output to verify form positioning.";
+      }
+      else
+     {
+       validationErrors.Add($"Failed to print alignment test: {RawPrinterHelper.GetLastErrorMessage()}");
+  }
+          }
+        }
         catch (Exception ex)
- {
+   {
             validationErrors.Add($"Alignment test error: {ex.Message}");
         }
         finally
@@ -494,305 +372,135 @@
 
     private async Task HandlePrint()
     {
-  if (!ValidateForm()) return;
+        if (!ValidateForm()) return;
 
- isProcessing = true;
+  isProcessing = true;
         validationErrors.Clear();
         successMessage = null;
 
         try
-        {
-    if (PrintingService == null || client == null) return;
-
-            // Get current user
-  string userName = "Unknown";
-    if (AuthenticationStateProvider != null)
-            {
-                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-  userName = authState.User?.Identity?.Name ?? "Unknown";
-            }
-
-// Parse form type
-       if (!Enum.TryParse<RequisitionPrintingService.FormType>(selectedFormType, out var formType))
      {
-  validationErrors.Add("Invalid form type selected");
-  return;
-       }
+        if (PrintingService == null || client == null) return;
 
-            if (printingMethod == "DotMatrix")
-            {
-    await HandleDotMatrixPrint(formType, userName);
+         // Get current user
+      string userName = "Unknown";
+      if (AuthenticationStateProvider != null)
+ {
+      var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+userName = authState.User?.Identity?.Name ?? "Unknown";
+         }
+
+  // Parse form type
+            if (!Enum.TryParse<RequisitionPrintingService.FormType>(selectedFormType, out var formType))
+     {
+     validationErrors.Add("Invalid form type selected");
+     return;
             }
-      else
+
+            // Validate client data
+        var (isValid, errors) = await PrintingService.ValidateClientForPrinting(ClientMnemonic, UnitOfWork);
+            if (!isValid)
+        {
+    validationErrors.AddRange(errors);
+                return;
+    }
+
+     // Check if using emulator
+    if (selectedPrinter!.Contains("EMULATOR"))
+      {
+          // Use emulator mode
+      var (success, message, filePath) = await PrintingService.PrintToEmulatorAsync(
+           ClientMnemonic,
+    formType,
+       quantity,
+          userName
+              );
+
+           if (success)
+     {
+successMessage = message;
+           }
+    else
+        {
+         validationErrors.Add(message);
+}
+ }
+            else
+     {
+     // Print directly to dot-matrix printer using raw PCL5
+                var (success, message) = await PrintingService.PrintToDotMatrixAsync(
+    ClientMnemonic,
+              selectedPrinter!,
+   formType,
+            quantity,
+         userName
+          );
+
+           if (success)
     {
-  await HandleBrowserPrint(formType, userName);
+         successMessage = message;
+    }
+     else
+          {
+      validationErrors.Add(message);
+     }
             }
         }
         catch (Exception ex)
-   {
-       validationErrors.Add($"An error occurred: {ex.Message}");
-      }
-        finally
         {
-      isProcessing = false;
+            validationErrors.Add($"An error occurred: {ex.Message}");
         }
-    }
-
-    private async Task HandleDotMatrixPrint(RequisitionPrintingService.FormType formType, string userName)
-    {
-        if (PrintingService == null || client == null) return;
-
-        // Check if form type is supported for dot-matrix
-        if (!IsDotMatrixSupported(selectedFormType))
-        {
-    validationErrors.Add("This form type is not supported for dot-matrix printing. Please use Browser Print method.");
-            return;
+      finally
+ {
+            isProcessing = false;
         }
-
-        // Validate client data
-    var (isValid, errors) = await PrintingService.ValidateClientForPrinting(ClientMnemonic, UnitOfWork);
-    if (!isValid)
-        {
-      validationErrors.AddRange(errors);
-    return;
-      }
-
-        // Print directly to dot-matrix printer
-        var (success, message) = await PrintingService.PrintToDotMatrixAsync(
-  ClientMnemonic,
-            selectedPrinter!,
-        formType,
-       quantity,
-      userName
-        );
-
-        if (success)
-     {
-            successMessage = message;
-        }
-        else
-        {
- validationErrors.Add(message);
-    }
-    }
-
-    private async Task HandleBrowserPrint(RequisitionPrintingService.FormType formType, string userName)
-    {
-        if (PrintingService == null || client == null || JSRuntime == null) return;
-
-  // Validate client data
-        var (isValid, errors) = await PrintingService.ValidateClientForPrinting(ClientMnemonic, UnitOfWork);
-   if (!isValid)
-        {
-   validationErrors.AddRange(errors);
-  return;
-        }
-
-        // Generate the form HTML for printing
-        string formHtml = GenerateFormHtml(formType);
-
-        // Record the print job
-    var recordSuccess = await PrintingService.RecordPrintJobAsync(
-     ClientMnemonic,
-            client.Name,
-      formType,
-       quantity,
-            selectedPrinter!,
-          userName
- );
-
-        if (recordSuccess)
-   {
-        successMessage = $"Print job recorded successfully! {quantity} {GetFormTypeDisplay(formType)} form(s) sent to {selectedPrinter}";
-
-            // Trigger browser print with the generated HTML
-            await PrintFormHtml(formHtml, formType.ToString());
-      }
-        else
-        {
-            validationErrors.Add("Failed to record print job. Please try again.");
- }
-    }
-
-    private bool IsDotMatrixSupported(string? formTypeStr)
-    {
-        if (string.IsNullOrEmpty(formTypeStr)) return false;
-
-     // Dot-matrix printing currently supports requisition forms only
-        return formTypeStr == "CLIREQ" || 
- formTypeStr == "PTHREQ" || 
-        formTypeStr == "CYTREQ";
     }
 
     private IEnumerable<RequisitionPrintingService.FormType> GetSupportedFormTypes()
     {
- var allTypes = Enum.GetValues<RequisitionPrintingService.FormType>();
-
-        if (printingMethod == "DotMatrix")
+ // Only return dot-matrix compatible form types
+        return new[]
         {
-     // Only show dot-matrix compatible forms
-            return allTypes.Where(ft => 
-    ft == RequisitionPrintingService.FormType.CLIREQ ||
-         ft == RequisitionPrintingService.FormType.PTHREQ ||
-                ft == RequisitionPrintingService.FormType.CYTREQ);
-        }
-
-    return allTypes;
+   RequisitionPrintingService.FormType.CLIREQ,
+   RequisitionPrintingService.FormType.PTHREQ,
+      RequisitionPrintingService.FormType.CYTREQ
+        };
     }
 
     private void HandleClearAll()
     {
-        useAlternativeSite = false;
-      ClearAlternativeSite();
-    selectedFormType = null;
+        selectedFormType = null;
         quantity = 1;
         selectedPrinter = PrintingService?.GetDefaultPrinter();
-        printingMethod = "Browser";
-      addDapNotation = false;
-        cutForms = false;
-    validationErrors.Clear();
+      validationErrors.Clear();
         successMessage = null;
-        showPreview = false;
-    }
-
-    private void ClearAlternativeSite()
-    {
-        alternativeSiteName = string.Empty;
-        alternativeSiteAddress = string.Empty;
-        alternativeSiteCity = string.Empty;
-        alternativeSiteState = string.Empty;
-        alternativeSiteZip = string.Empty;
-        alternativeSitePhone = string.Empty;
     }
 
     private string GetFormTypeDisplay(RequisitionPrintingService.FormType formType)
     {
         return formType switch
         {
-            RequisitionPrintingService.FormType.CLIREQ => "Client Requisition Forms",
-            RequisitionPrintingService.FormType.PTHREQ => "Path Requisition Forms",
+       RequisitionPrintingService.FormType.CLIREQ => "Client Requisition Forms",
+RequisitionPrintingService.FormType.PTHREQ => "Path Requisition Forms",
             RequisitionPrintingService.FormType.CYTREQ => "Cytology Requisition Forms",
-            RequisitionPrintingService.FormType.CUSTODY => "Chain of Custody Forms",
-        RequisitionPrintingService.FormType.LABOFFICE => "Lab Office Forms (TOX LAB)",
-  RequisitionPrintingService.FormType.EDLAB => "ED Lab Forms",
-            RequisitionPrintingService.FormType.EHS => "EHS Forms",
- _ => formType.ToString()
-};
-    }
-
-    private string GenerateFormHtml(RequisitionPrintingService.FormType formType)
-    {
-     if (FormPrintService == null || client == null)
-       return "<html><body>Error: Unable to generate form</body></html>";
-
-  try
-        {
-       string formContent = formType switch
-          {
-      RequisitionPrintingService.FormType.CLIREQ or
-   RequisitionPrintingService.FormType.PTHREQ or
-         RequisitionPrintingService.FormType.CYTREQ =>
-        FormPrintService.GenerateRequisitionForm(client, quantity, formType.ToString()),
-
-      RequisitionPrintingService.FormType.CUSTODY =>
-   FormPrintService.GenerateCustodyForm(client, GetAlternativeSiteForService(), addDapNotation, quantity),
-
- RequisitionPrintingService.FormType.LABOFFICE =>
-           FormPrintService.GenerateLabOfficeForm(quantity),
-
-RequisitionPrintingService.FormType.EDLAB =>
-         FormPrintService.GenerateEdLabForm(quantity),
-
-    _ => "<div class='form-container'><p>Unsupported form type</p></div>"
-       };
-
-    // Wrap with complete HTML document including stylesheets
-          return BuildCompleteHtmlDocument(formContent);
-        }
-        catch (Exception ex)
-        {
-  return $"<html><body><p>Error generating form: {ex.Message}</p></body></html>";
-   }
-    }
-
-    private string BuildCompleteHtmlDocument(string formContent)
-    {
-   return $@"
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-  <meta charset='utf-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <title>Requisition Form Print</title>
-    <link rel='stylesheet' href='/css/bootstrap/bootstrap.min.css' />
-    <link rel='stylesheet' href='/css/requisition-forms.css' />
-    <style>
-   body {{
-      margin: 0;
-    padding: 0;
-     background: white;
-    }}
-
-  @media print {{
-        body > *:not(.form-container) {{
-       display: none !important;
- }}
-      .form-container {{
-      margin: 0;
-    padding: 0.5in;
- page-break-after: always;
-      }}
-        }}
-    </style>
-</head>
-<body>
-    {formContent}
-</body>
-</html>";
-    }
-
-    private async Task PrintFormHtml(string html, string formType)
-    {
-        try
-        {
-            if (JSRuntime == null) return;
-
-    // Call JavaScript print helper
-      await JSRuntime.InvokeVoidAsync("requisitionPrintHelper.printForm", html, formType);
- }
-        catch (Exception ex)
-        {
-  validationErrors.Add($"Print error: {ex.Message}");
-   }
-    }
-
-  private FormPrintService.AlternativeSite? GetAlternativeSiteForService()
-    {
-  if (!useAlternativeSite) return null;
-
-  return new FormPrintService.AlternativeSite
-     {
-   Name = alternativeSiteName,
-       Address = alternativeSiteAddress,
-          City = alternativeSiteCity,
-        State = alternativeSiteState,
-        Zip = alternativeSiteZip,
-     Phone = alternativeSitePhone
+        _ => formType.ToString()
         };
     }
 
-    private CustodyFormLayout.AlternativeSiteData? GetAlternativeSiteData()
+    private void OnFormTypeChanged()
     {
-        if (!useAlternativeSite) return null;
+     // Automatically select the correct printer based on form type
+ if (!string.IsNullOrEmpty(selectedFormType) &&
+   PrintingService != null &&
+    Enum.TryParse<RequisitionPrintingService.FormType>(selectedFormType, out var formType))
+        {
+      string printerForType = PrintingService.GetPrinterForFormType(formType);
 
-  return new CustodyFormLayout.AlternativeSiteData
-  {
-       Name = alternativeSiteName,
-      Address = alternativeSiteAddress,
-    City = alternativeSiteCity,
-         State = alternativeSiteState,
-     Zip = alternativeSiteZip,
-            Phone = alternativeSitePhone
-    };
+       if (!string.IsNullOrEmpty(printerForType))
+            {
+                selectedPrinter = printerForType;
+        Log.Instance.Debug($"Auto-selected printer '{printerForType}' for form type {formType}");
+            }
+   }
     }
 }

@@ -23,22 +23,22 @@ public class PCL5FormatterService
     public string InitializePrinter()
     {
         StringBuilder sb = new StringBuilder();
-        
-     // Reset printer to default state
-    sb.Append(RESET);
-      
-    // Set to 10 pitch (10 characters per inch) - standard for forms
-      sb.Append($"{ESC}(s10H");
-        
-// Set line spacing to 6 lines per inch (standard)
+
+        // Reset printer to default state
+        sb.Append(RESET);
+
+        // Set to 10 pitch (10 characters per inch) - standard for forms
+        sb.Append($"{ESC}(s10H");
+
+        // Set line spacing to 6 lines per inch (standard)
         sb.Append($"{ESC}&l6D");
-      
+
         // Disable auto line feed
         sb.Append($"{ESC}&k0G");
-        
+
         // Set top margin to 0 (for pre-printed forms)
         sb.Append($"{ESC}&l0E");
-        
+
         return sb.ToString();
     }
 
@@ -64,17 +64,17 @@ public class PCL5FormatterService
     {
         // At 6 lines per inch, each line is 0.1667 inch = 120 decipoints
         int decipoints = row * 120;
-      return $"{ESC}*p{decipoints}Y";
+        return $"{ESC}*p{decipoints}Y";
     }
 
     /// <summary>
-/// Sets absolute position on the page.
+    /// Sets absolute position on the page.
     /// </summary>
     /// <param name="row">Row number (lines from top)</param>
     /// <param name="column">Column number (characters from left)</param>
     /// <returns>PCL5 command string</returns>
     public string SetPosition(int row, int column)
-{
+    {
         return SetVerticalPosition(row) + SetHorizontalPosition(column);
     }
 
@@ -82,16 +82,16 @@ public class PCL5FormatterService
     /// Moves to the specified line (relative positioning).
     /// </summary>
     /// <param name="lines">Number of lines to move (positive for down, negative for up)</param>
- /// <returns>PCL5 command string</returns>
+    /// <returns>PCL5 command string</returns>
     public string MoveVertical(int lines)
     {
-     if (lines > 0)
+        if (lines > 0)
         {
-    // Move down
-        return $"{ESC}&a+{lines}R";
+            // Move down
+            return $"{ESC}&a+{lines}R";
         }
-     else if (lines < 0)
-      {
+        else if (lines < 0)
+        {
             // Move up
             return $"{ESC}&a{lines}R";
         }
@@ -107,14 +107,14 @@ public class PCL5FormatterService
     {
         if (columns > 0)
         {
-        return $"{ESC}&a+{columns}C";
-   }
+            return $"{ESC}&a+{columns}C";
+        }
         else if (columns < 0)
         {
             return $"{ESC}&a{columns}C";
         }
         return string.Empty;
- }
+    }
 
     /// <summary>
     /// Sets the font to Courier (fixed-width, ideal for forms).
@@ -123,11 +123,11 @@ public class PCL5FormatterService
     /// <returns>PCL5 command string</returns>
     public string SetCourierFont(int pitch = 10)
     {
-      StringBuilder sb = new StringBuilder();
-        
-    // Select Courier font
-    sb.Append($"{ESC}(s0p{pitch}h0s0b3T");
-    
+        StringBuilder sb = new StringBuilder();
+
+        // Select Courier font
+        sb.Append($"{ESC}(s0p{pitch}h0s0b3T");
+
         return sb.ToString();
     }
 
@@ -138,7 +138,7 @@ public class PCL5FormatterService
     /// <returns>PCL5 command string</returns>
     public string SetBold(bool enabled)
     {
-      return enabled ? $"{ESC}(s3B" : $"{ESC}(s0B";
+        return enabled ? $"{ESC}(s3B" : $"{ESC}(s0B";
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ public class PCL5FormatterService
 
     /// <summary>
     /// Advances to the next line.
- /// </summary>
+    /// </summary>
     /// <returns>Carriage return + line feed</returns>
     public string NextLine()
     {
@@ -164,7 +164,7 @@ public class PCL5FormatterService
     /// </summary>
     /// <returns>Carriage return</returns>
     public string CarriageReturn()
-  {
+    {
         return CARRIAGE_RETURN;
     }
 
@@ -173,15 +173,15 @@ public class PCL5FormatterService
     /// </summary>
     /// <returns>Line feed</returns>
     public string LineFeed()
-  {
-     return LINE_FEED;
+    {
+        return LINE_FEED;
     }
 
     /// <summary>
     /// Creates spacing using spaces (for simple horizontal positioning).
     /// More reliable than tab characters on dot-matrix printers.
     /// </summary>
-  /// <param name="count">Number of spaces</param>
+    /// <param name="count">Number of spaces</param>
     /// <returns>String of spaces</returns>
     public string Spaces(int count)
     {
@@ -190,13 +190,13 @@ public class PCL5FormatterService
 
     /// <summary>
     /// Formats a text line with left margin spacing.
-  /// </summary>
+    /// </summary>
     /// <param name="text">Text to print</param>
     /// <param name="leftMargin">Number of characters to indent from left edge</param>
     /// <returns>Formatted string with spacing and newline</returns>
     public string FormatLine(string text, int leftMargin)
     {
-    return Spaces(leftMargin) + text + NextLine();
+        return Spaces(leftMargin) + text + NextLine();
     }
 
     /// <summary>
@@ -225,26 +225,26 @@ public class PCL5FormatterService
     public string InitializeForPinFedForms()
     {
         StringBuilder sb = new StringBuilder();
-  
+
         // Reset and basic setup
         sb.Append(InitializePrinter());
-        
+
         // Disable perforation skip (critical for pin-fed forms)
         sb.Append(DisablePerforationSkip());
-        
-   // Set page length (11" at 6 LPI = 66 lines)
+
+        // Set page length (11" at 6 LPI = 66 lines)
         sb.Append(SetPageLength(66));
-        
+
         // Set Courier font at 10 pitch
-    sb.Append(SetCourierFont(10));
-        
+        sb.Append(SetCourierFont(10));
+
         return sb.ToString();
     }
 
     /// <summary>
     /// Resets printer to default state.
     /// </summary>
-  /// <returns>PCL5 reset command</returns>
+    /// <returns>PCL5 reset command</returns>
     public string ResetPrinter()
     {
         return RESET;

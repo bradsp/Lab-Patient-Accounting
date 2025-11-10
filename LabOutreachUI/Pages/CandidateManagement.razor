@@ -11,99 +11,99 @@
 
 <PageTitle>Candidate Management - Random Drug Screen</PageTitle>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h3>Candidate Management</h3>
-    <a href="/help/user-guide#candidate-management" class="btn btn-outline-info btn-sm" title="View Help">
-        <span class="oi oi-book"></span> Help
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h3 class="mb-0">Candidate Management</h3>
+    <a href="/help/user-guide#candidate-management" class="btn btn-sm btn-outline-info" title="View Help">
+    <span class="oi oi-book"></span> Help
     </a>
 </div>
 
-@* Debug info *@
 @if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div class="alert alert-danger">
-        <strong>Error:</strong> @errorMessage
-    </div>
+    <div class="alert alert-danger alert-dismissible py-2 mb-2">
+ <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <small><strong>Error:</strong> @errorMessage</small>
+  </div>
 }
 
 <ClientSelectionPanel Clients="@clients"
-                      SelectedClient="@selectedClient"
-                      Shifts="@shifts"
-                      SelectedShift="@selectedShift"
-                      ShowDeleted="@showDeleted"
-                      OnClientSelected="@OnClientSelected"
-                      OnClearSelection="@ClearClientSelection"
-                      OnShiftChanged="@OnShiftChanged"
-                      OnShowDeletedChanged="@OnShowDeletedChanged"
-                      OnAddNew="@ShowAddCandidateModal" />
+    SelectedClient="@selectedClient"
+      Shifts="@shifts"
+  SelectedShift="@selectedShift"
+          ShowDeleted="@showDeleted"
+   OnClientSelected="@OnClientSelected"
+     OnClearSelection="@ClearClientSelection"
+  OnShiftChanged="@OnShiftChanged"
+          OnShowDeletedChanged="@OnShowDeletedChanged"
+            OnAddNew="@ShowAddCandidateModal" />
 
 <RandomSelectionPanel SelectedClient="@selectedClient"
-                      Shifts="@shifts"
-                      IsExpanded="@showSelectionPanel"
-                      SelectionShift="@selectionShift"
-                      SelectionCount="@selectionCount"
-                      AvailableCount="@selectionAvailableCount"
-                      IsProcessing="@isSelectionProcessing"
-                      CanPerformSelection="@CanPerformSelection()"
-                      ValidationMessage="@selectionValidationMessage"
-                      ErrorMessage="@selectionErrorMessage"
-                      OnTogglePanel="@ToggleSelectionPanel"
-                      OnShiftChanged="@OnSelectionShiftChanged"
-                      OnSelectionCountChanged="@OnSelectionCountChanged"
-                      OnPerformSelection="@PerformSelection" />
+         Shifts="@shifts"
+   IsExpanded="@showSelectionPanel"
+     SelectionShift="@selectionShift"
+  SelectionCount="@selectionCount"
+          AvailableCount="@selectionAvailableCount"
+   IsProcessing="@isSelectionProcessing"
+         CanPerformSelection="@CanPerformSelection()"
+            ValidationMessage="@selectionValidationMessage"
+          ErrorMessage="@selectionErrorMessage"
+         OnTogglePanel="@ToggleSelectionPanel"
+      OnShiftChanged="@OnSelectionShiftChanged"
+  OnSelectionCountChanged="@OnSelectionCountChanged"
+               OnPerformSelection="@PerformSelection" />
 
 <SelectionResultsPanel SelectedCandidates="@selectedRandomCandidates"
-                       OnExport="@ExportSelectionResults"
-                       OnClear="@ClearSelectionResults" />
+           OnExport="@ExportSelectionResults"
+         OnClear="@ClearSelectionResults" />
 
 <ReportsPanel SelectedClient="@selectedClient"
-              IsExpanded="@showReportsPanel"
-              SelectedReportType="@selectedReportType"
-              DaysSinceLastTest="@daysSinceLastTest"
-              IsProcessing="@isReportLoading"
-              ErrorMessage="@reportErrorMessage"
-              PreviewData="@reportData"
+   IsExpanded="@showReportsPanel"
+      SelectedReportType="@selectedReportType"
+ DaysSinceLastTest="@daysSinceLastTest"
+      IsProcessing="@isReportLoading"
+ ErrorMessage="@reportErrorMessage"
+    PreviewData="@reportData"
               SummaryStats="@summaryStats"
-              OnTogglePanel="@ToggleReportsPanel"
-              OnReportTypeChanged="@OnReportTypeChanged"
-              OnDaysChanged="@OnDaysChanged"
-              OnExportCsv="@ExportReportToCsv"
+ OnTogglePanel="@ToggleReportsPanel"
+     OnReportTypeChanged="@OnReportTypeChanged"
+     OnDaysChanged="@OnDaysChanged"
+     OnExportCsv="@ExportReportToCsv"
               OnGeneratePdf="@GenerateReportPdf" />
 
 <CandidateListTable Candidates="@candidates"
-                    SelectedClient="@selectedClient"
-                    IsLoading="@isLoading"
-                    OnEdit="@ShowEditCandidateModal"
-                    OnDelete="@ShowDeleteConfirmation"
-                    OnRestore="@RestoreCandidate" />
+ SelectedClient="@selectedClient"
+          IsLoading="@isLoading"
+   OnEdit="@ShowEditCandidateModal"
+    OnDelete="@ShowDeleteConfirmation"
+      OnRestore="@RestoreCandidate" />
 
 <CandidateModal IsVisible="@showModal"
-                Candidate="@editingCandidate"
-                Clients="@clients"
-                IsProcessing="@isSaving"
-                ErrorMessage="@errorMessage"
-                OnSave="@SaveCandidate"
-                OnCancel="@CloseModal" />
+          Candidate="@editingCandidate"
+            Clients="@clients"
+     IsProcessing="@isSaving"
+         ErrorMessage="@errorMessage"
+  OnSave="@SaveCandidate"
+   OnCancel="@CloseModal" />
 
 <DeleteConfirmationModal IsVisible="@showDeleteConfirm"
-                         CandidateName="@(candidateToDelete?.Name ?? "")"
-                         IsProcessing="@isSaving"
-                         OnConfirm="@ConfirmDelete"
-                         OnCancel="@CloseDeleteConfirmation" />
+           CandidateName="@(candidateToDelete?.Name ?? "")"
+     IsProcessing="@isSaving"
+ OnConfirm="@ConfirmDelete"
+          OnCancel="@CloseDeleteConfirmation" />
 
 @code {
     // State fields
     private List<RandomDrugScreenPerson> candidates = new();
-    private List<Client> clients = new();
+ private List<Client> clients = new();
     private List<string> shifts = new();
 
-    private string selectedClient = "";
+  private string selectedClient = "";
     private string selectedShift = "";
-    private bool showDeleted = false;
+  private bool showDeleted = false;
     private bool isLoading = true;
-    private bool isSaving = false;
+  private bool isSaving = false;
 
-    private bool showModal = false;
+  private bool showModal = false;
     private bool showDeleteConfirm = false;
     private RandomDrugScreenPerson? editingCandidate;
     private RandomDrugScreenPerson? candidateToDelete;
@@ -132,66 +132,64 @@
     {
         try
         {
-            await LoadClients();
+  await LoadClients();
 
-            // Check for client query parameter
             var uri = new Uri(NavigationManager.Uri);
             var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-            var clientParam = query["client"];
+  var clientParam = query["client"];
 
-            if (!string.IsNullOrEmpty(clientParam))
+   if (!string.IsNullOrEmpty(clientParam))
             {
-                // Pre-select the client from query parameter
-                var client = clients.FirstOrDefault(c => c.ClientMnem == clientParam);
-                if (client != null)
-                {
-                    await OnClientSelected(client);
-                }
+     var client = clients.FirstOrDefault(c => c.ClientMnem == clientParam);
+     if (client != null)
+      {
+   await OnClientSelected(client);
+      }
             }
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error loading data: {ex.Message}";
-            Console.WriteLine(ex.ToString());
-        }
+   errorMessage = $"Error loading data: {ex.Message}";
+         Console.WriteLine(ex.ToString());
+    }
         finally
-        {
+    {
             isLoading = false;
         }
     }
 
     // Data loading methods
     private async Task LoadClients()
-    {
+{
         try
         {
-            clients = await DictionaryService.GetAllClientsAsync(UnitOfWork, false);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading clients: {ex.Message}");
-            clients = new List<Client>();
-        }
+        clients = await DictionaryService.GetAllClientsAsync(UnitOfWork, false);
+   }
+     catch (Exception ex)
+      {
+   Console.WriteLine($"Error loading clients: {ex.Message}");
+         clients = new List<Client>();
+    }
     }
 
     private async Task LoadShifts()
     {
         try
         {
-            if (!string.IsNullOrEmpty(selectedClient))
+          if (!string.IsNullOrEmpty(selectedClient))
             {
-                shifts = await RdsService.GetDistinctShiftsAsync(selectedClient);
+       shifts = await RdsService.GetDistinctShiftsAsync(selectedClient);
             }
             else
             {
                 shifts = await RdsService.GetDistinctShiftsAsync();
-            }
-        }
+       }
+  }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading shifts: {ex.Message}");
+     Console.WriteLine($"Error loading shifts: {ex.Message}");
             shifts = new List<string>();
-        }
+  }
     }
 
     private async Task LoadCandidates()
@@ -199,67 +197,67 @@
         isLoading = true;
         try
         {
-            if (!string.IsNullOrEmpty(selectedClient))
-            {
+       if (!string.IsNullOrEmpty(selectedClient))
+     {
                 if (!string.IsNullOrEmpty(selectedShift))
-                {
-                    candidates = await RdsService.GetCandidatesByClientAsync(selectedClient, showDeleted);
-                    candidates = candidates.Where(c => c.Shift == selectedShift).ToList();
+{
+     candidates = await RdsService.GetCandidatesByClientAsync(selectedClient, showDeleted);
+       candidates = candidates.Where(c => c.Shift == selectedShift).ToList();
+         }
+         else
+         {
+            candidates = await RdsService.GetCandidatesByClientAsync(selectedClient, showDeleted);
                 }
-                else
-                {
-                    candidates = await RdsService.GetCandidatesByClientAsync(selectedClient, showDeleted);
-                }
-            }
+          }
             else
             {
-                candidates = await RdsService.GetAllCandidatesAsync(showDeleted);
-            }
+       candidates = await RdsService.GetAllCandidatesAsync(showDeleted);
+     }
         }
-        catch (Exception ex)
+     catch (Exception ex)
         {
             errorMessage = $"Error loading candidates: {ex.Message}";
-            Console.WriteLine(ex.ToString());
-            candidates = new List<RandomDrugScreenPerson>();
+         Console.WriteLine(ex.ToString());
+     candidates = new List<RandomDrugScreenPerson>();
         }
         finally
         {
-            isLoading = false;
-        }
-    }
+     isLoading = false;
+     }
+  }
 
     // Client selection handlers
     private async Task OnClientSelected(Client client)
     {
         selectedClient = client?.ClientMnem ?? "";
-        selectedShift = "";
-        await LoadShifts();
-        await LoadCandidates();
+   selectedShift = "";
+     await LoadShifts();
+await LoadCandidates();
         await UpdateSelectionAvailableCount();
     }
 
-    private async Task ClearClientSelection()
-    {
+private async Task ClearClientSelection()
+ {
         selectedClient = "";
-        selectedShift = "";
+    selectedShift = "";
         candidates = new List<RandomDrugScreenPerson>();
         shifts = new List<string>();
-        selectionAvailableCount = 0;
-        selectedRandomCandidates = null;
+      selectionAvailableCount = 0;
+    selectedRandomCandidates = null;
 
         StateHasChanged();
         await Task.CompletedTask;
     }
 
-    private async Task OnShiftChanged(string newShift)
+  private async Task OnShiftChanged(string newShift)
     {
         selectedShift = newShift;
-        await LoadCandidates();
-    }
+      await LoadCandidates();
+}
 
     private async Task OnShowDeletedChanged(bool newShowDeleted)
     {
-        showDeleted = newShowDeleted;
+   showDeleted = newShowDeleted;
         await LoadCandidates();
     }
 
@@ -271,36 +269,36 @@
 
     // Reports methods
     private void ToggleReportsPanel()
-    {
+  {
         showReportsPanel = !showReportsPanel;
     }
 
     private async Task OnReportTypeChanged(string reportType)
     {
-        selectedReportType = reportType;
-        reportErrorMessage = null;
+   selectedReportType = reportType;
+      reportErrorMessage = null;
 
         if (!string.IsNullOrEmpty(reportType))
         {
             await LoadReportData();
-        }
+  }
         else
-        {
-            reportData = null;
+ {
+ reportData = null;
         }
     }
 
     private async Task OnDaysChanged(int days)
     {
         daysSinceLastTest = days;
-        if (selectedReportType == "non-selected")
-        {
+     if (selectedReportType == "non-selected")
+     {
             await LoadReportData();
-        }
+      }
     }
 
     private async Task LoadReportData()
-    {
+  {
         isReportLoading = true;
         reportErrorMessage = null;
 
@@ -308,66 +306,66 @@
         {
             switch (selectedReportType)
             {
-                case "all-candidates":
-                    reportData = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
-                    break;
+    case "all-candidates":
+ reportData = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
+     break;
 
                 case "non-selected":
-                    var cutoffDate = DateTime.Now.AddDays(-daysSinceLastTest);
-                    var allCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
-                    reportData = allCandidates
-                      .Where(c => !c.TestDate.HasValue || c.TestDate.Value < cutoffDate)
-                           .ToList();
-                    break;
+         var cutoffDate = DateTime.Now.AddDays(-daysSinceLastTest);
+ var allCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
+       reportData = allCandidates
+  .Where(c => !c.TestDate.HasValue || c.TestDate.Value < cutoffDate)
+     .ToList();
+   break;
 
-                case "client-summary":
-                    await LoadClientSummary();
-                    break;
-            }
+    case "client-summary":
+   await LoadClientSummary();
+  break;
+    }
         }
         catch (Exception ex)
         {
-            reportErrorMessage = $"Error loading report data: {ex.Message}";
+reportErrorMessage = $"Error loading report data: {ex.Message}";
             Console.WriteLine(ex.ToString());
-        }
+  }
         finally
-        {
-            isReportLoading = false;
+    {
+         isReportLoading = false;
         }
     }
 
     private async Task LoadClientSummary()
     {
-        try
-        {
-            var allCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, true);
-            var activeCandidates = allCandidates.Where(c => !c.IsDeleted).ToList();
-            var deletedCandidates = allCandidates.Where(c => c.IsDeleted).ToList();
+  try
+    {
+       var allCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, true);
+var activeCandidates = allCandidates.Where(c => !c.IsDeleted).ToList();
+    var deletedCandidates = allCandidates.Where(c => c.IsDeleted).ToList();
 
-            var now = DateTime.Now;
+          var now = DateTime.Now;
             var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
-            var firstDayOfYear = new DateTime(now.Year, 1, 1);
+   var firstDayOfYear = new DateTime(now.Year, 1, 1);
 
-            summaryStats = new ReportsPanel.ClientSummaryStats
-            {
+      summaryStats = new ReportsPanel.ClientSummaryStats
+{
                 TotalActiveCandidates = activeCandidates.Count,
-                TotalDeletedCandidates = deletedCandidates.Count,
-                TestedThisMonth = activeCandidates.Count(c => c.TestDate.HasValue && c.TestDate.Value >= firstDayOfMonth),
-                TestedThisYear = activeCandidates.Count(c => c.TestDate.HasValue && c.TestDate.Value >= firstDayOfYear),
-                NeverTested = activeCandidates.Count(c => !c.TestDate.HasValue),
-                AverageDaysSinceLastTest = activeCandidates
-                 .Where(c => c.TestDate.HasValue)
-            .Select(c => (now - c.TestDate!.Value).Days)
-               .DefaultIfEmpty(0)
-                  .Average()
-            };
+             TotalDeletedCandidates = deletedCandidates.Count,
+          TestedThisMonth = activeCandidates.Count(c => c.TestDate.HasValue && c.TestDate.Value >= firstDayOfMonth),
+           TestedThisYear = activeCandidates.Count(c => c.TestDate.HasValue && c.TestDate.Value >= firstDayOfYear),
+      NeverTested = activeCandidates.Count(c => !c.TestDate.HasValue),
+         AverageDaysSinceLastTest = activeCandidates
+        .Where(c => c.TestDate.HasValue)
+       .Select(c => (now - c.TestDate!.Value).Days)
+   .DefaultIfEmpty(0)
+        .Average()
+  };
 
-            reportData = activeCandidates;
+       reportData = activeCandidates;
         }
         catch (Exception ex)
-        {
+   {
             reportErrorMessage = $"Error loading client summary: {ex.Message}";
-            Console.WriteLine(ex.ToString());
+ Console.WriteLine(ex.ToString());
         }
     }
 
@@ -376,53 +374,52 @@
         if (reportData == null || !reportData.Any()) return;
 
         isReportLoading = true;
-        try
+   try
         {
-            var csv = new System.Text.StringBuilder();
+       var csv = new System.Text.StringBuilder();
 
-            // Add header based on report type
-            if (selectedReportType == "client-summary")
-            {
+          if (selectedReportType == "client-summary")
+         {
                 csv.AppendLine($"Client Summary Report - {selectedClient}");
                 csv.AppendLine($"Generated: {DateTime.Now:g}");
                 csv.AppendLine();
                 csv.AppendLine($"Total Active Candidates,{summaryStats.TotalActiveCandidates}");
-                csv.AppendLine($"Total Deleted Candidates,{summaryStats.TotalDeletedCandidates}");
-                csv.AppendLine($"Tested This Month,{summaryStats.TestedThisMonth}");
-                csv.AppendLine($"Tested This Year,{summaryStats.TestedThisYear}");
-                csv.AppendLine($"Never Tested,{summaryStats.NeverTested}");
+  csv.AppendLine($"Total Deleted Candidates,{summaryStats.TotalDeletedCandidates}");
+         csv.AppendLine($"Tested This Month,{summaryStats.TestedThisMonth}");
+    csv.AppendLine($"Tested This Year,{summaryStats.TestedThisYear}");
+     csv.AppendLine($"Never Tested,{summaryStats.NeverTested}");
                 csv.AppendLine($"Average Days Since Last Test,{summaryStats.AverageDaysSinceLastTest:F1}");
-                csv.AppendLine();
+    csv.AppendLine();
             }
 
             csv.AppendLine("Name,Shift,Client,Last Test Date,Days Since Test,Status");
 
-            foreach (var candidate in reportData)
-            {
-                var daysSinceTest = candidate.TestDate.HasValue
-                ? (DateTime.Now - candidate.TestDate.Value).Days.ToString()
-                : "Never";
+       foreach (var candidate in reportData)
+         {
+         var daysSinceTest = candidate.TestDate.HasValue
+    ? (DateTime.Now - candidate.TestDate.Value).Days.ToString()
+      : "Never";
 
                 csv.AppendLine($"\"{candidate.Name}\",\"{candidate.Shift}\",\"{candidate.ClientMnemonic}\",\"{(candidate.TestDate.HasValue ? candidate.TestDate.Value.ToShortDateString() : "Never")}\",\"{daysSinceTest}\",\"{(candidate.IsDeleted ? "Deleted" : "Active")}\"");
-            }
+       }
 
-            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            var fileName = $"{GetReportFileName()}_{selectedClient}_{timestamp}.csv";
+  var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+ var fileName = $"{GetReportFileName()}_{selectedClient}_{timestamp}.csv";
 
-            await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromText",
+   await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromText",
     csv.ToString(),
     fileName,
    "text/csv");
         }
         catch (Exception ex)
         {
-            reportErrorMessage = $"Error exporting CSV: {ex.Message}";
-            Console.WriteLine(ex.ToString());
+     reportErrorMessage = $"Error exporting CSV: {ex.Message}";
+        Console.WriteLine(ex.ToString());
         }
-        finally
+     finally
         {
-            isReportLoading = false;
-        }
+   isReportLoading = false;
+     }
     }
 
     private async Task GenerateReportPdf()
@@ -430,175 +427,143 @@
         if (reportData == null || !reportData.Any()) return;
 
         isReportLoading = true;
-        reportErrorMessage = null;
+     reportErrorMessage = null;
 
         try
         {
-            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+  var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
             var fileName = $"{GetReportFileName()}_{selectedClient}_{timestamp}.pdf";
 
-            // Create PDF using MigraDoc
             var document = new Document();
-
-            // Set up document info
-            document.Info.Title = GetReportTitle();
-            document.Info.Subject = $"Random Drug Screen Report - {selectedClient}";
-            document.Info.Author = AppEnvironment.User;
+         document.Info.Title = GetReportTitle();
+   document.Info.Subject = $"Random Drug Screen Report - {selectedClient}";
+  document.Info.Author = AppEnvironment.User;
 
             var section = document.AddSection();
+    section.PageSetup.PageFormat = PageFormat.Letter;
+  section.PageSetup.Orientation = Orientation.Portrait;
 
-            // Set up page with footer
-            section.PageSetup.PageFormat = PageFormat.Letter;
-            section.PageSetup.Orientation = Orientation.Portrait;
-
-            // Add footer with page numbers
-            var footer = section.Footers.Primary;
+ var footer = section.Footers.Primary;
             var footerPara = footer.AddParagraph();
             footerPara.Format.Font.Size = 9;
-            footerPara.Format.Alignment = ParagraphAlignment.Center;
+          footerPara.Format.Alignment = ParagraphAlignment.Center;
             footerPara.AddText("Page ");
-            footerPara.AddPageField();
-            footerPara.AddText(" of ");
+ footerPara.AddPageField();
+        footerPara.AddText(" of ");
             footerPara.AddNumPagesField();
-            footerPara.AddText($" | Generated: {DateTime.Now:g}")
-     ;
+  footerPara.AddText($" | Generated: {DateTime.Now:g}");
 
-            // Add title
-            var title = section.AddParagraph();
-            title.Format.Font.Size = 16;
+          var title = section.AddParagraph();
+     title.Format.Font.Size = 16;
             title.Format.Font.Bold = true;
             title.Format.SpaceAfter = "0.5cm";
-            title.AddText(GetReportTitle());
+          title.AddText(GetReportTitle());
 
-            // Add generated date
             var dateInfo = section.AddParagraph();
-            dateInfo.Format.Font.Size = 10;
-            dateInfo.Format.SpaceAfter = "0.5cm";
-            dateInfo.AddText($"Client: {selectedClient}");
+        dateInfo.Format.Font.Size = 10;
+    dateInfo.Format.SpaceAfter = "0.5cm";
+   dateInfo.AddText($"Client: {selectedClient}");
 
-            // Add summary stats if client summary report
             if (selectedReportType == "client-summary")
             {
-                section.AddParagraph($"Total Active Candidates: {summaryStats.TotalActiveCandidates}");
-                section.AddParagraph($"Total Deleted Candidates: {summaryStats.TotalDeletedCandidates}");
-                section.AddParagraph($"Tested This Month: {summaryStats.TestedThisMonth}");
-                section.AddParagraph($"Tested This Year: {summaryStats.TestedThisYear}");
-                section.AddParagraph($"Never Tested: {summaryStats.NeverTested}");
-                section.AddParagraph($"Average Days Since Last Test: {summaryStats.AverageDaysSinceLastTest:F1}");
-                section.AddParagraph(); // Empty line
+         section.AddParagraph($"Total Active Candidates: {summaryStats.TotalActiveCandidates}");
+      section.AddParagraph($"Total Deleted Candidates: {summaryStats.TotalDeletedCandidates}");
+     section.AddParagraph($"Tested This Month: {summaryStats.TestedThisMonth}");
+  section.AddParagraph($"Tested This Year: {summaryStats.TestedThisYear}");
+     section.AddParagraph($"Never Tested: {summaryStats.NeverTested}");
+       section.AddParagraph($"Average Days Since Last Test: {summaryStats.AverageDaysSinceLastTest:F1}");
+          section.AddParagraph();
             }
 
-            // Create table
-            var table = section.AddTable();
-            table.Borders.Width = 0.75;
-            table.Borders.Color = Colors.Black;
-
-            // Enable header row repetition on each page
+       var table = section.AddTable();
+ table.Borders.Width = 0.75;
+        table.Borders.Color = Colors.Black;
             table.Format.KeepTogether = false;
 
-            // Define columns - adjusted widths for better layout
-            // Total usable width in portrait: ~16cm (after margins)
-            var column = table.AddColumn("5cm");  // Name - increased from 3.5cm
+            var column = table.AddColumn("5cm");
             column.Format.Alignment = ParagraphAlignment.Left;
-
-            column = table.AddColumn("2cm");  // Shift
+    column = table.AddColumn("2cm");
+       column.Format.Alignment = ParagraphAlignment.Left;
+       column = table.AddColumn("2cm");
             column.Format.Alignment = ParagraphAlignment.Left;
-
-            column = table.AddColumn("2cm");  // Client
-            column.Format.Alignment = ParagraphAlignment.Left;
-
-            column = table.AddColumn("2.5cm");  // Last Test Date
-            column.Format.Alignment = ParagraphAlignment.Left;
-
-            column = table.AddColumn("2.5cm");  // Days Since Test
-            column.Format.Alignment = ParagraphAlignment.Right;
-
-            column = table.AddColumn("2cm");  // Status
+            column = table.AddColumn("2.5cm");
+      column.Format.Alignment = ParagraphAlignment.Left;
+    column = table.AddColumn("2.5cm");
+    column.Format.Alignment = ParagraphAlignment.Right;
+            column = table.AddColumn("2cm");
             column.Format.Alignment = ParagraphAlignment.Center;
 
-            // Add header row
-            var headerRow = table.AddRow();
-            headerRow.HeadingFormat = true; // This makes the header repeat on each page
-            headerRow.Format.Font.Bold = true;
-            headerRow.Shading.Color = Colors.LightGray;
+       var headerRow = table.AddRow();
+            headerRow.HeadingFormat = true;
+  headerRow.Format.Font.Bold = true;
+    headerRow.Shading.Color = Colors.LightGray;
             headerRow.Borders.Bottom.Width = 2;
 
-            var cell = headerRow.Cells[0];
-            cell.AddParagraph("Name");
+     var cell = headerRow.Cells[0];
+     cell.AddParagraph("Name");
+   cell.Format.Alignment = ParagraphAlignment.Left;
+    cell = headerRow.Cells[1];
+    cell.AddParagraph("Shift");
+      cell.Format.Alignment = ParagraphAlignment.Left;
+    cell = headerRow.Cells[2];
+  cell.AddParagraph("Client");
             cell.Format.Alignment = ParagraphAlignment.Left;
-
-            cell = headerRow.Cells[1];
-            cell.AddParagraph("Shift");
+      cell = headerRow.Cells[3];
+         cell.AddParagraph("Last Test Date");
             cell.Format.Alignment = ParagraphAlignment.Left;
-
-            cell = headerRow.Cells[2];
-            cell.AddParagraph("Client");
-            cell.Format.Alignment = ParagraphAlignment.Left;
-
-            cell = headerRow.Cells[3];
-            cell.AddParagraph("Last Test Date");
-            cell.Format.Alignment = ParagraphAlignment.Left;
-
-            cell = headerRow.Cells[4];
-            cell.AddParagraph("Days Since Test");
+        cell = headerRow.Cells[4];
+  cell.AddParagraph("Days Since Test");
             cell.Format.Alignment = ParagraphAlignment.Right;
+        cell = headerRow.Cells[5];
+cell.AddParagraph("Status");
+    cell.Format.Alignment = ParagraphAlignment.Center;
 
-            cell = headerRow.Cells[5];
-            cell.AddParagraph("Status");
-            cell.Format.Alignment = ParagraphAlignment.Center;
-
-            // Add data rows
             foreach (var candidate in reportData)
-            {
-                var row = table.AddRow();
-
-                row.Cells[0].AddParagraph(candidate.Name);
-                row.Cells[1].AddParagraph(string.IsNullOrEmpty(candidate.Shift) ? "-" : candidate.Shift);
+    {
+              var row = table.AddRow();
+          row.Cells[0].AddParagraph(candidate.Name);
+       row.Cells[1].AddParagraph(string.IsNullOrEmpty(candidate.Shift) ? "-" : candidate.Shift);
                 row.Cells[2].AddParagraph(candidate.ClientMnemonic);
-                row.Cells[3].AddParagraph(candidate.TestDate.HasValue ? candidate.TestDate.Value.ToShortDateString() : "Never");
+           row.Cells[3].AddParagraph(candidate.TestDate.HasValue ? candidate.TestDate.Value.ToShortDateString() : "Never");
 
-                var daysSinceTest = candidate.TestDate.HasValue
-                     ? (DateTime.Now - candidate.TestDate.Value).Days.ToString()
-                         : "Never";
-                row.Cells[4].AddParagraph(daysSinceTest);
-                row.Cells[4].Format.Alignment = ParagraphAlignment.Right;
+   var daysSinceTest = candidate.TestDate.HasValue
+         ? (DateTime.Now - candidate.TestDate.Value).Days.ToString()
+       : "Never";
+ row.Cells[4].AddParagraph(daysSinceTest);
+         row.Cells[4].Format.Alignment = ParagraphAlignment.Right;
 
                 var statusCell = row.Cells[5];
-                var statusPara = statusCell.AddParagraph(candidate.IsDeleted ? "Deleted" : "Active");
-                statusPara.Format.Alignment = ParagraphAlignment.Center;
+         var statusPara = statusCell.AddParagraph(candidate.IsDeleted ? "Deleted" : "Active");
+       statusPara.Format.Alignment = ParagraphAlignment.Center;
 
-                // Add subtle alternating row colors
-                if (reportData.IndexOf(candidate) % 2 == 1)
-                {
-                    row.Shading.Color = new Color(245, 245, 245);
-                }
+       if (reportData.IndexOf(candidate) % 2 == 1)
+    {
+     row.Shading.Color = new Color(245, 245, 245);
+        }
             }
 
-            // Render PDF
-            var pdfRenderer = new PdfDocumentRenderer(true);
-            pdfRenderer.Document = document;
+      var pdfRenderer = new PdfDocumentRenderer(true);
+       pdfRenderer.Document = document;
             pdfRenderer.RenderDocument();
 
-            // Save to memory stream
-            using var stream = new System.IO.MemoryStream();
-            pdfRenderer.PdfDocument.Save(stream, false);
-            var pdfBytes = stream.ToArray();
-            var base64 = Convert.ToBase64String(pdfBytes);
+    using var stream = new System.IO.MemoryStream();
+       pdfRenderer.PdfDocument.Save(stream, false);
+         var pdfBytes = stream.ToArray();
+ var base64 = Convert.ToBase64String(pdfBytes);
 
-            // Download using JavaScript
             await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromBase64",
-                base64,
+          base64,
                 fileName,
-                   "application/pdf");
-        }
+          "application/pdf");
+ }
         catch (Exception ex)
         {
-            reportErrorMessage = $"Error generating PDF: {ex.Message}";
-            Console.WriteLine(ex.ToString());
+         reportErrorMessage = $"Error generating PDF: {ex.Message}";
+Console.WriteLine(ex.ToString());
         }
         finally
-        {
-            isReportLoading = false;
+{
+isReportLoading = false;
         }
     }
 
@@ -606,11 +571,11 @@
     {
         return selectedReportType switch
         {
-            "all-candidates" => "AllCandidates",
-            "non-selected" => $"NonSelectedCandidates_{daysSinceLastTest}Days",
-            "client-summary" => "ClientSummary",
+    "all-candidates" => "AllCandidates",
+        "non-selected" => $"NonSelectedCandidates_{daysSinceLastTest}Days",
+ "client-summary" => "ClientSummary",
             _ => "Report"
-        };
+     };
     }
 
     private string GetReportTitle()
@@ -618,16 +583,16 @@
         return selectedReportType switch
         {
             "all-candidates" => $"All Active Candidates - {selectedClient}",
-            "non-selected" => $"Non-Selected Candidates ({daysSinceLastTest}+ days) - {selectedClient}",
+          "non-selected" => $"Non-Selected Candidates ({daysSinceLastTest}+ days) - {selectedClient}",
             "client-summary" => $"Client Summary Report - {selectedClient}",
-            _ => "Report"
-        };
+      _ => "Report"
+  };
     }
 
     private async Task OnSelectionShiftChanged(string newShift)
     {
-        selectionShift = newShift;
-        await UpdateSelectionAvailableCount();
+   selectionShift = newShift;
+   await UpdateSelectionAvailableCount();
     }
 
     private void OnSelectionCountChanged(int newCount)
@@ -640,93 +605,93 @@
         try
         {
             if (string.IsNullOrEmpty(selectedClient))
-            {
-                selectionAvailableCount = 0;
-                return;
-            }
+      {
+    selectionAvailableCount = 0;
+         return;
+   }
 
-            List<RandomDrugScreenPerson> availableCandidates;
-            if (!string.IsNullOrEmpty(selectionShift))
+  List<RandomDrugScreenPerson> availableCandidates;
+  if (!string.IsNullOrEmpty(selectionShift))
             {
                 availableCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
-                selectionAvailableCount = availableCandidates.Count(c => c.Shift == selectionShift);
+             selectionAvailableCount = availableCandidates.Count(c => c.Shift == selectionShift);
             }
-            else
+   else
             {
                 availableCandidates = await RdsService.GetCandidatesByClientAsync(selectedClient, false);
-                selectionAvailableCount = availableCandidates.Count;
-            }
+         selectionAvailableCount = availableCandidates.Count;
+  }
 
-            if (selectionCount > selectionAvailableCount)
-            {
-                selectionCount = Math.Max(1, selectionAvailableCount);
+   if (selectionCount > selectionAvailableCount)
+        {
+    selectionCount = Math.Max(1, selectionAvailableCount);
             }
         }
         catch (Exception ex)
-        {
+      {
             Console.WriteLine($"Error updating selection available count: {ex.Message}");
-            selectionAvailableCount = 0;
+ selectionAvailableCount = 0;
         }
-    }
+  }
 
     private bool CanPerformSelection()
     {
-        if (string.IsNullOrEmpty(selectedClient))
-        {
-            selectionValidationMessage = "Please select a client";
-            return false;
-        }
+  if (string.IsNullOrEmpty(selectedClient))
+ {
+          selectionValidationMessage = "Please select a client";
+        return false;
+     }
 
         if (selectionCount < 1)
         {
-            selectionValidationMessage = "Selection count must be at least 1";
+      selectionValidationMessage = "Selection count must be at least 1";
             return false;
         }
 
         if (selectionCount > selectionAvailableCount)
         {
             selectionValidationMessage = $"Selection count ({selectionCount}) exceeds available candidates ({selectionAvailableCount})";
-            return false;
+        return false;
         }
 
-        if (selectionAvailableCount == 0)
-        {
-            selectionValidationMessage = "No candidates available for this client/shift combination";
+  if (selectionAvailableCount == 0)
+    {
+   selectionValidationMessage = "No candidates available for this client/shift combination";
             return false;
-        }
+   }
 
-        selectionValidationMessage = null;
+      selectionValidationMessage = null;
         return true;
     }
 
     private async Task PerformSelection()
-    {
+  {
         if (!CanPerformSelection()) return;
 
-        isSelectionProcessing = true;
-        selectionErrorMessage = null;
-        selectedRandomCandidates = null;
+ isSelectionProcessing = true;
+     selectionErrorMessage = null;
+ selectedRandomCandidates = null;
 
-        try
+    try
         {
-            selectedRandomCandidates = await RdsService.SelectRandomCandidatesAsync(
+    selectedRandomCandidates = await RdsService.SelectRandomCandidatesAsync(
   selectedClient,
     selectionCount,
-     string.IsNullOrEmpty(selectionShift) ? null : selectionShift);
+ string.IsNullOrEmpty(selectionShift) ? null : selectionShift);
 
-            await LoadCandidates();
-            selectionCount = 1;
-            selectionShift = "";
-            await UpdateSelectionAvailableCount();
+    await LoadCandidates();
+     selectionCount = 1;
+      selectionShift = "";
+   await UpdateSelectionAvailableCount();
         }
-        catch (Exception ex)
+   catch (Exception ex)
         {
-            selectionErrorMessage = $"Error performing selection: {ex.Message}";
+      selectionErrorMessage = $"Error performing selection: {ex.Message}";
             Console.WriteLine(ex.ToString());
         }
         finally
         {
-            isSelectionProcessing = false;
+          isSelectionProcessing = false;
         }
     }
 
@@ -736,29 +701,29 @@
 
         try
         {
-            var csv = new System.Text.StringBuilder();
-            csv.AppendLine("Name,Client,Shift,Previous Test Date,Selection Date");
+var csv = new System.Text.StringBuilder();
+ csv.AppendLine("Name,Client,Shift,Previous Test Date,Selection Date");
 
-            foreach (var candidate in selectedRandomCandidates)
-            {
-                var prevTestDate = candidate.TestDate.HasValue && candidate.TestDate.Value < DateTime.Now.Date
-           ? candidate.TestDate.Value.ToShortDateString()
-                 : "Never";
-                csv.AppendLine($"\"{candidate.Name}\",\"{candidate.ClientMnemonic}\",\"{candidate.Shift}\",\"{prevTestDate}\",\"{DateTime.Now.ToShortDateString()}\"");
-            }
+        foreach (var candidate in selectedRandomCandidates)
+      {
+    var prevTestDate = candidate.TestDate.HasValue && candidate.TestDate.Value < DateTime.Now.Date
+         ? candidate.TestDate.Value.ToShortDateString()
+       : "Never";
+         csv.AppendLine($"\"{candidate.Name}\",\"{candidate.ClientMnemonic}\",\"{candidate.Shift}\",\"{prevTestDate}\",\"{DateTime.Now.ToShortDateString()}\"");
+   }
 
-            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+  var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
             var fileName = $"RandomSelection_{selectedClient}_{timestamp}.csv";
 
             await JSRuntime.InvokeVoidAsync("fileDownload.downloadFromText",
           csv.ToString(),
       fileName,
-       "text/csv");
+    "text/csv");
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error exporting CSV: {ex.Message}";
-            Console.WriteLine(ex.ToString());
+          errorMessage = $"Error exporting CSV: {ex.Message}";
+    Console.WriteLine(ex.ToString());
         }
     }
 
@@ -770,33 +735,33 @@
     // Candidate CRUD methods
     private void ShowAddCandidateModal()
     {
-        editingCandidate = new RandomDrugScreenPerson
+   editingCandidate = new RandomDrugScreenPerson
         {
             ClientMnemonic = selectedClient,
             TestDate = null
         };
         errorMessage = null;
-        showModal = true;
+  showModal = true;
     }
 
     private void ShowEditCandidateModal(RandomDrugScreenPerson candidate)
-    {
+  {
         editingCandidate = new RandomDrugScreenPerson
         {
-            Id = candidate.Id,
-            Name = candidate.Name,
+         Id = candidate.Id,
+   Name = candidate.Name,
             ClientMnemonic = candidate.ClientMnemonic,
             Shift = candidate.Shift,
-            TestDate = candidate.TestDate,
-            IsDeleted = candidate.IsDeleted
+         TestDate = candidate.TestDate,
+      IsDeleted = candidate.IsDeleted
         };
         errorMessage = null;
-        showModal = true;
+     showModal = true;
     }
 
     private void CloseModal()
     {
-        showModal = false;
+   showModal = false;
         editingCandidate = null;
         errorMessage = null;
     }
@@ -807,43 +772,43 @@
 
         if (string.IsNullOrWhiteSpace(candidate.Name))
         {
-            errorMessage = "Name is required";
+  errorMessage = "Name is required";
             return;
         }
 
         if (string.IsNullOrWhiteSpace(candidate.ClientMnemonic))
         {
-            errorMessage = "Client is required";
-            return;
-        }
+errorMessage = "Client is required";
+         return;
+     }
 
-        isSaving = true;
+   isSaving = true;
         errorMessage = null;
 
         try
         {
             if (candidate.Id > 0)
-            {
-                await RdsService.UpdateCandidateAsync(candidate);
+       {
+           await RdsService.UpdateCandidateAsync(candidate);
             }
-            else
-            {
-                await RdsService.AddCandidateAsync(candidate);
-            }
+      else
+        {
+        await RdsService.AddCandidateAsync(candidate);
+         }
 
             CloseModal();
             await LoadCandidates();
-            await UpdateSelectionAvailableCount();
+       await UpdateSelectionAvailableCount();
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error saving candidate: {ex.Message}";
-            Console.WriteLine(ex.ToString());
-        }
-        finally
+      errorMessage = $"Error saving candidate: {ex.Message}";
+     Console.WriteLine(ex.ToString());
+    }
+     finally
         {
-            isSaving = false;
-        }
+        isSaving = false;
+ }
     }
 
     private void ShowDeleteConfirmation(RandomDrugScreenPerson candidate)
@@ -854,34 +819,34 @@
 
     private void CloseDeleteConfirmation()
     {
-        showDeleteConfirm = false;
-        candidateToDelete = null;
+      showDeleteConfirm = false;
+      candidateToDelete = null;
     }
 
     private async Task ConfirmDelete()
-    {
+ {
         if (candidateToDelete == null) return;
 
         isSaving = true;
         try
         {
-            await RdsService.DeleteCandidateAsync(candidateToDelete.Id);
-            CloseDeleteConfirmation();
-            await LoadCandidates();
+  await RdsService.DeleteCandidateAsync(candidateToDelete.Id);
+ CloseDeleteConfirmation();
+   await LoadCandidates();
             await UpdateSelectionAvailableCount();
         }
-        catch (Exception ex)
+    catch (Exception ex)
         {
             errorMessage = $"Error deleting candidate: {ex.Message}";
-            Console.WriteLine(ex.ToString());
-        }
-        finally
+          Console.WriteLine(ex.ToString());
+      }
+  finally
         {
             isSaving = false;
         }
-    }
+  }
 
-    private async Task RestoreCandidate(RandomDrugScreenPerson candidate)
+private async Task RestoreCandidate(RandomDrugScreenPerson candidate)
     {
         try
         {
@@ -889,11 +854,11 @@
             await RdsService.UpdateCandidateAsync(candidate);
             await LoadCandidates();
             await UpdateSelectionAvailableCount();
-        }
-        catch (Exception ex)
+  }
+     catch (Exception ex)
         {
-            errorMessage = $"Error restoring candidate: {ex.Message}";
+          errorMessage = $"Error restoring candidate: {ex.Message}";
             Console.WriteLine(ex.ToString());
-        }
+   }
     }
 }
