@@ -394,10 +394,10 @@ string printerName,
     {
    try
    {
-          // Validate client
+ // Validate client
      using var uow = new UnitOfWorkMain(_appEnvironment);
    var (isValid, errors) = await ValidateClientForPrinting(clientMnemonic, uow);
-      
+ 
   if (!isValid)
    {
     string errorMsg = string.Join("; ", errors);
@@ -405,8 +405,8 @@ string printerName,
        return (false, $"Validation failed: {errorMsg}");
    }
 
-        // Get client data
-            var client = uow.ClientRepository.GetClient(clientMnemonic);
+      // Get client data
+ var client = uow.ClientRepository.GetClient(clientMnemonic);
    if (client == null)
           {
  return (false, "Client not found");
@@ -418,18 +418,33 @@ string printerName,
    // Convert to bytes for raw printing
   byte[] textBytes = Encoding.ASCII.GetBytes(textData);
 
-     // Send directly to printer
-   string documentName = $"{formType} - {client.ClientMnem}";
-   bool printSuccess = RawPrinterHelper.SendBytesToPrinter(printerName, textBytes, documentName);
-
-    if (!printSuccess)
+     // Send to printer multiple times based on copies parameter
+     string documentName = $"{formType} - {client.ClientMnem}";
+     int successfulCopies = 0;
+     
+     for (int i = 0; i < copies; i++)
+ {
+         bool printSuccess = RawPrinterHelper.SendBytesToPrinter(printerName, textBytes, documentName);
+         
+         if (!printSuccess)
      {
-     string errorMsg = RawPrinterHelper.GetLastErrorMessage();
-       Log.Instance.Error($"Failed to print to {printerName}: {errorMsg}");
-     return (false, $"Print failed: {errorMsg}");
-}
+             string errorMsg = RawPrinterHelper.GetLastErrorMessage();
+  Log.Instance.Error($"Failed to print copy {i + 1} of {copies} to {printerName}: {errorMsg}");
+       
+      // If first copy fails, return immediately
+       if (i == 0)
+      {
+  return (false, $"Print failed: {errorMsg}");
+             }
+     
+     // If subsequent copy fails, report partial success
+     return (false, $"Printed {successfulCopies} of {copies} copies. Last error: {errorMsg}");
+   }
+         
+      successfulCopies++;
+     }
 
-          // Record print job
+      // Record print job
    await RecordPrintJobAsync(
      client.ClientMnem,
         client.Name,
@@ -441,10 +456,10 @@ string printerName,
 
             Log.Instance.Info($"Successfully printed {copies} cop{(copies == 1 ? "y" : "ies")} of {formType} for {client.ClientMnem} to {printerName}");
     return (true, $"Successfully printed {copies} requisition(s)");
-      }
+  }
         catch (Exception ex)
   {
-            Log.Instance.Error($"Error printing to dot-matrix printer: {ex.Message}", ex);
+     Log.Instance.Error($"Error printing to dot-matrix printer: {ex.Message}", ex);
             return (false, $"Error: {ex.Message}");
     }
     }
@@ -536,14 +551,14 @@ return success;
    int copies = 1,
      string userName = "System")
  {
-        try
-        {
-            // Validate client
+    try
+  {
+   // Validate client
    using var uow = new UnitOfWorkMain(_appEnvironment);
         var (isValid, errors) = await ValidateClientForPrinting(clientMnemonic, uow);
           
  if (!isValid)
-            {
+       {
        string errorMsg = string.Join("; ", errors);
  Log.Instance.Warn($"Client validation failed for {clientMnemonic}: {errorMsg}");
       return (false, $"Validation failed: {errorMsg}", null);
@@ -552,17 +567,23 @@ return success;
  // Get client data
        var client = uow.ClientRepository.GetClient(clientMnemonic);
    if (client == null)
-        {
+    {
        return (false, "Client not found", null);
-    }
+  }
 
      // Generate plain text formatted data
          string textData = _dotMatrixService.FormatRequisition(client, formType.ToString());
 
-   // Write to emulator
+   // Write to emulator - create one file per copy
     var emulator = new PCL5FileEmulatorService();
-string fileName = $"{formType}_{client.ClientMnem}_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
-            string filePath = emulator.WritePCL5ToFile(textData, fileName);
+ var createdFiles = new List<string>();
+    
+    for (int i = 0; i < copies; i++)
+    {
+        string fileName = $"{formType}_{client.ClientMnem}_{DateTime.Now:yyyyMMdd_HHmmss}_copy{i + 1}.txt";
+        string filePath = emulator.WritePCL5ToFile(textData, fileName);
+        createdFiles.Add(fileName);
+    }
 
    // Record print job (mark as emulator)
    await RecordPrintJobAsync(
@@ -574,15 +595,15 @@ copies,
     userName,
      "EmulatorMode");
 
+     string fileList = string.Join("\n  ? ", createdFiles);
      string message = $"Dot-matrix emulation successful!\n\n" +
-      $"Files created in:\n{emulator.GetOutputDirectory()}\n\n" +
-        $"• {fileName} - Plain text output\n" +
-       $"• {Path.GetFileNameWithoutExtension(fileName)}.txt - Text preview with line numbers\n" +
-     $"• {Path.GetFileNameWithoutExtension(fileName)}_layout.txt - Visual layout grid\n\n" +
-      $"Open the _layout.txt file to verify column positioning (should be at column 55).";
+      $"Created {copies} cop{(copies == 1 ? "y" : "ies")} in:\n{emulator.GetOutputDirectory()}\n\n" +
+        $"Files created:\n  ? {fileList}\n\n" +
+       $"Each file has corresponding .txt preview and _layout.txt files.\n" +
+      $"Open any _layout.txt file to verify column positioning (should be at column 55).";
 
-        Log.Instance.Info($"Emulated print for {client.ClientMnem} - files created: {filePath}");
-       return (true, message, filePath);
+        Log.Instance.Info($"Emulated print for {client.ClientMnem} - {copies} copies created");
+ return (true, message, createdFiles.FirstOrDefault());
         }
     catch (Exception ex)
         {
