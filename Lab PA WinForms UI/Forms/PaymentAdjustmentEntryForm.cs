@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
@@ -13,6 +14,7 @@ public partial class PaymentAdjustmentEntryForm : Form
     public Chk chk = new();
 
     private readonly DictionaryService _dictionaryService;
+    private readonly ToolTip _toolTip = new();
 
     public PaymentAdjustmentEntryForm(ref Account account) 
     {
@@ -40,6 +42,12 @@ public partial class PaymentAdjustmentEntryForm : Form
 
         paymentAmtTextBox.Enabled = Program.LoggedInUser.CanAddPayments;
         refundCheckBox.Enabled = Program.LoggedInUser.CanAddPayments;
+
+        // enforce positive currency amount for payment
+        paymentAmtTextBox.Validating += paymentAmtTextBox_Validating;
+        // enforce positive currency amount for contractual and write-off amounts
+        contractualAmtTextBox.Validating += contractualAmtTextBox_Validating;
+        writeOffAmtTextBox.Validating += writeOffAmtTextBox_Validating;
         // todo: investigate restriction from legacy system:
         // CODE 1500 SHOULD NOT BE USED TO WRITE OFF FOR BAD DEBT. BAD DEBT CANNOT BE HANDLED BY THE ACCOUNT PROGRAM.
     }
@@ -136,6 +144,141 @@ public partial class PaymentAdjustmentEntryForm : Form
     {
         if (!string.IsNullOrEmpty(writeOffAmtTextBox.Text))
             writeOffDateTextBox.Text = dateReceivedTextBox.Text;
+    }
+
+    private void paymentAmtTextBox_Validating(object sender, CancelEventArgs e)
+    {
+        if (IsCancelling())
+        {
+            // allow cancel to bypass validation
+            return;
+        }
+        // allow empty when payments are disabled; otherwise require a positive currency amount
+        if (!paymentAmtTextBox.Enabled)
+        {
+            errorProvider1.SetError(paymentAmtTextBox, string.Empty);
+            _toolTip.SetToolTip(paymentAmtTextBox, string.Empty);
+            return;
+        }
+
+        var text = paymentAmtTextBox.Text?.Trim();
+        if (string.IsNullOrEmpty(text))
+        {
+            errorProvider1.SetError(paymentAmtTextBox, "Enter a payment amount.");
+            _toolTip.SetToolTip(paymentAmtTextBox, "Please enter a positive amount");
+            e.Cancel = true;
+            return;
+        }
+
+        try
+        {
+            var amount = Convert.ToDouble(paymentAmtTextBox.DollarValue);
+            if (amount <= 0)
+            {
+                errorProvider1.SetError(paymentAmtTextBox, "Amount must be a positive currency value.");
+                _toolTip.SetToolTip(paymentAmtTextBox, "Please enter a positive amount");
+                e.Cancel = true;
+            }
+            else
+            {
+                errorProvider1.SetError(paymentAmtTextBox, string.Empty);
+                _toolTip.SetToolTip(paymentAmtTextBox, string.Empty);
+            }
+        }
+        catch
+        {
+            errorProvider1.SetError(paymentAmtTextBox, "Enter a valid currency amount.");
+            _toolTip.SetToolTip(paymentAmtTextBox, "Please enter a positive amount");
+            e.Cancel = true;
+        }
+    }
+
+    private void contractualAmtTextBox_Validating(object sender, CancelEventArgs e)
+    {
+        if (IsCancelling())
+        {
+            return;
+        }
+        var text = contractualAmtTextBox.Text?.Trim();
+        if (string.IsNullOrEmpty(text))
+        {
+            errorProvider1.SetError(contractualAmtTextBox, "Enter a contractual amount.");
+            _toolTip.SetToolTip(contractualAmtTextBox, "Please enter a positive amount");
+            e.Cancel = true;
+            return;
+        }
+
+        try
+        {
+            var amount = Convert.ToDouble(contractualAmtTextBox.DollarValue);
+            if (amount <= 0)
+            {
+                errorProvider1.SetError(contractualAmtTextBox, "Amount must be a positive currency value.");
+                _toolTip.SetToolTip(contractualAmtTextBox, "Please enter a positive amount");
+                e.Cancel = true;
+            }
+            else
+            {
+                errorProvider1.SetError(contractualAmtTextBox, string.Empty);
+                _toolTip.SetToolTip(contractualAmtTextBox, string.Empty);
+            }
+        }
+        catch
+        {
+            errorProvider1.SetError(contractualAmtTextBox, "Enter a valid currency amount.");
+            _toolTip.SetToolTip(contractualAmtTextBox, "Please enter a positive amount");
+            e.Cancel = true;
+        }
+    }
+
+    private void writeOffAmtTextBox_Validating(object sender, CancelEventArgs e)
+    {
+        if (IsCancelling())
+        {
+            return;
+        }
+        var text = writeOffAmtTextBox.Text?.Trim();
+        if (string.IsNullOrEmpty(text))
+        {
+            errorProvider1.SetError(writeOffAmtTextBox, "Enter a write-off amount.");
+            _toolTip.SetToolTip(writeOffAmtTextBox, "Please enter a positive amount");
+            e.Cancel = true;
+            return;
+        }
+
+        try
+        {
+            var amount = Convert.ToDouble(writeOffAmtTextBox.DollarValue);
+            if (amount <= 0)
+            {
+                errorProvider1.SetError(writeOffAmtTextBox, "Amount must be a positive currency value.");
+                _toolTip.SetToolTip(writeOffAmtTextBox, "Please enter a positive amount");
+                e.Cancel = true;
+            }
+            else
+            {
+                errorProvider1.SetError(writeOffAmtTextBox, string.Empty);
+                _toolTip.SetToolTip(writeOffAmtTextBox, string.Empty);
+            }
+        }
+        catch
+        {
+            errorProvider1.SetError(writeOffAmtTextBox, "Enter a valid currency amount.");
+            _toolTip.SetToolTip(writeOffAmtTextBox, "Please enter a positive amount");
+            e.Cancel = true;
+        }
+    }
+
+    private bool IsCancelling()
+    {
+        if (ActiveControl is Button btn)
+        {
+            if (btn.DialogResult == DialogResult.Cancel || !btn.CausesValidation)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     bool writeOffCodeDoNotChange = false;
