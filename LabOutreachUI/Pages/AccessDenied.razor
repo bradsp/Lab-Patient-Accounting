@@ -1,0 +1,274 @@
+@page "/access-denied"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+
+<PageTitle>Access Denied</PageTitle>
+
+<div class="access-denied-container">
+    <div class="access-denied-card">
+  <div class="icon-container">
+     <span class="error-icon">??</span>
+        </div>
+    
+   <h1>Access Denied</h1>
+        
+   <AuthorizeView>
+    <Authorized>
+       <p class="message">
+ <strong>@context.User.Identity?.Name</strong>, you are not authorized to access this application.
+  </p>
+   
+       <p class="details">
+ Your Windows account was authenticated successfully, but you do not have permission 
+      to use this application.
+     </p>
+
+    @if (GetUnauthorizedReason() == "NotInDatabase")
+          {
+   <p class="reason">
+          <strong>Reason:</strong> Your account is not registered in the application database.
+         </p>
+           <p class="details">
+         Your Windows credentials (<strong>@context.User.Identity?.Name</strong>) were verified, 
+     but your account has not been set up in the Lab Outreach application.
+      </p>
+              }
+       else if (GetUnauthorizedReason() == "DatabaseError")
+       {
+      <p class="reason">
+   <strong>Reason:</strong> A database error occurred while validating your account.
+          </p>
+  <p class="details">
+    Please try again in a few moments. If the problem persists, contact IT support.
+   </p>
+ }
+      else
+         {
+        <p class="reason">
+         <strong>Reason:</strong> Your account does not have the required permissions.
+  </p>
+       }
+     </Authorized>
+     <NotAuthorized>
+<p class="message">
+    You must be logged in with a Windows account to access this application.
+       </p>
+       
+    <p class="details">
+        This application uses Windows Authentication. Please ensure you are:
+  </p>
+         
+        <ul class="details-list">
+ <li>Connected to the internal network</li>
+        <li>Logged in to your Windows workstation</li>
+ <li>Using a supported browser (Edge, Chrome, Firefox)</li>
+   </ul>
+     
+       <p class="reason">
+          If you continue to see this message after logging in to Windows, 
+      contact IT support for assistance.
+       </p>
+     </NotAuthorized>
+   </AuthorizeView>
+    
+      <div class="contact-info">
+            <p><strong>To request access:</strong></p>
+     <ul>
+       <li>Contact your system administrator</li>
+      <li>Email: IT Support</li>
+        <li>Provide your Windows username: <strong>@GetCurrentUsername()</strong></li>
+       </ul>
+        </div>
+
+      <div class="action-buttons">
+      <a href="/auth-diag" class="btn btn-secondary">View Diagnostics</a>
+         <a href="/" class="btn btn-secondary" style="margin-left: 10px;">Try Again</a>
+        </div>
+    </div>
+</div>
+
+@code {
+[CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+
+    [Inject]
+    private IHttpContextAccessor? HttpContextAccessor { get; set; }
+
+  private ClaimsPrincipal? User { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthenticationStateTask != null)
+        {
+var authState = await AuthenticationStateTask;
+  User = authState.User;
+        }
+    }
+ 
+    private string GetCurrentUsername()
+    {
+// Try to get from User (Blazor context)
+  if (User?.Identity?.IsAuthenticated == true)
+  {
+            return User.Identity.Name ?? "Unknown";
+ }
+      
+     // Try to get from HttpContext (direct HTTP request)
+        if (HttpContextAccessor?.HttpContext?.User?.Identity?.IsAuthenticated == true)
+        {
+   return HttpContextAccessor.HttpContext.User.Identity.Name ?? "Unknown";
+        }
+ 
+        return "Unknown";
+    }
+    
+    private string? GetUnauthorizedReason()
+    {
+        // Try User first
+   var reason = User?.FindFirst("UnauthorizedReason")?.Value;
+        if (!string.IsNullOrEmpty(reason))
+     {
+   return reason;
+        }
+  
+        // Try HttpContext
+        reason = HttpContextAccessor?.HttpContext?.User?.FindFirst("UnauthorizedReason")?.Value;
+        return reason;
+    }
+}
+
+<style>
+    .access-denied-container {
+   display: flex;
+        justify-content: center;
+   align-items: center;
+        min-height: 100vh;
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+    }
+
+    .access-denied-card {
+        background: white;
+   border-radius: 10px;
+        padding: 40px;
+     max-width: 700px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+   text-align: center;
+    }
+
+    .icon-container {
+        margin-bottom: 20px;
+  }
+
+ .error-icon {
+        font-size: 80px;
+   animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+       transform: scale(1.1);
+        }
+    }
+
+    .access-denied-card h1 {
+  color: #dc3545;
+        margin-bottom: 20px;
+  font-size: 2rem;
+    }
+
+    .message {
+  font-size: 1.1rem;
+   color: #333;
+        margin-bottom: 15px;
+   font-weight: 500;
+  }
+
+    .details {
+        color: #666;
+   margin-bottom: 20px;
+        line-height: 1.6;
+  text-align: left;
+    }
+
+    .details-list {
+        text-align: left;
+   padding-left: 30px;
+        margin: 15px 0;
+   color: #666;
+    }
+
+    .details-list li {
+        margin: 8px 0;
+ }
+
+    .reason {
+   background: #fff3cd;
+        border-left: 4px solid #ffc107;
+   border-radius: 5px;
+   padding: 15px;
+        margin: 20px 0;
+        color: #856404;
+   text-align: left;
+    }
+
+    .contact-info {
+      background: #f8f9fa;
+      border-radius: 5px;
+   padding: 20px;
+   margin: 20px 0;
+        text-align: left;
+    border: 1px solid #dee2e6;
+    }
+
+    .contact-info p {
+        margin-bottom: 10px;
+   font-weight: 600;
+  color: #495057;
+    }
+
+    .contact-info ul {
+        margin: 10px 0;
+   padding-left: 20px;
+    }
+
+    .contact-info li {
+   margin: 5px 0;
+        color: #6c757d;
+    }
+
+    .action-buttons {
+   margin-top: 30px;
+    }
+
+    .btn {
+        padding: 12px 30px;
+     border-radius: 5px;
+        text-decoration: none;
+  display: inline-block;
+   font-weight: 600;
+        transition: all 0.3s;
+   border: none;
+        cursor: pointer;
+    }
+
+    .btn-secondary {
+   background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+   background: #5a6268;
+        transform: translateY(-2px);
+   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        color: white;
+    text-decoration: none;
+    }
+
+    strong {
+        color: #0056b3;
+    }
+</style>

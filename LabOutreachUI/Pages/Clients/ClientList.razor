@@ -1,0 +1,440 @@
+@page "/clients"
+@inject DictionaryService DictionaryService
+@inject LabBilling.Core.UnitOfWork.IUnitOfWork UnitOfWork
+@inject NavigationManager NavigationManager
+
+<PageTitle>Client Viewer - Client Information</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Client Viewer</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Client Viewer</h3>
+    @if (selectedClient != null)
+    {
+        <button class="btn btn-primary" @onclick="ViewRequisitionForms">
+  <span class="oi oi-document"></span> Requisition Forms
+        </button>
+    }
+</div>
+
+<!-- Compact Search Header -->
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <div class="row g-2 align-items-end">
+      <div class="col-md-9">
+      <label for="clientSearch" class="form-label small mb-1">Search by Name or Mnemonic</label>
+ @if (selectedClient == null)
+    {
+       <AutocompleteInput TItem="LabBilling.Core.Models.Client"
+       Items="@allClients"
+            SearchProperty="@(c => $"{c.Name} ({c.ClientMnem})")"
+           ValueProperty="@(c => c.ClientMnem)"
+          ItemTemplate="@clientItemTemplate"
+       OnItemSelected="@OnClientSelected"
+  Placeholder="Search by name or mnemonic..."
+                   MinSearchLength="1"
+  MaxResults="15"
+  @ref="clientAutocomplete" />
+      }
+          else
+   {
+           <div class="input-group input-group-sm">
+       <input type="text" class="form-control" value="@GetSelectedClientDisplay()" readonly />
+      <button class="btn btn-outline-secondary" type="button" @onclick="ClearClientSelection" title="Clear selection">
+    <span class="oi oi-x"></span>
+           </button>
+       </div>
+ }
+            </div>
+<div class="col-md-3">
+    <div class="form-check">
+             <input class="form-check-input"
+   type="checkbox"
+          id="showInactive"
+                checked="@showInactive"
+     @onchange="@((ChangeEventArgs e) => OnShowInactiveChanged(e))" />
+ <label class="form-check-label small" for="showInactive">
+               Show inactive
+  </label>
+       </div>
+            </div>
+        </div>
+
+        @if (errorMessage != null)
+      {
+            <div class="alert alert-danger alert-sm mt-2 mb-0 py-1">
+   <small><span class="oi oi-warning"></span> @errorMessage</small>
+     </div>
+  }
+
+        @if (isLoading)
+     {
+      <div class="text-center py-2">
+            <div class="spinner-border spinner-border-sm text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+     </div>
+       <small class="ms-2">Loading...</small>
+         </div>
+      }
+        else if (selectedClient == null)
+        {
+   <div class="alert alert-info alert-sm mt-2 mb-0 py-1">
+    <small><span class="oi oi-info"></span> Select a client to view information.</small>
+            </div>
+        }
+    </div>
+</div>
+
+@if (selectedClient != null)
+{
+    <!-- Compact Client Header -->
+    <div class="card mb-3">
+   <div class="card-body py-2">
+     <div class="d-flex justify-content-between align-items-center">
+  <div>
+         <h4 class="mb-1">@selectedClient.Name</h4>
+   <div>
+         <span class="badge bg-primary">@selectedClient.ClientMnem</span>
+        @if (selectedClient.IsDeleted)
+                 {
+               <span class="badge bg-danger">Inactive</span>
+          }
+        else
+         {
+            <span class="badge bg-success">Active</span>
+           }
+          <span class="badge bg-secondary">@(selectedClient.ClientType?.Description ?? "Type not specified")</span>
+        </div>
+          </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Compact Two-Column Layout -->
+    <div class="row g-3">
+   <div class="col-md-6">
+        <!-- Client Details -->
+ <div class="card h-100">
+          <div class="card-header bg-primary text-white py-2">
+        <h6 class="mb-0"><span class="oi oi-info"></span> Client Details</h6>
+     </div>
+                <div class="card-body py-2">
+   <table class="table table-sm table-borderless mb-0">
+      <tr>
+    <td class="text-muted" style="width: 35%;">Type:</td>
+    <td>@(selectedClient.ClientType?.Description ?? "Not specified")</td>
+ </tr>
+             <tr>
+               <td class="text-muted">Client Code:</td>
+       <td>@selectedClient.Id</td>
+          </tr>
+      <tr>
+   <td class="text-muted">Facility No:</td>
+        <td>@(selectedClient.FacilityNo ?? "Not provided")</td>
+    </tr>
+    <tr>
+      <td class="text-muted">EMR Type:</td>
+   <td>@(selectedClient.ElectronicBillingType ?? "Not provided")</td>
+   </tr>
+      <tr>
+             <td class="text-muted">GL Code:</td>
+           <td>@(selectedClient.GlCode ?? "Not provided")</td>
+           </tr>
+    <tr>
+     <td class="text-muted">Fee Schedule:</td>
+      <td>@(selectedClient.FeeSchedule ?? "Not provided")</td>
+  </tr>
+      </table>
+    </div>
+    </div>
+        </div>
+
+        <div class="col-md-6">
+   <!-- Contact Information -->
+       <div class="card h-100">
+  <div class="card-header bg-info text-white py-2">
+                 <h6 class="mb-0"><span class="oi oi-phone"></span> Contact Information</h6>
+ </div>
+  <div class="card-body py-2">
+   <table class="table table-sm table-borderless mb-0">
+       <tr>
+        <td class="text-muted" style="width: 30%;">Address:</td>
+   <td>
+     @if (!string.IsNullOrEmpty(selectedClient.StreetAddress1))
+     {
+     <div>@selectedClient.StreetAddress1</div>
+    @if (!string.IsNullOrEmpty(selectedClient.StreetAddress2))
+  {
+      <div>@selectedClient.StreetAddress2</div>
+        }
+                <div>@selectedClient.City, @selectedClient.State @selectedClient.ZipCode</div>
+         }
+           else
+         {
+ <span class="text-muted">Not provided</span>
+    }
+        </td>
+        </tr>
+         <tr>
+        <td class="text-muted">Phone:</td>
+         <td>@(selectedClient.Phone ?? "Not provided")</td>
+       </tr>
+  <tr>
+          <td class="text-muted">Fax:</td>
+     <td>@(selectedClient.Fax ?? "Not provided")</td>
+       </tr>
+   <tr>
+  <td class="text-muted">Contact:</td>
+       <td>@(selectedClient.Contact ?? "Not provided")</td>
+   </tr>
+               <tr>
+        <td class="text-muted">Email:</td>
+      <td>
+           @if (!string.IsNullOrEmpty(selectedClient.ContactEmail))
+          {
+ <a href="mailto:@selectedClient.ContactEmail">@selectedClient.ContactEmail</a>
+       }
+          else
+        {
+               <span class="text-muted">Not provided</span>
+       }
+       </td>
+             </tr>
+   </table>
+    </div>
+</div>
+        </div>
+    </div>
+
+    <!-- Billing Information -->
+    <div class="row g-3 mt-0">
+        <div class="col-md-6">
+            <div class="card">
+            <div class="card-header bg-success text-white py-2">
+                    <h6 class="mb-0"><span class="oi oi-dollar"></span> Billing Settings</h6>
+            </div>
+      <div class="card-body py-2">
+      <table class="table table-sm table-borderless mb-0">
+       <tr>
+        <td class="text-muted" style="width: 45%;">Bill Method:</td>
+                <td>@(selectedClient.BillMethod ?? "Not provided")</td>
+            </tr>
+      <tr>
+     <td class="text-muted">Default Discount:</td>
+<td>@selectedClient.DefaultDiscount.ToString("P2")</td>
+         </tr>
+ <tr>
+            <td class="text-muted">Do Not Bill:</td>
+      <td>@(selectedClient.DoNotBill ? "Yes" : "No")</td>
+     </tr>
+                  <tr>
+       <td class="text-muted">Print CPT on Invoice:</td>
+        <td>@(selectedClient.PrintCptOnInvoice ? "Yes" : "No")</td>
+     </tr>
+            <tr>
+       <td class="text-muted">Bill at Discount:</td>
+                  <td>@(selectedClient.ShowDiscountedAmtOnBill ? "Yes" : "No")</td>
+  </tr>
+<tr>
+     <td class="text-muted">Last Invoice:</td>
+            <td>
+ @if (!string.IsNullOrEmpty(selectedClient.LastInvoice))
+        {
+ <span>@selectedClient.LastInvoice</span>
+          @if (selectedClient.LastInvoiceDate.HasValue)
+          {
+   <small class="text-muted">(@selectedClient.LastInvoiceDate.Value.ToString("MM/dd/yyyy"))</small>
+             }
+        }
+     else
+       {
+          <span class="text-muted">None</span>
+    }
+     </td>
+    </tr>
+   </table>
+         </div>
+            </div>
+        </div>
+
+    <div class="col-md-6">
+            <div class="card">
+         <div class="card-header bg-secondary text-white py-2">
+       <h6 class="mb-0"><span class="oi oi-wrench"></span> Additional Settings</h6>
+        </div>
+      <div class="card-body py-2">
+           <table class="table table-sm table-borderless mb-0">
+       <tr>
+    <td class="text-muted" style="width: 45%;">Client Class:</td>
+            <td>@(selectedClient.ClientClass ?? "Not provided")</td>
+       </tr>
+       <tr>
+           <td class="text-muted">Sales Rep:</td>
+      <td>@(selectedClient.CLientSalesRep ?? "Not assigned")</td>
+</tr>
+     <tr>
+    <td class="text-muted">Maint. Rep:</td>
+           <td>@(selectedClient.ClientMaintenanceRep ?? "Not assigned")</td>
+  </tr>
+     <tr>
+          <td class="text-muted">Route:</td>
+     <td>@(selectedClient.Route ?? "Not provided")</td>
+          </tr>
+         <tr>
+   <td class="text-muted">County:</td>
+          <td>@(selectedClient.County ?? "Not provided")</td>
+             </tr>
+    <tr>
+    <td class="text-muted">Outpatient Billing:</td>
+         <td>@(selectedClient.OutpatientBilling ? "Yes" : "No")</td>
+    </tr>
+                    </table>
+      </div>
+         </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(selectedClient.Comment) || !string.IsNullOrEmpty(selectedClient.Notes))
+    {
+  <div class="row g-3 mt-0">
+       <div class="col-md-12">
+          <div class="card">
+             <div class="card-header bg-warning text-dark py-2">
+       <h6 class="mb-0"><span class="oi oi-comment-square"></span> Comments & Notes</h6>
+           </div>
+               <div class="card-body py-2">
+        @if (!string.IsNullOrEmpty(selectedClient.Comment))
+               {
+                   <div class="mb-2">
+                  <strong class="small">Comments:</strong>
+      <p class="mb-0 small">@selectedClient.Comment</p>
+      </div>
+            }
+ @if (!string.IsNullOrEmpty(selectedClient.Notes))
+         {
+                   <div>
+         <strong class="small">Notes:</strong>
+         <p class="mb-0 small">@selectedClient.Notes</p>
+      </div>
+          }
+ </div>
+ </div>
+     </div>
+        </div>
+    }
+}
+
+<style>
+    .alert-sm {
+      padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .card-header h6 {
+        font-size: 0.95rem;
+    }
+
+    .table-sm td {
+        padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+    }
+
+    .table-sm tr:last-child td {
+        border-bottom: none;
+    }
+</style>
+
+@code {
+    private List<LabBilling.Core.Models.Client> allClients = new();
+    private LabBilling.Core.Models.Client? selectedClient;
+    private bool showInactive = false;
+    private bool isLoading = true;
+    private string? errorMessage;
+    private AutocompleteInput<LabBilling.Core.Models.Client>? clientAutocomplete;
+
+    // Template for autocomplete items
+    private RenderFragment<LabBilling.Core.Models.Client> clientItemTemplate = client => __builder =>
+    {
+        <div>
+            <strong>@client.Name</strong>
+        <br />
+            <small class="text-muted">@client.ClientMnem</small>
+        </div>
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadClients();
+    }
+
+    private async Task LoadClients()
+    {
+ try
+        {
+            isLoading = true;
+       errorMessage = null;
+     allClients = await DictionaryService.GetAllClientsAsync(UnitOfWork, showInactive);
+        }
+        catch (Exception ex)
+    {
+            errorMessage = $"Error loading clients: {ex.Message}";
+    Console.WriteLine(ex.ToString());
+        }
+        finally
+        {
+         isLoading = false;
+        }
+    }
+
+    private async Task OnClientSelected(LabBilling.Core.Models.Client client)
+    {
+        selectedClient = client;
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
+    private async Task ClearClientSelection()
+    {
+        selectedClient = null;
+
+        if (clientAutocomplete != null)
+        {
+   clientAutocomplete.Clear();
+        }
+
+StateHasChanged();
+   await Task.CompletedTask;
+    }
+
+    private string GetSelectedClientDisplay()
+    {
+   return selectedClient != null
+ ? $"{selectedClient.Name} ({selectedClient.ClientMnem})"
+            : "";
+    }
+
+    private async Task OnShowInactiveChanged(ChangeEventArgs e)
+    {
+        showInactive = (bool)(e.Value ?? false);
+        await LoadClients();
+
+        // Clear selection if the currently selected client is now filtered out
+        if (selectedClient != null && !allClients.Any(c => c.ClientMnem == selectedClient.ClientMnem))
+{
+            await ClearClientSelection();
+   }
+  }
+
+    private void ViewRequisitionForms()
+    {
+        if (selectedClient != null)
+        {
+            NavigationManager.NavigateTo($"/requisition-forms/{selectedClient.ClientMnem}");
+        }
+    }
+}

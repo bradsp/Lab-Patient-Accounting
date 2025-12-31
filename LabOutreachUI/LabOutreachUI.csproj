@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>LabOutreachUI</AssemblyName>
+    <RootNamespace>LabOutreachUI</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\images\logoicon2.ico" />
+    <Content Remove="wwwroot\images\logoicon2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.43.0" />
+    <PackageReference Include="MigraDocCore.DocumentObjectModel" Version="1.3.65" />
+    <PackageReference Include="MigraDocCore.Rendering" Version="1.3.65" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="6.0.5" />
+    <PackageReference Include="PdfSharpCore" Version="1.3.65" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\logoicon2.ico" />
+    <None Include="wwwroot\images\logoicon2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\Docs\*.md" Link="Docs\%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

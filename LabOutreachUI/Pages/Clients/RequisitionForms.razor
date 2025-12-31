@@ -1,0 +1,33 @@
+@page "/requisition-forms/{ClientMnem}"
+@inject NavigationManager NavigationManager
+
+<PageTitle>Requisition Forms - @ClientMnem</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/clients">Client Viewer</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Requisition Forms</li>
+ </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+<div>
+        <h3 class="mb-1">Requisition Forms</h3>
+        <div>
+            <span class="badge bg-primary">@ClientMnem</span>
+        </div>
+    </div>
+    <div>
+        <a href="/clients" class="btn btn-sm btn-outline-secondary">
+     <span class="oi oi-arrow-left"></span> Back to Clients
+        </a>
+    </div>
+</div>
+
+<AddressRequisitionPrint ClientMnemonic="@ClientMnem" />
+
+@code {
+    [Parameter]
+    public string? ClientMnem { get; set; }
+}

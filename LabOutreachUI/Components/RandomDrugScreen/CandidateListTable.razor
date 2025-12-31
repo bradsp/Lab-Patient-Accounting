@@ -1,0 +1,111 @@
+@* Candidate List Table Component *@
+@if (IsLoading)
+{
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p>Loading candidates...</p>
+    </div>
+}
+else if (string.IsNullOrEmpty(SelectedClient))
+{
+    <div class="alert alert-info">
+        <span class="oi oi-info"></span> Please select a client to view candidates.
+    </div>
+}
+else if (Candidates.Any())
+{
+    <div class="row mb-2">
+        <div class="col">
+            <p class="text-muted">
+                Showing @Candidates.Count candidate(s) for client @SelectedClient
+            </p>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Client</th>
+                    <th>Shift</th>
+                    <th>Last Test Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var candidate in Candidates)
+                {
+                    <tr class="@(candidate.IsDeleted ? "table-secondary" : "")">
+                        <td>@candidate.Name</td>
+                        <td>@candidate.ClientMnemonic</td>
+                        <td>@(string.IsNullOrEmpty(candidate.Shift) ? "-" : candidate.Shift)</td>
+                        <td>@(candidate.TestDate.HasValue? candidate.TestDate.Value.ToShortDateString() : "Never")</td>
+                        <td>
+                            @if (candidate.IsDeleted)
+                            {
+                                <span class="badge bg-danger">Deleted</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary"
+                                    @onclick="() => HandleEdit(candidate)"
+                                    disabled="@candidate.IsDeleted">
+                                <span class="oi oi-pencil"></span> Edit
+                            </button>
+                            @if (candidate.IsDeleted)
+                            {
+                                <button class="btn btn-sm btn-success" @onclick="() => HandleRestore(candidate)">
+                                    <span class="oi oi-action-undo"></span> Restore
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-danger" @onclick="() => HandleDelete(candidate)">
+                                    <span class="oi oi-trash"></span> Delete
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <span class="oi oi-info"></span> No candidates found for client @SelectedClient. Add a new candidate to get started.
+    </div>
+}
+
+@code {
+    [Parameter] public List<RandomDrugScreenPerson> Candidates { get; set; } = new();
+    [Parameter] public string SelectedClient { get; set; } = string.Empty;
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public EventCallback<RandomDrugScreenPerson> OnEdit { get; set; }
+    [Parameter] public EventCallback<RandomDrugScreenPerson> OnDelete { get; set; }
+    [Parameter] public EventCallback<RandomDrugScreenPerson> OnRestore { get; set; }
+
+    private async Task HandleEdit(RandomDrugScreenPerson candidate)
+    {
+        await OnEdit.InvokeAsync(candidate);
+    }
+
+    private async Task HandleDelete(RandomDrugScreenPerson candidate)
+    {
+        await OnDelete.InvokeAsync(candidate);
+    }
+
+    private async Task HandleRestore(RandomDrugScreenPerson candidate)
+    {
+        await OnRestore.InvokeAsync(candidate);
+    }
+}

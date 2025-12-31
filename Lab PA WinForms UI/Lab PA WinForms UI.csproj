@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>LabBilling</RootNamespace>
     <AssemblyName>LabBilling</AssemblyName>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>\\wthmclbill\installations%24\LabBilling\</PublishUrl>
+    <PublishUrl>\\wth014\installations%24\LabBilling\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -15,7 +15,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>\\wthmclbill\installations%24\LabBilling\</InstallUrl>
+    <InstallUrl>\\wth014\installations%24\LabBilling\</InstallUrl>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
     <WebPage>publish.htm</WebPage>
@@ -145,32 +145,34 @@
   </ItemGroup>
   <ItemGroup Label="Package References">
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.72</Version>
+      <Version>1.12.4</Version>
     </PackageReference>
     <PackageReference Include="LazyCache">
       <Version>2.4.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects">
-      <Version>172.61.0</Version>
+      <Version>172.76.0</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.SqlServer.TransactSql.ScriptDom" Version="170.23.0" />
+    <PackageReference Include="Microsoft.SqlServer.TransactSql.ScriptDom" Version="170.128.0" />
     <PackageReference Include="NLog">
-      <Version>5.4.0</Version>
+      <Version>6.0.5</Version>
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="NLog.Database">
-      <Version>5.4.0</Version>
+      <Version>6.0.3</Version>
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="NLog.Schema">
-      <Version>5.4.0</Version>
+      <Version>6.0.5</Version>
     </PackageReference>
-    <PackageReference Include="System.Drawing.Common" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup Label="Project References">
-    <ProjectReference Include="..\..\#Utilities\DataGridViewGrouper\DataGridViewGrouper\DataGridViewGrouper.csproj" />
+    <ProjectReference Include="..\..\#Utilities\DataGridViewGrouper\DataGridViewGrouper\DataGridViewGrouper.csproj">
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj">
       <Private>True</Private>
     </ProjectReference>

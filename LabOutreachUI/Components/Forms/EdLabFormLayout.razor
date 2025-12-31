@@ -1,0 +1,20 @@
+@* ED Lab Form Layout Component *@
+@* Legacy format: ED Lab info 20 lines down *@
+
+<div class="form-container lab-office-form">
+    <div class="lab-info line-20">
+        @* Line 1: ED Lab with phone *@
+        <div class="lab-line">   JMCGH - ED LAB@(new string(' ', 40))731 541 4833</div>
+
+        @* Line 2: Empty *@
+        <div class="lab-line"></div>
+
+        @* Line 3: Address (no fax per specs) *@
+        <div class="lab-line">   620 Skyline Drive, JACKSON, TN 38301</div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Copies { get; set; } = 1;
+}

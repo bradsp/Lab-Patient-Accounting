@@ -1,0 +1,188 @@
+@page
+@model LabOutreachUI.Pages.AccessDeniedPageModel
+@{
+ Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Access Denied - Lab Outreach</title>
+    <link rel="stylesheet" href="~/css/bootstrap/bootstrap.min.css" />
+    <style>
+        .access-denied-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+      .access-denied-card {
+     background: white;
+   border-radius: 10px;
+     padding: 40px;
+     max-width: 700px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .icon-container {
+            margin-bottom: 20px;
+   }
+
+        .error-icon {
+            font-size: 80px;
+        animation: pulse 2s infinite;
+   }
+
+        @@keyframes pulse {
+   0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            color: #dc3545;
+            margin-bottom: 20px;
+    font-size: 2rem;
+        }
+
+        .message {
+font-size: 1.1rem;
+          color: #333;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+   .details {
+            color: #666;
+     margin-bottom: 20px;
+   line-height: 1.6;
+          text-align: left;
+        }
+
+        .reason {
+            background: #fff3cd;
+        border-left: 4px solid #ffc107;
+   border-radius: 5px;
+            padding: 15px;
+      margin: 20px 0;
+            color: #856404;
+            text-align: left;
+        }
+
+        .contact-info {
+   background: #f8f9fa;
+            border-radius: 5px;
+   padding: 20px;
+            margin: 20px 0;
+       text-align: left;
+            border: 1px solid #dee2e6;
+        }
+
+        .btn {
+            padding: 12px 30px;
+ border-radius: 5px;
+            text-decoration: none;
+   display: inline-block;
+   font-weight: 600;
+        transition: all 0.3s;
+       background: #6c757d;
+  color: white;
+        border: none;
+        }
+
+      .btn:hover {
+   background: #5a6268;
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  color: white;
+     }
+
+      strong {
+  color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="access-denied-container">
+        <div class="access-denied-card">
+<div class="icon-container">
+      <span class="error-icon">??</span>
+       </div>
+       
+            <h1>Access Denied</h1>
+       
+     @if (Model.IsAuthenticated)
+            {
+       <p class="message">
+        <strong>@Model.Username</strong>, you are not authorized to access this application.
+        </p>
+   
+        <p class="details">
+        Your Windows account was authenticated successfully, but you do not have permission to use this application.
+                </p>
+
+     @if (Model.UnauthorizedReason == "NotInDatabase")
+      {
+     <div class="reason">
+   <strong>Reason:</strong> Your account is not registered in the application database.
+            <p style="margin-top: 10px;">
+         Your Windows credentials (<strong>@Model.Username</strong>) were verified, 
+           but your account has not been set up in the Lab Outreach application.
+       </p>
+      </div>
+                }
+      else if (Model.UnauthorizedReason == "DatabaseError")
+    {
+    <div class="reason">
+      <strong>Reason:</strong> A database error occurred while validating your account.
+    <p style="margin-top: 10px;">
+    Please try again in a few moments. If the problem persists, contact IT support.
+          </p>
+  </div>
+       }
+       else
+      {
+            <div class="reason">
+        <strong>Reason:</strong> Your account does not have the required permissions.
+        </div>
+        }
+   }
+   else
+        {
+  <p class="message">
+      You must be logged in with a Windows account to access this application.
+                </p>
+      
+    <p class="details">
+      This application uses Windows Authentication. Please ensure you are:
+    </p>
+  
+                <ul class="details">
+                    <li>Connected to the internal network</li>
+         <li>Logged in to your Windows workstation</li>
+    <li>Using a supported browser (Edge, Chrome, Firefox)</li>
+    </ul>
+            }
+  
+ <div class="contact-info">
+                <p><strong>To request access:</strong></p>
+       <ul>
+<li>Contact your system administrator</li>
+ <li>Email: IT Support</li>
+     <li>Provide your Windows username: <strong>@Model.Username</strong></li>
+         </ul>
+            </div>
+
+<div class="action-buttons" style="margin-top: 30px;">
+                <a href="/auth-diag" class="btn">View Diagnostics</a>
+       <a href="/" class="btn" style="margin-left: 10px;">Try Again</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,8 +1,9 @@
 ﻿using LabBilling.Core.DataAccess;
 using PetaPoco;
+using System;
 
 namespace LabBilling.Core.UnitOfWork;
-public interface IUnitOfWorkSystem
+public interface IUnitOfWorkSystem : IDisposable
 {
     IDatabase Context { get; }
     SystemParametersRepository SystemParametersRepository { get; }
@@ -10,7 +11,6 @@ public interface IUnitOfWorkSystem
     UserProfileRepository UserProfileRepository { get; }
 
     void Commit();
-    void Dispose();
     void Rollback();
     void StartTransaction();
 }

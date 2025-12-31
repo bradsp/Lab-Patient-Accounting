@@ -1,0 +1,49 @@
+﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager NavigationManager
+@inject IHttpContextAccessor HttpContextAccessor
+
+<PageTitle>Lab Outreach</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <AuthorizeView>
+                    <Authorized>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-muted">
+                                <span class="oi oi-person"></span>
+                                @context.User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value
+                            </span>
+                            <span class="text-muted small">
+                                (@context.User.Identity?.Name)
+                            </span>
+                        </div>
+                    </Authorized>
+                    <NotAuthorized>
+                        <span class="text-danger">Not Authorized</span>
+                    </NotAuthorized>
+                </AuthorizeView>
+
+                <!-- Help Button -->
+                <a href="/help" class="btn btn-sm btn-outline-primary" title="Help & Documentation">
+                    <span class="oi oi-question-mark"></span> Help
+                </a>
+            </div>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    // No logout needed - Windows Auth is automatic
+    // User cannot "logout" from Windows Authentication
+}

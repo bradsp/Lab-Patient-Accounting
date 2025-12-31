@@ -1,0 +1,135 @@
+@using LabBilling.Core.Models
+
+@* Add/Edit Candidate Modal Component *@
+@if (IsVisible && Candidate != null)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(Candidate.Id > 0 ? "Edit" : "Add") Candidate</h5>
+                    <button type="button" class="btn-close" @onclick="HandleCancel"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="Candidate" OnValidSubmit="HandleSave">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+
+                        <div class="mb-3">
+                            <label for="candidateName" class="form-label">Name *</label>
+                            <InputText id="candidateName" class="form-control" @bind-Value="Candidate.Name" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="candidateClient" class="form-label">Client *</label>
+                            <AutocompleteInput @ref="clientAutocomplete" 
+                                               TItem="Client"
+                                               Items="@Clients"
+                                               SearchProperty="@(c => $"{c.Name} ({c.ClientMnem})")"
+                                               ValueProperty="@(c => c.ClientMnem)"
+                                               ItemTemplate="@clientItemTemplate"
+                                               OnItemSelected="@((client) => { if (Candidate != null) Candidate.ClientMnemonic = client.ClientMnem; })"
+                                               Placeholder="Search by name or mnemonic..."
+                                               MinSearchLength="1"
+                                               MaxResults="10" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="candidateShift" class="form-label">Shift</label>
+                            <InputText id="candidateShift" class="form-control" @bind-Value="Candidate.Shift" placeholder="Optional" />
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(ErrorMessage))
+                        {
+                            <div class="alert alert-danger">@ErrorMessage</div>
+                        }
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="HandleCancel">Cancel</button>
+                            <button type="submit" class="btn btn-primary" disabled="@IsProcessing">
+                                @if (IsProcessing)
+                                {
+                                    <span class="spinner-border spinner-border-sm" role="status"></span>
+                                    <text> Saving...</text>
+                                }
+                                else
+                                {
+                                    <span class="oi oi-check"></span>
+                                    <text> Save</text>
+                                }
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public RandomDrugScreenPerson? Candidate { get; set; }
+    [Parameter] public List<Client> Clients { get; set; } = new();
+    [Parameter] public bool IsProcessing { get; set; }
+    [Parameter] public string? ErrorMessage { get; set; }
+    [Parameter] public EventCallback<RandomDrugScreenPerson> OnSave { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    private AutocompleteInput<Client>? clientAutocomplete;
+    private bool hasSetInitialValue = false;
+    private string? lastClientMnemonic = null;
+
+    // Template for autocomplete items
+    private RenderFragment<Client> clientItemTemplate = client => __builder =>
+    {
+        <div>
+            <strong>@client.Name</strong>
+            <br />
+            <small class="text-muted">@client.ClientMnem</small>
+        </div>
+    };
+
+    protected override void OnParametersSet()
+    {
+        // Reset flag when parameters change (e.g., modal opens/closes or candidate changes)
+        if (!IsVisible)
+        {
+          hasSetInitialValue = false;
+            lastClientMnemonic = null;
+        }
+        else if (Candidate != null && Candidate.ClientMnemonic != lastClientMnemonic)
+     {
+   hasSetInitialValue = false;
+    lastClientMnemonic = Candidate.ClientMnemonic;
+    }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+   // Set the initial value after the component is fully rendered
+        if (IsVisible && !hasSetInitialValue && Candidate != null && !string.IsNullOrEmpty(Candidate.ClientMnemonic) && clientAutocomplete != null)
+        {
+       var selectedClient = Clients.FirstOrDefault(c => c.ClientMnem == Candidate.ClientMnemonic);
+       if (selectedClient != null)
+         {
+   clientAutocomplete.SetValue($"{selectedClient.Name} ({selectedClient.ClientMnem})");
+            hasSetInitialValue = true;
+        }
+      }
+        
+  await base.OnAfterRenderAsync(firstRender);
+  }
+
+    private async Task HandleSave()
+    {
+  if (Candidate != null)
+  {
+            await OnSave.InvokeAsync(Candidate);
+        }
+    }
+
+ private async Task HandleCancel()
+    {
+        await OnCancel.InvokeAsync();
+    }
+}

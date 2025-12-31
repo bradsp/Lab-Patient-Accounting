@@ -1,0 +1,277 @@
+@page "/rds/dashboard"
+@attribute [Authorize(Policy = "RandomDrugScreen")]
+@inject IRandomDrugScreenService RdsService
+@inject DictionaryService DictionaryService
+@inject LabBilling.Core.DataAccess.IAppEnvironment AppEnvironment
+@inject LabBilling.Core.UnitOfWork.IUnitOfWork UnitOfWork
+@inject NavigationManager NavigationManager
+
+<PageTitle>Random Drug Screen - Dashboard</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">RDS Dashboard</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+        <h3 class="mb-1">Random Drug Screen Dashboard</h3>
+        <small class="text-muted">Manage candidate lists and perform random selections</small>
+ </div>
+    <a href="/help/user-guide#random-drug-screen-module" class="btn btn-sm btn-outline-info" title="View RDS Documentation">
+       <span class="oi oi-book"></span> Help
+      </a>
+</div>
+
+<!-- Compact Stats Cards -->
+<div class="row g-2 mb-3">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+   <div class="card-body py-2">
+    <div class="d-flex justify-content-between align-items-center">
+   <div>
+ <div class="small">Total Candidates</div>
+        <h4 class="mb-0">@totalCandidates</h4>
+     </div>
+    <span class="oi oi-people" style="font-size: 2rem; opacity: 0.3;"></span>
+       </div>
+         <a href="/candidates" class="btn btn-light btn-sm mt-2">Manage</a>
+     </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+     <div class="card text-white bg-success">
+   <div class="card-body py-2">
+          <div class="d-flex justify-content-between align-items-center">
+        <div>
+  <div class="small">Active Clients</div>
+              <h4 class="mb-0">@activeClients</h4>
+            </div>
+       <span class="oi oi-briefcase" style="font-size: 2rem; opacity: 0.3;"></span>
+ </div>
+          <a href="#clientList" class="btn btn-light btn-sm mt-2">View Details</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body py-2">
+                <div class="d-flex justify-content-between align-items-center">
+         <div>
+            <div class="small">Random Selection</div>
+          <div class="small mt-1">Select candidates</div>
+     </div>
+    <span class="oi oi-random" style="font-size: 2rem; opacity: 0.3;"></span>
+    </div>
+    <a href="/candidates" class="btn btn-light btn-sm mt-2">Go to Candidates</a>
+      </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+         <div class="card-body py-2">
+          <div class="d-flex justify-content-between align-items-center">
+                <div>
+   <div class="small">Import Data</div>
+       <div class="small mt-1">Bulk import</div>
+    </div>
+               <span class="oi oi-data-transfer-upload" style="font-size: 2rem; opacity: 0.3;"></span>
+    </div>
+  <a href="/import" class="btn btn-light btn-sm mt-2">Import</a>
+  </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions - Compact -->
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <div class="d-flex gap-2 align-items-center">
+            <strong class="small me-2">Quick Actions:</strong>
+            <a href="/candidates" class="btn btn-sm btn-primary">
+     <span class="oi oi-people"></span> Manage Candidates
+      </a>
+  <a href="/import" class="btn btn-sm btn-info">
+         <span class="oi oi-data-transfer-upload"></span> Import Candidates
+     </a>
+</div>
+    </div>
+</div>
+
+<!-- Clients with Candidates Section -->
+<div class="card" id="clientList">
+    <div class="card-header bg-primary text-white py-2">
+   <div class="d-flex justify-content-between align-items-center">
+      <h6 class="mb-0">
+                <span class="oi oi-briefcase"></span> Clients with Candidates
+       </h6>
+   <div class="form-check form-switch mb-0">
+           <input class="form-check-input" type="checkbox" id="showInactiveClients"
+               checked="@showInactiveClients" @onchange="OnShowInactiveClientsChanged" />
+         <label class="form-check-label text-white small" for="showInactiveClients">
+Include Inactive
+    </label>
+       </div>
+        </div>
+ </div>
+    <div class="card-body p-0">
+@if (isLoading)
+        {
+            <div class="text-center py-3">
+      <div class="spinner-border spinner-border-sm text-primary" role="status">
+       <span class="visually-hidden">Loading...</span>
+                </div>
+              <small class="ms-2">Loading...</small>
+   </div>
+        }
+   else if (clientCandidateCounts.Any())
+     {
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0">
+<thead class="table-light">
+    <tr>
+  <th>Client Name</th>
+   <th>Mnemonic</th>
+              <th class="text-end">Active</th>
+          <th class="text-end">Total</th>
+          <th class="text-center">Status</th>
+            <th class="text-center">Actions</th>
+         </tr>
+             </thead>
+            <tbody>
+      @foreach (var item in clientCandidateCounts.OrderBy(c => c.ClientName))
+  {
+              <tr class="@(item.IsClientDeleted ? "table-secondary" : "")">
+                  <td>@item.ClientName</td>
+               <td><span class="badge bg-secondary">@item.ClientMnemonic</span></td>
+        <td class="text-end"><span class="badge bg-success">@item.ActiveCount</span></td>
+          <td class="text-end"><span class="badge bg-info">@item.TotalCount</span></td>
+               <td class="text-center">
+      @if (item.IsClientDeleted)
+    {
+        <span class="badge bg-danger">Inactive</span>
+         }
+          else
+      {
+   <span class="badge bg-success">Active</span>
+    }
+        </td>
+          <td class="text-center">
+             <button class="btn btn-sm btn-primary" @onclick="() => NavigateToClient(item.ClientMnemonic)">
+       <span class="oi oi-people"></span> Manage
+      </button>
+ </td>
+      </tr>
+  }
+          </tbody>
+         <tfoot class="table-light">
+       <tr>
+         <td colspan="2"><strong class="small">Total</strong></td>
+           <td class="text-end"><strong class="small">@clientCandidateCounts.Sum(c => c.ActiveCount)</strong></td>
+           <td class="text-end"><strong class="small">@clientCandidateCounts.Sum(c => c.TotalCount)</strong></td>
+         <td></td>
+               <td></td>
+          </tr>
+             </tfoot>
+           </table>
+   </div>
+    }
+        else
+ {
+       <div class="alert alert-info m-3 py-2">
+  <small><span class="oi oi-info"></span> No clients with candidates found. <a href="/import" class="alert-link">Import candidates</a> to get started.</small>
+            </div>
+   }
+    </div>
+</div>
+
+<style>
+    .card-body.py-2 h4 {
+   font-size: 1.5rem;
+    }
+    
+    .table-sm td, .table-sm th {
+        padding: 0.4rem;
+        font-size: 0.9rem;
+    }
+</style>
+
+@code {
+    private int totalCandidates = 0;
+    private int activeClients = 0;
+    private bool isLoading = true;
+    private bool showInactiveClients = false;
+    private List<ClientCandidateCount> clientCandidateCounts = new();
+
+    private class ClientCandidateCount
+    {
+        public string ClientName { get; set; } = "";
+        public string ClientMnemonic { get; set; } = "";
+        public int ActiveCount { get; set; }
+        public int TotalCount { get; set; }
+        public bool IsClientDeleted { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+     await LoadDashboardData();
+}
+
+    private async Task LoadDashboardData()
+    {
+ try
+{
+            isLoading = true;
+        var clients = await DictionaryService.GetAllClientsAsync(UnitOfWork, showInactiveClients);
+          var clientsWithCandidates = await RdsService.GetDistinctClientsAsync();
+            var allCandidates = await RdsService.GetAllCandidatesAsync(true);
+       totalCandidates = allCandidates.Count(c => !c.IsDeleted);
+
+ clientCandidateCounts = new List<ClientCandidateCount>();
+
+        foreach (var clientMnem in clientsWithCandidates)
+         {
+        var client = clients.FirstOrDefault(c => c.ClientMnem == clientMnem);
+       if (client == null) continue;
+
+          var candidatesForClient = allCandidates.Where(c => c.ClientMnemonic == clientMnem).ToList();
+
+                clientCandidateCounts.Add(new ClientCandidateCount
+                {
+  ClientName = client.Name,
+              ClientMnemonic = clientMnem,
+          ActiveCount = candidatesForClient.Count(c => !c.IsDeleted),
+       TotalCount = candidatesForClient.Count,
+        IsClientDeleted = client.IsDeleted
+                });
+            }
+
+   activeClients = clientCandidateCounts.Count(c => !c.IsClientDeleted);
+        }
+   catch (Exception ex)
+        {
+    Console.WriteLine($"Error loading dashboard: {ex.Message}");
+      Console.WriteLine(ex.StackTrace);
+        }
+        finally
+        {
+     isLoading = false;
+        }
+    }
+
+    private async Task OnShowInactiveClientsChanged(ChangeEventArgs e)
+    {
+   showInactiveClients = (bool)(e.Value ?? false);
+        await LoadDashboardData();
+    }
+
+    private void NavigateToClient(string clientMnemonic)
+    {
+        NavigationManager.NavigateTo($"/candidates?client={clientMnemonic}");
+    }
+}

@@ -1,0 +1,96 @@
+@page
+@model LabOutreachUI.Pages.AuthDiagModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authentication Diagnostics</title>
+    <style>
+     body { font-family: 'Segoe UI', Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .section h2 { margin-top: 0; color: #0078d4; }
+      .status-ok { color: green; font-weight: bold; }
+        .status-error { color: red; font-weight: bold; }
+        .info-row { margin: 5px 0; }
+      .label { font-weight: bold; display: inline-block; width: 250px; }
+    </style>
+</head>
+<body>
+<h1>IIS / ASP.NET Core Authentication Diagnostics</h1>
+    
+    <div class="section">
+        <h2>IIS / HTTP Context Authentication</h2>
+        <div class="info-row">
+     <span class="label">User.Identity.IsAuthenticated:</span>
+          <span class="@(Model.IsAuthenticated ? "status-ok" : "status-error")">
+  @Model.IsAuthenticated
+          </span>
+        </div>
+        <div class="info-row">
+     <span class="label">User.Identity.Name:</span>
+      <span>@(Model.Username ?? "NULL")</span>
+        </div>
+      <div class="info-row">
+   <span class="label">User.Identity.AuthenticationType:</span>
+            <span>@(Model.AuthenticationType ?? "NULL")</span>
+        </div>
+      <div class="info-row">
+        <span class="label">HttpContext Available:</span>
+            <span class="@(Model.HttpContextAvailable ? "status-ok" : "status-error")">
+          @Model.HttpContextAvailable
+            </span>
+ </div>
+    </div>
+
+    <div class="section">
+        <h2>IIS Configuration Check</h2>
+     <div class="info-row">
+ <span class="label">Expected Result:</span>
+    <span class="status-ok">IsAuthenticated = True, AuthenticationType = Negotiate</span>
+        </div>
+      <div class="info-row">
+   <span class="label">If Anonymous:</span>
+        <span class="status-error">Windows Authentication not enabled or Anonymous Authentication is enabled in IIS</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Server Variables</h2>
+        @foreach (var key in Model.ServerVariables.Keys.OrderBy(k => k))
+        {
+   <div class="info-row">
+  <span class="label">@key:</span>
+       <span>@Model.ServerVariables[key]</span>
+            </div>
+        }
+    </div>
+
+    <div class="section">
+        <h2>Recommendations</h2>
+        @if (!Model.IsAuthenticated)
+        {
+            <p class="status-error">?? <strong>Windows Authentication is NOT working</strong></p>
+            <ol>
+ <li>Open <strong>IIS Manager</strong></li>
+                <li>Navigate to your site: <strong>Sites ? LabOutreach</strong></li>
+     <li>Double-click <strong>Authentication</strong></li>
+   <li><strong>Enable</strong> Windows Authentication</li>
+                <li><strong>Disable</strong> Anonymous Authentication</li>
+        <li>Restart the site</li>
+            </ol>
+   }
+     else
+{
+          <p class="status-ok">? Windows Authentication is working at the IIS/HTTP level!</p>
+            <p>If Blazor still shows anonymous, the issue is with the Blazor SignalR circuit not receiving the authentication.</p>
+        }
+    </div>
+
+    <div class="section">
+        <a href="/">? Back to Application</a>
+    </div>
+</body>
+</html>

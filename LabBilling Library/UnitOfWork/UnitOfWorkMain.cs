@@ -73,6 +73,7 @@ public class UnitOfWorkMain : IUnitOfWork
     public UserAccountRepository UserAccountRepository { get; private set; }
     public UserProfileRepository UserProfileRepository { get; private set; }
     public WriteOffCodeRepository WriteOffCodeRepository { get; private set; }
+    public RandomDrugScreenPersonRepository RandomDrugScreenPersonRepository { get; private set; }
 
     /// <summary>
     /// For use with other Database instances outside of Unit Of Work
@@ -166,6 +167,7 @@ public class UnitOfWorkMain : IUnitOfWork
         UserAccountRepository = new(appEnvironment, Context);
         UserProfileRepository = new(appEnvironment, Context);
         WriteOffCodeRepository = new(appEnvironment, Context);
+        RandomDrugScreenPersonRepository = new(appEnvironment, Context);
     }
 
     public void StartTransaction()
