@@ -1,0 +1,22 @@
+@page "/billing/collections"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Policy = "DatabaseUser")]
+
+<PageTitle>Collections - Lab Patient Accounting</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col">
+            <h3><span class="oi oi-warning"></span> Collections Management</h3>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <h5>Coming Soon</h5>
+        <p>This page will manage bad debt accounts and collections processing.</p>
+    </div>
+</div>
+
+@code {
+    // Collections management functionality will be implemented in future phases
+}

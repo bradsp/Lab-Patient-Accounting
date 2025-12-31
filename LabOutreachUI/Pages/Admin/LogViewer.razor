@@ -1,0 +1,22 @@
+@page "/admin/log-viewer"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Policy = "DatabaseUser")]
+
+<PageTitle>Log Viewer - Lab Patient Accounting</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col">
+            <h3><span class="oi oi-list-rich"></span> Log Viewer</h3>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <h5>Coming Soon</h5>
+        <p>This page will display system logs and application events.</p>
+    </div>
+</div>
+
+@code {
+    // Log viewer functionality will be implemented in future phases
+}

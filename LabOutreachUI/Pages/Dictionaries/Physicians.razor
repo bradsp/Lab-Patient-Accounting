@@ -1,0 +1,22 @@
+@page "/dictionaries/physicians"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Policy = "DatabaseUser")]
+
+<PageTitle>Physicians - Lab Patient Accounting</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col">
+            <h3><span class="oi oi-person"></span> Physicians</h3>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <h5>Coming Soon</h5>
+        <p>This page will manage physician directory and contact information.</p>
+    </div>
+</div>
+
+@code {
+    // Physician management functionality will be implemented in future phases
+}

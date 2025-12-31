@@ -1,7 +1,9 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Components.Authorization
+@using LabBilling.Core.DataAccess
 @inject NavigationManager NavigationManager
 @inject IHttpContextAccessor HttpContextAccessor
+@inject IAppEnvironment AppEnvironment
 
 <PageTitle>Lab Outreach</PageTitle>
 
@@ -30,20 +32,48 @@
                     </NotAuthorized>
                 </AuthorizeView>
 
-                <!-- Help Button -->
-                <a href="/help" class="btn btn-sm btn-outline-primary" title="Help & Documentation">
-                    <span class="oi oi-question-mark"></span> Help
-                </a>
+                <!-- Recent Accounts and Help -->
+                <div class="d-flex align-items-center gap-2">
+                    <LabOutreachUI.Components.Shared.RecentAccounts @ref="recentAccountsComponent" />
+                    <a href="/help" class="btn btn-sm btn-outline-primary" title="Help & Documentation">
+                        <span class="oi oi-question-mark"></span> Help
+                    </a>
+                </div>
             </div>
         </div>
 
         <article class="content px-4">
             @Body
         </article>
+
+        <!-- Status Bar Footer -->
+        <footer class="bottom-row px-4 py-2 border-top">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <AuthorizeView>
+                    <Authorized>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-muted small">
+                                <span class="oi oi-person"></span>
+                                <strong>User:</strong> @context.User.Identity?.Name
+                            </span>
+                            <span class="text-muted small">
+                                <span class="oi oi-hard-drive"></span>
+                                <strong>Database:</strong> @AppEnvironment.DatabaseName
+                            </span>
+                        </div>
+                    </Authorized>
+                    <NotAuthorized>
+                        <span class="text-danger small">Not Authorized</span>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+        </footer>
     </main>
 </div>
 
 @code {
+    private LabOutreachUI.Components.Shared.RecentAccounts? recentAccountsComponent;
+
     // No logout needed - Windows Auth is automatic
     // User cannot "logout" from Windows Authentication
 }

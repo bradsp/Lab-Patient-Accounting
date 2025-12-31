@@ -18,6 +18,57 @@
             </NavLink>
         </div>
 
+        <!-- Billing Module -->
+        <AuthorizeView Policy="DatabaseUser">
+            <Authorized>
+                <div class="nav-item px-3 mt-3">
+                    <div class="text-muted small px-3 py-2">
+                        <strong>BILLING</strong>
+                    </div>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="billing/account">
+                        <span class="oi oi-document" aria-hidden="true"></span> Account
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="billing/worklist">
+                        <span class="oi oi-list" aria-hidden="true"></span> Work List
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="billing/charge-entry">
+                        <span class="oi oi-plus" aria-hidden="true"></span> Charge Entry
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="billing/batch-charges">
+                        <span class="oi oi-layers" aria-hidden="true"></span> Batch Charges
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="billing/remittance">
+                        <span class="oi oi-dollar" aria-hidden="true"></span> Remittance
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="billing/claims">
+                        <span class="oi oi-spreadsheet" aria-hidden="true"></span> Claims
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="billing/client-invoices">
+                        <span class="oi oi-clipboard" aria-hidden="true"></span> Client Invoices
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="billing/collections">
+                        <span class="oi oi-warning" aria-hidden="true"></span> Collections
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
         <!-- Random Drug Screen Module - Only show if authorized -->
         <AuthorizeView Policy="RandomDrugScreen">
             <Authorized>
@@ -44,17 +95,87 @@
             </Authorized>
         </AuthorizeView>
 
-        <!-- Client Viewer Module -->
-        <div class="nav-item px-3 mt-3">
-            <div class="text-muted small px-3 py-2">
-                <strong>CLIENT VIEWER</strong>
-            </div>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="clients">
-                <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Search Clients
-            </NavLink>
-        </div>
+        <!-- Dictionaries Module -->
+        <AuthorizeView Policy="DatabaseUser">
+            <Authorized>
+                <div class="nav-item px-3 mt-3">
+                    <div class="text-muted small px-3 py-2">
+                        <strong>DICTIONARIES</strong>
+                    </div>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="dictionaries/audit-reports">
+                        <span class="oi oi-task" aria-hidden="true"></span> Audit Reports
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="dictionaries/charge-master">
+                        <span class="oi oi-grid-three-up" aria-hidden="true"></span> Charge Master
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="clients">
+                        <span class="oi oi-building" aria-hidden="true"></span> Clients
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="dictionaries/insurance-plans">
+                        <span class="oi oi-medical-cross" aria-hidden="true"></span> Insurance Plans
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="dictionaries/physicians">
+                        <span class="oi oi-person" aria-hidden="true"></span> Physicians
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="dictionaries/pathologists">
+                        <span class="oi oi-person" aria-hidden="true"></span> Pathologists
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
+        <!-- System Administration Module - Admin only -->
+        <AuthorizeView Policy="DatabaseUser">
+            <Authorized>
+                <div class="nav-item px-3 mt-3">
+                    <div class="text-muted small px-3 py-2">
+                        <strong>ADMINISTRATION</strong>
+                    </div>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="admin/user-security">
+                        <span class="oi oi-lock-locked" aria-hidden="true"></span> User Security
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="admin/system-parameters">
+                        <span class="oi oi-cog" aria-hidden="true"></span> System Parameters
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="admin/interface-mapping">
+                        <span class="oi oi-link-intact" aria-hidden="true"></span> Interface Mapping
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="admin/interface-monitor">
+                        <span class="oi oi-monitor" aria-hidden="true"></span> Interface Monitor
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="admin/log-viewer">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Log Viewer
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="admin/account-locks">
+                        <span class="oi oi-ban" aria-hidden="true"></span> Account Locks
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
 
         <!-- Help & Support -->
         <div class="nav-item px-3 mt-3">

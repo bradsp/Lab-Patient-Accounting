@@ -1,0 +1,117 @@
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage LocalStorage
+@inject NavigationManager NavigationManager
+
+@if (recentAccounts != null && recentAccounts.Any())
+{
+    <div class="dropdown">
+        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="recentAccountsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="oi oi-clock"></span> Recent Accounts
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="recentAccountsDropdown">
+            @foreach (var account in recentAccounts)
+            {
+                <li>
+                    <a class="dropdown-item" href="@($"billing/account?id={account.AccountNo}")">
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold">@account.AccountNo</span>
+                            <span class="text-muted small">@account.PatientName</span>
+                        </div>
+                    </a>
+                </li>
+            }
+            @if (recentAccounts.Count > 0)
+            {
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <button class="dropdown-item text-danger" @onclick="ClearRecentAccounts">
+                        <span class="oi oi-trash"></span> Clear Recent
+                    </button>
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    private List<RecentAccount> recentAccounts = new();
+    private const int MaxRecentAccounts = 10;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadRecentAccountsAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadRecentAccountsAsync()
+    {
+        try
+        {
+            var result = await LocalStorage.GetAsync<List<RecentAccount>>("recentAccounts");
+            if (result.Success && result.Value != null)
+            {
+                recentAccounts = result.Value;
+            }
+        }
+        catch (Exception)
+        {
+            // If there's an error loading from storage, just use empty list
+            recentAccounts = new List<RecentAccount>();
+        }
+    }
+
+    public async Task AddAccountAsync(string accountNo, string patientName)
+    {
+        if (string.IsNullOrWhiteSpace(accountNo))
+            return;
+
+        // Remove if already exists
+        recentAccounts.RemoveAll(a => a.AccountNo == accountNo);
+
+        // Add to top of list
+        recentAccounts.Insert(0, new RecentAccount
+        {
+            AccountNo = accountNo,
+            PatientName = patientName ?? "Unknown",
+            AccessedAt = DateTime.Now
+        });
+
+        // Keep only the most recent entries
+        if (recentAccounts.Count > MaxRecentAccounts)
+        {
+            recentAccounts = recentAccounts.Take(MaxRecentAccounts).ToList();
+        }
+
+        await SaveRecentAccountsAsync();
+        StateHasChanged();
+    }
+
+    private async Task SaveRecentAccountsAsync()
+    {
+        try
+        {
+            await LocalStorage.SetAsync("recentAccounts", recentAccounts);
+        }
+        catch (Exception)
+        {
+            // Silently fail if storage fails
+        }
+    }
+
+    private async Task ClearRecentAccounts()
+    {
+        recentAccounts.Clear();
+        await LocalStorage.DeleteAsync("recentAccounts");
+        StateHasChanged();
+    }
+
+    private class RecentAccount
+    {
+        public string AccountNo { get; set; } = string.Empty;
+        public string PatientName { get; set; } = string.Empty;
+        public DateTime AccessedAt { get; set; }
+    }
+}

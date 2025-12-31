@@ -1,0 +1,22 @@
+@page "/admin/interface-monitor"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Policy = "DatabaseUser")]
+
+<PageTitle>Interface Monitor - Lab Patient Accounting</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col">
+            <h3><span class="oi oi-monitor"></span> Interface Monitor</h3>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <h5>Coming Soon</h5>
+        <p>This page will monitor interface messages and activity.</p>
+    </div>
+</div>
+
+@code {
+    // Interface monitoring functionality will be implemented in future phases
+}

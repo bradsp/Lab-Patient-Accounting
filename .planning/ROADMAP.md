@@ -7,7 +7,7 @@ Complete migration of WinForms billing application to Blazor Server.
 ---
 
 ## Phase 01: Foundation & Shared Components
-**Status:** Not Started
+**Status:** In Progress
 **Directory:** `.planning/phases/01-foundation/`
 
 Create the foundational UI components and layout structure that all subsequent phases will use.
@@ -401,7 +401,7 @@ End-to-end testing and final polish.
 
 | Phase | Status | Plans Complete |
 |-------|--------|----------------|
-| 01 Foundation | Not Started | 0/5 |
+| 01 Foundation | In Progress | 1/5 |
 | 02 Account Core | Not Started | 0/3 |
 | 03 Diagnosis/Insurance | Not Started | 0/3 |
 | 04 Charges/Payments | Not Started | 0/4 |

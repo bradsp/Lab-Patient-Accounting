@@ -1,0 +1,22 @@
+@page "/admin/user-security"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Policy = "DatabaseUser")]
+
+<PageTitle>User Security - Lab Patient Accounting</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col">
+            <h3><span class="oi oi-lock-locked"></span> User Security</h3>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <h5>Coming Soon</h5>
+        <p>This page will manage user accounts, roles, and security permissions.</p>
+    </div>
+</div>
+
+@code {
+    // User security management functionality will be implemented in future phases
+}

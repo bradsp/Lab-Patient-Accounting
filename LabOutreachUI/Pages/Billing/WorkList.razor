@@ -1,0 +1,22 @@
+@page "/billing/worklist"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Policy = "DatabaseUser")]
+
+<PageTitle>Work List - Lab Patient Accounting</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col">
+            <h3><span class="oi oi-list"></span> Work List</h3>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <h5>Coming Soon</h5>
+        <p>This page will provide access to various work queues and account lists for processing.</p>
+    </div>
+</div>
+
+@code {
+    // Work list functionality will be implemented in future phases
+}
