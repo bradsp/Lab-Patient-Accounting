@@ -1,4 +1,4 @@
-using LabBilling.Core.DataAccess;
+﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Core.UnitOfWork;
@@ -90,38 +90,38 @@ public class RequisitionPrintingService
     {
         try
         {
-        Log.Instance.Debug("GetAvailablePrinters() called");
-            
-    // First, try to get network printers from system parameters
+            Log.Instance.Debug("GetAvailablePrinters() called");
+
+            // First, try to get network printers from system parameters
             var networkPrinters = GetNetworkPrintersFromConfig();
-   
-         Log.Instance.Debug($"GetNetworkPrintersFromConfig() returned {networkPrinters.Count} printer(s)");
-       
+
+            Log.Instance.Debug($"GetNetworkPrintersFromConfig() returned {networkPrinters.Count} printer(s)");
+
             if (networkPrinters.Count > 0)
-  {
-              Log.Instance.Info($"Returning {networkPrinters.Count} network printer(s) from configuration: {string.Join(", ", networkPrinters)}");
-      return networkPrinters;
-       }
+            {
+                Log.Instance.Info($"Returning {networkPrinters.Count} network printer(s) from configuration: {string.Join(", ", networkPrinters)}");
+                return networkPrinters;
+            }
 
             // Fallback to locally installed printers (for development/local scenarios)
-  Log.Instance.Warn("No network printers configured in system parameters, attempting to fall back to local printers");
-         
-       try
-          {
-var printers = System.Drawing.Printing.PrinterSettings.InstalledPrinters;
-         var printerList = printers.Cast<string>().OrderBy(p => p).ToList();
-       Log.Instance.Debug($"Found {printerList.Count} local printer(s): {string.Join(", ", printerList)}");
-     return printerList;
-            }
-  catch (Exception localEx)
+            Log.Instance.Warn("No network printers configured in system parameters, attempting to fall back to local printers");
+
+            try
             {
-    Log.Instance.Error($"Unable to access local printers (expected on IIS): {localEx.Message}");
-             return new List<string>();
-     }
+                var printers = System.Drawing.Printing.PrinterSettings.InstalledPrinters;
+                var printerList = printers.Cast<string>().OrderBy(p => p).ToList();
+                Log.Instance.Debug($"Found {printerList.Count} local printer(s): {string.Join(", ", printerList)}");
+                return printerList;
+            }
+            catch (Exception localEx)
+            {
+                Log.Instance.Error($"Unable to access local printers (expected on IIS): {localEx.Message}");
+                return new List<string>();
+            }
         }
         catch (Exception ex)
         {
-     Log.Instance.Error($"Error in GetAvailablePrinters(): {ex.Message}", ex);
+            Log.Instance.Error($"Error in GetAvailablePrinters(): {ex.Message}", ex);
             return new List<string>();
         }
     }
@@ -132,83 +132,83 @@ var printers = System.Drawing.Printing.PrinterSettings.InstalledPrinters;
     /// and any custom printer parameters.
     /// </summary>
     private List<string> GetNetworkPrintersFromConfig()
-  {
-var printers = new List<string>();
+    {
+        var printers = new List<string>();
 
-try
+        try
         {
- // TEMPORARY: Hardcoded printers for production use
-     // TODO: Move these to system parameters once they are configured in the database
+            // TEMPORARY: Hardcoded printers for production use
+            // TODO: Move these to system parameters once they are configured in the database
             printers.Add(@"\\WTH125\MCL_LP");
-     printers.Add(@"\\WTH125\MCL_LW");
-            
+            printers.Add(@"\\WTH125\MCL_LW");
+
             Log.Instance.Info($"Using hardcoded printer configuration: {string.Join(", ", printers)}");
-            
+
             return printers.Distinct().OrderBy(p => p).ToList();
-            
-          /* ORIGINAL CODE - Commented out until system parameters are configured
-        if (_appEnvironment == null)
-   {
-       Log.Instance.Error("AppEnvironment is null in GetNetworkPrintersFromConfig()");
-      return printers;
- }
 
-            var appParams = _appEnvironment.ApplicationParameters;
- 
- if (appParams == null)
-            {
-     Log.Instance.Error("ApplicationParameters is null in GetNetworkPrintersFromConfig()");
-             return printers;
-}
-
-            Log.Instance.Debug($"Checking printer configuration parameters:");
-        Log.Instance.Debug($"  DefaultClientRequisitionPrinter = '{appParams.DefaultClientRequisitionPrinter ?? "(null)"}'");
-       Log.Instance.Debug($"  DefaultPathologyReqPrinter = '{appParams.DefaultPathologyReqPrinter ?? "(null)"}'");
-            Log.Instance.Debug($"  DefaultCytologyRequisitionPrinter = '{appParams.DefaultCytologyRequisitionPrinter ?? "(null)"}'");
-
-       // Add standard requisition printers if configured
-    if (!string.IsNullOrWhiteSpace(appParams.DefaultClientRequisitionPrinter))
-         {
-    printers.Add(appParams.DefaultClientRequisitionPrinter);
-      Log.Instance.Debug($"Added DefaultClientRequisitionPrinter: {appParams.DefaultClientRequisitionPrinter}");
-}
-
-   if (!string.IsNullOrWhiteSpace(appParams.DefaultPathologyReqPrinter))
- {
-                printers.Add(appParams.DefaultPathologyReqPrinter);
-  Log.Instance.Debug($"Added DefaultPathologyReqPrinter: {appParams.DefaultPathologyReqPrinter}");
-            }
-
-   if (!string.IsNullOrWhiteSpace(appParams.DefaultCytologyRequisitionPrinter))
-  {
-    printers.Add(appParams.DefaultCytologyRequisitionPrinter);
-      Log.Instance.Debug($"Added DefaultCytologyRequisitionPrinter: {appParams.DefaultCytologyRequisitionPrinter}");
-      }
-
-      // Remove duplicates and sort
-          var distinctPrinters = printers.Distinct().OrderBy(p => p).ToList();
-            
-            if (distinctPrinters.Count == 0)
-   {
-    Log.Instance.Warn("No printer parameters are configured in system parameters. Please configure: DefaultClientRequisitionPrinter, DefaultPathologyReqPrinter, and/or DefaultCytologyRequisitionPrinter");
+            /* ORIGINAL CODE - Commented out until system parameters are configured
+          if (_appEnvironment == null)
+     {
+         Log.Instance.Error("AppEnvironment is null in GetNetworkPrintersFromConfig()");
+        return printers;
    }
-    
-    return distinctPrinters;
-     */
+
+              var appParams = _appEnvironment.ApplicationParameters;
+
+   if (appParams == null)
+              {
+       Log.Instance.Error("ApplicationParameters is null in GetNetworkPrintersFromConfig()");
+               return printers;
+  }
+
+              Log.Instance.Debug($"Checking printer configuration parameters:");
+          Log.Instance.Debug($"  DefaultClientRequisitionPrinter = '{appParams.DefaultClientRequisitionPrinter ?? "(null)"}'");
+         Log.Instance.Debug($"  DefaultPathologyReqPrinter = '{appParams.DefaultPathologyReqPrinter ?? "(null)"}'");
+              Log.Instance.Debug($"  DefaultCytologyRequisitionPrinter = '{appParams.DefaultCytologyRequisitionPrinter ?? "(null)"}'");
+
+         // Add standard requisition printers if configured
+      if (!string.IsNullOrWhiteSpace(appParams.DefaultClientRequisitionPrinter))
+           {
+      printers.Add(appParams.DefaultClientRequisitionPrinter);
+        Log.Instance.Debug($"Added DefaultClientRequisitionPrinter: {appParams.DefaultClientRequisitionPrinter}");
+  }
+
+     if (!string.IsNullOrWhiteSpace(appParams.DefaultPathologyReqPrinter))
+   {
+                  printers.Add(appParams.DefaultPathologyReqPrinter);
+    Log.Instance.Debug($"Added DefaultPathologyReqPrinter: {appParams.DefaultPathologyReqPrinter}");
+              }
+
+     if (!string.IsNullOrWhiteSpace(appParams.DefaultCytologyRequisitionPrinter))
+    {
+      printers.Add(appParams.DefaultCytologyRequisitionPrinter);
+        Log.Instance.Debug($"Added DefaultCytologyRequisitionPrinter: {appParams.DefaultCytologyRequisitionPrinter}");
+        }
+
+        // Remove duplicates and sort
+            var distinctPrinters = printers.Distinct().OrderBy(p => p).ToList();
+
+              if (distinctPrinters.Count == 0)
+     {
+      Log.Instance.Warn("No printer parameters are configured in system parameters. Please configure: DefaultClientRequisitionPrinter, DefaultPathologyReqPrinter, and/or DefaultCytologyRequisitionPrinter");
+     }
+
+      return distinctPrinters;
+       */
         }
         catch (Exception ex)
         {
             Log.Instance.Error($"Error loading network printers from configuration: {ex.Message}", ex);
-         
-      // Fallback to hardcoded printers even on error
+
+            // Fallback to hardcoded printers even on error
             if (printers.Count == 0)
-     {
-    printers.Add(@"\\WTH125\MCL_LP");
-      printers.Add(@"\\WTH125\MCL_LW");
+            {
+                printers.Add(@"\\WTH125\MCL_LP");
+                printers.Add(@"\\WTH125\MCL_LW");
                 Log.Instance.Warn("Exception occurred, using hardcoded printer fallback");
-   }
-            
-     return printers;
+            }
+
+            return printers;
         }
     }
 
@@ -218,60 +218,60 @@ try
     /// </summary>
     public string GetDefaultPrinter()
     {
-      try
- {
-    // TEMPORARY: Return hardcoded default printer
- // TODO: Update to use system parameters once configured
-  return @"\\WTH125\MCL_LP";
-        
-     /* ORIGINAL CODE - Commented out until system parameters are configured
-            // Try to get default from application parameters first
-    var appParams = _appEnvironment.ApplicationParameters;
-
- if (!string.IsNullOrEmpty(appParams.DefaultClientRequisitionPrinter))
-       return appParams.DefaultClientRequisitionPrinter;
-
-      // Fallback to system default printer (for local scenarios)
-var printerSettings = new System.Drawing.Printing.PrinterSettings();
-            return printerSettings.PrinterName;
-      */
-        }
-  catch (Exception ex)
+        try
         {
-  Log.Instance.Error($"Error getting default printer: {ex.Message}", ex);
-       return @"\\WTH125\MCL_LP"; // Fallback to hardcoded printer
+            // TEMPORARY: Return hardcoded default printer
+            // TODO: Update to use system parameters once configured
+            return @"\\WTH125\MCL_LP";
+
+            /* ORIGINAL CODE - Commented out until system parameters are configured
+                   // Try to get default from application parameters first
+           var appParams = _appEnvironment.ApplicationParameters;
+
+        if (!string.IsNullOrEmpty(appParams.DefaultClientRequisitionPrinter))
+              return appParams.DefaultClientRequisitionPrinter;
+
+             // Fallback to system default printer (for local scenarios)
+       var printerSettings = new System.Drawing.Printing.PrinterSettings();
+                   return printerSettings.PrinterName;
+             */
         }
-}
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error getting default printer: {ex.Message}", ex);
+            return @"\\WTH125\MCL_LP"; // Fallback to hardcoded printer
+        }
+    }
 
     /// <summary>
     /// Gets printer for specific form type based on configuration.
     /// </summary>
     public string GetPrinterForFormType(FormType formType)
     {
-   // TEMPORARY: Return hardcoded printer based on form type
-   // TODO: Update to use system parameters once configured
-        
-   // Use MCL_LP (portrait) for most forms, MCL_LW (landscape/wide) could be used for specific forms if needed
-   return formType switch
-   {
-FormType.CLIREQ => @"\\WTH125\MCL_LP",
-       FormType.PTHREQ => @"\\WTH125\MCL_LP",
-   FormType.CYTREQ => @"\\WTH125\MCL_LP",
-      _ => @"\\WTH125\MCL_LP"
-    };
-        
- /* ORIGINAL CODE - Commented out until system parameters are configured
-        var appParams = _appEnvironment.ApplicationParameters;
+        // TEMPORARY: Return hardcoded printer based on form type
+        // TODO: Update to use system parameters once configured
 
-  return formType switch
+        // Use MCL_LP (portrait) for most forms, MCL_LW (landscape/wide) could be used for specific forms if needed
+        return formType switch
         {
-     FormType.CLIREQ => appParams.DefaultClientRequisitionPrinter ?? GetDefaultPrinter(),
-    FormType.PTHREQ => appParams.DefaultPathologyReqPrinter ?? GetDefaultPrinter(),
-      FormType.CYTREQ => appParams.DefaultCytologyRequisitionPrinter ?? GetDefaultPrinter(),
-   _ => GetDefaultPrinter()
+            FormType.CLIREQ => @"\\WTH125\MCL_LP",
+            FormType.PTHREQ => @"\\WTH125\MCL_LP",
+            FormType.CYTREQ => @"\\WTH125\MCL_LP",
+            _ => @"\\WTH125\MCL_LP"
         };
-        */
-}
+
+        /* ORIGINAL CODE - Commented out until system parameters are configured
+               var appParams = _appEnvironment.ApplicationParameters;
+
+         return formType switch
+               {
+            FormType.CLIREQ => appParams.DefaultClientRequisitionPrinter ?? GetDefaultPrinter(),
+           FormType.PTHREQ => appParams.DefaultPathologyReqPrinter ?? GetDefaultPrinter(),
+             FormType.CYTREQ => appParams.DefaultCytologyRequisitionPrinter ?? GetDefaultPrinter(),
+          _ => GetDefaultPrinter()
+               };
+               */
+    }
 
     /// <summary>
     /// Validates that a printer is accessible from the server.
@@ -382,7 +382,7 @@ FormType.CLIREQ => @"\\WTH125\MCL_LP",
     /// <param name="clientMnemonic">Client mnemonic code</param>
     /// <param name="printerName">Name of dot-matrix printer</param>
     /// <param name="formType">Type of form to print</param>
- /// <param name="copies">Number of copies to print</param>
+    /// <param name="copies">Number of copies to print</param>
     /// <param name="userName">User requesting the print job</param>
     /// <returns>Success status and any error messages</returns>
     public async Task<(bool success, string message)> PrintToDotMatrixAsync(
@@ -392,76 +392,76 @@ string printerName,
      int copies = 1,
      string userName = "System")
     {
-   try
-   {
- // Validate client
-     using var uow = new UnitOfWorkMain(_appEnvironment);
-   var (isValid, errors) = await ValidateClientForPrinting(clientMnemonic, uow);
- 
-  if (!isValid)
-   {
-    string errorMsg = string.Join("; ", errors);
-     Log.Instance.Warn($"Client validation failed for {clientMnemonic}: {errorMsg}");
-       return (false, $"Validation failed: {errorMsg}");
-   }
+        try
+        {
+            // Validate client
+            using var uow = new UnitOfWorkMain(_appEnvironment);
+            var (isValid, errors) = await ValidateClientForPrinting(clientMnemonic, uow);
 
-      // Get client data
- var client = uow.ClientRepository.GetClient(clientMnemonic);
-   if (client == null)
-          {
- return (false, "Client not found");
-       }
+            if (!isValid)
+            {
+                string errorMsg = string.Join("; ", errors);
+                Log.Instance.Warn($"Client validation failed for {clientMnemonic}: {errorMsg}");
+                return (false, $"Validation failed: {errorMsg}");
+            }
 
-    // Generate plain text formatted data
-  string textData = _dotMatrixService.FormatRequisition(client, formType.ToString());
+            // Get client data
+            var client = uow.ClientRepository.GetClient(clientMnemonic);
+            if (client == null)
+            {
+                return (false, "Client not found");
+            }
 
-   // Convert to bytes for raw printing
-  byte[] textBytes = Encoding.ASCII.GetBytes(textData);
+            // Generate plain text formatted data
+            string textData = _dotMatrixService.FormatRequisition(client, formType.ToString());
 
-     // Send to printer multiple times based on copies parameter
-     string documentName = $"{formType} - {client.ClientMnem}";
-     int successfulCopies = 0;
-     
-     for (int i = 0; i < copies; i++)
- {
-         bool printSuccess = RawPrinterHelper.SendBytesToPrinter(printerName, textBytes, documentName);
-         
-         if (!printSuccess)
-     {
-             string errorMsg = RawPrinterHelper.GetLastErrorMessage();
-  Log.Instance.Error($"Failed to print copy {i + 1} of {copies} to {printerName}: {errorMsg}");
-       
-      // If first copy fails, return immediately
-       if (i == 0)
-      {
-  return (false, $"Print failed: {errorMsg}");
-             }
-     
-     // If subsequent copy fails, report partial success
-     return (false, $"Printed {successfulCopies} of {copies} copies. Last error: {errorMsg}");
-   }
-         
-      successfulCopies++;
-     }
+            // Convert to bytes for raw printing
+            byte[] textBytes = Encoding.ASCII.GetBytes(textData);
 
-      // Record print job
-   await RecordPrintJobAsync(
-     client.ClientMnem,
-        client.Name,
-    formType,
-      copies,
-      printerName,
-        userName,
-              "RequisitionPrintingService");
+            // Send to printer multiple times based on copies parameter
+            string documentName = $"{formType} - {client.ClientMnem}";
+            int successfulCopies = 0;
+
+            for (int i = 0; i < copies; i++)
+            {
+                bool printSuccess = RawPrinterHelper.SendBytesToPrinter(printerName, textBytes, documentName);
+
+                if (!printSuccess)
+                {
+                    string errorMsg = RawPrinterHelper.GetLastErrorMessage();
+                    Log.Instance.Error($"Failed to print copy {i + 1} of {copies} to {printerName}: {errorMsg}");
+
+                    // If first copy fails, return immediately
+                    if (i == 0)
+                    {
+                        return (false, $"Print failed: {errorMsg}");
+                    }
+
+                    // If subsequent copy fails, report partial success
+                    return (false, $"Printed {successfulCopies} of {copies} copies. Last error: {errorMsg}");
+                }
+
+                successfulCopies++;
+            }
+
+            // Record print job
+            await RecordPrintJobAsync(
+              client.ClientMnem,
+                 client.Name,
+             formType,
+               copies,
+               printerName,
+                 userName,
+                       "RequisitionPrintingService");
 
             Log.Instance.Info($"Successfully printed {copies} cop{(copies == 1 ? "y" : "ies")} of {formType} for {client.ClientMnem} to {printerName}");
-    return (true, $"Successfully printed {copies} requisition(s)");
-  }
+            return (true, $"Successfully printed {copies} requisition(s)");
+        }
         catch (Exception ex)
-  {
-     Log.Instance.Error($"Error printing to dot-matrix printer: {ex.Message}", ex);
+        {
+            Log.Instance.Error($"Error printing to dot-matrix printer: {ex.Message}", ex);
             return (false, $"Error: {ex.Message}");
-    }
+        }
     }
 
     /// <summary>
@@ -512,103 +512,103 @@ string printerName,
     public bool PrintAlignmentTest(string printerName)
     {
         try
-{
-          string testPattern = _dotMatrixService.GenerateAlignmentTestPattern();
-  byte[] testBytes = Encoding.ASCII.GetBytes(testPattern);
-    
-  bool success = RawPrinterHelper.SendBytesToPrinter(printerName, testBytes, "Alignment Test");
-   
-        if (success)
         {
-           Log.Instance.Info($"Alignment test printed successfully to {printerName}");
-       }
-  else
+            string testPattern = _dotMatrixService.GenerateAlignmentTestPattern();
+            byte[] testBytes = Encoding.ASCII.GetBytes(testPattern);
+
+            bool success = RawPrinterHelper.SendBytesToPrinter(printerName, testBytes, "Alignment Test");
+
+            if (success)
             {
-              Log.Instance.Error($"Alignment test failed: {RawPrinterHelper.GetLastErrorMessage()}");
- }
-      
-return success;
-    }
-        catch (Exception ex)
-    {
-         Log.Instance.Error($"Error printing alignment test: {ex.Message}", ex);
-     return false;
+                Log.Instance.Info($"Alignment test printed successfully to {printerName}");
+            }
+            else
+            {
+                Log.Instance.Error($"Alignment test failed: {RawPrinterHelper.GetLastErrorMessage()}");
+            }
+
+            return success;
         }
- }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error printing alignment test: {ex.Message}", ex);
+            return false;
+        }
+    }
 
     /// <summary>
     /// Prints requisition to file emulator for development/testing without physical printer.
     /// Creates plain text file, text preview, and visual layout.
- /// </summary>
+    /// </summary>
     /// <param name="clientMnemonic">Client mnemonic code</param>
     /// <param name="formType">Type of form to print</param>
     /// <param name="copies">Number of copies (for logging purposes)</param>
     /// <param name="userName">User requesting the print job</param>
- /// <returns>Success status, message, and file path</returns>
+    /// <returns>Success status, message, and file path</returns>
     public async Task<(bool success, string message, string filePath)> PrintToEmulatorAsync(
         string clientMnemonic,
     FormType formType = FormType.CLIREQ,
    int copies = 1,
      string userName = "System")
- {
-    try
-  {
-   // Validate client
-   using var uow = new UnitOfWorkMain(_appEnvironment);
-        var (isValid, errors) = await ValidateClientForPrinting(clientMnemonic, uow);
-          
- if (!isValid)
-       {
-       string errorMsg = string.Join("; ", errors);
- Log.Instance.Warn($"Client validation failed for {clientMnemonic}: {errorMsg}");
-      return (false, $"Validation failed: {errorMsg}", null);
-   }
-
- // Get client data
-       var client = uow.ClientRepository.GetClient(clientMnemonic);
-   if (client == null)
     {
-       return (false, "Client not found", null);
-  }
-
-     // Generate plain text formatted data
-         string textData = _dotMatrixService.FormatRequisition(client, formType.ToString());
-
-   // Write to emulator - create one file per copy
-    var emulator = new PCL5FileEmulatorService();
- var createdFiles = new List<string>();
-    
-    for (int i = 0; i < copies; i++)
-    {
-        string fileName = $"{formType}_{client.ClientMnem}_{DateTime.Now:yyyyMMdd_HHmmss}_copy{i + 1}.txt";
-        string filePath = emulator.WritePCL5ToFile(textData, fileName);
-        createdFiles.Add(fileName);
-    }
-
-   // Record print job (mark as emulator)
-   await RecordPrintJobAsync(
-client.ClientMnem,
- client.Name,
- formType,
-copies,
-  "DOTMATRIX_EMULATOR",
-    userName,
-     "EmulatorMode");
-
-     string fileList = string.Join("\n  ? ", createdFiles);
-     string message = $"Dot-matrix emulation successful!\n\n" +
-      $"Created {copies} cop{(copies == 1 ? "y" : "ies")} in:\n{emulator.GetOutputDirectory()}\n\n" +
-        $"Files created:\n  ? {fileList}\n\n" +
-       $"Each file has corresponding .txt preview and _layout.txt files.\n" +
-      $"Open any _layout.txt file to verify column positioning (should be at column 55).";
-
-        Log.Instance.Info($"Emulated print for {client.ClientMnem} - {copies} copies created");
- return (true, message, createdFiles.FirstOrDefault());
-        }
-    catch (Exception ex)
+        try
         {
-        Log.Instance.Error($"Error in emulator print: {ex.Message}", ex);
-        return (false, $"Emulator error: {ex.Message}", null);
+            // Validate client
+            using var uow = new UnitOfWorkMain(_appEnvironment);
+            var (isValid, errors) = await ValidateClientForPrinting(clientMnemonic, uow);
+
+            if (!isValid)
+            {
+                string errorMsg = string.Join("; ", errors);
+                Log.Instance.Warn($"Client validation failed for {clientMnemonic}: {errorMsg}");
+                return (false, $"Validation failed: {errorMsg}", null);
+            }
+
+            // Get client data
+            var client = uow.ClientRepository.GetClient(clientMnemonic);
+            if (client == null)
+            {
+                return (false, "Client not found", null);
+            }
+
+            // Generate plain text formatted data
+            string textData = _dotMatrixService.FormatRequisition(client, formType.ToString());
+
+            // Write to emulator - create one file per copy
+            var emulator = new PCL5FileEmulatorService();
+            var createdFiles = new List<string>();
+
+            for (int i = 0; i < copies; i++)
+            {
+                string fileName = $"{formType}_{client.ClientMnem}_{DateTime.Now:yyyyMMdd_HHmmss}_copy{i + 1}.txt";
+                string filePath = emulator.WritePCL5ToFile(textData, fileName);
+                createdFiles.Add(fileName);
+            }
+
+            // Record print job (mark as emulator)
+            await RecordPrintJobAsync(
+         client.ClientMnem,
+          client.Name,
+          formType,
+         copies,
+           "DOTMATRIX_EMULATOR",
+             userName,
+              "EmulatorMode");
+
+            string fileList = string.Join("\n  � ", createdFiles);
+            string message = $"Dot-matrix emulation successful!\n\n" +
+             $"Created {copies} cop{(copies == 1 ? "y" : "ies")} in:\n{emulator.GetOutputDirectory()}\n\n" +
+               $"Files created:\n  � {fileList}\n\n" +
+              $"Each file has corresponding .txt preview and _layout.txt files.\n" +
+             $"Open any _layout.txt file to verify column positioning (should be at column 55).";
+
+            Log.Instance.Info($"Emulated print for {client.ClientMnem} - {copies} copies created");
+            return (true, message, createdFiles.FirstOrDefault());
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in emulator print: {ex.Message}", ex);
+            return (false, $"Emulator error: {ex.Message}", null);
         }
     }
 
@@ -620,23 +620,23 @@ copies,
     {
         try
         {
-         string testPattern = _dotMatrixService.GenerateAlignmentTestPattern();
-         
+            string testPattern = _dotMatrixService.GenerateAlignmentTestPattern();
+
             var emulator = new PCL5FileEmulatorService();
-   string fileName = $"AlignmentTest_{DateTime.Now:yyyyMMdd_HHmmss}.pcl";
+            string fileName = $"AlignmentTest_{DateTime.Now:yyyyMMdd_HHmmss}.pcl";
             string filePath = emulator.WritePCL5ToFile(testPattern, fileName);
 
-   string message = $"Alignment test pattern created!\n\n" +
-   $"Files created in:\n{emulator.GetOutputDirectory()}\n\n" +
-              $"Check the _layout.txt file to verify the grid appears at the correct position.";
+            string message = $"Alignment test pattern created!\n\n" +
+            $"Files created in:\n{emulator.GetOutputDirectory()}\n\n" +
+                       $"Check the _layout.txt file to verify the grid appears at the correct position.";
 
- Log.Instance.Info($"Emulated alignment test created: {filePath}");
- return (true, message, filePath);
-}
+            Log.Instance.Info($"Emulated alignment test created: {filePath}");
+            return (true, message, filePath);
+        }
         catch (Exception ex)
         {
-         Log.Instance.Error($"Error creating emulated alignment test: {ex.Message}", ex);
- return (false, $"Error: {ex.Message}", null);
-    }
+            Log.Instance.Error($"Error creating emulated alignment test: {ex.Message}", ex);
+            return (false, $"Error: {ex.Message}", null);
+        }
     }
 }
