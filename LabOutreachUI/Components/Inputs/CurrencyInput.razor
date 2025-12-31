@@ -1,0 +1,111 @@
+@using Microsoft.AspNetCore.Components.Forms
+@inherits InputBase<decimal>
+
+<input type="text"
+       class="form-control @CssClass @(IsInvalid ? "is-invalid" : "")"
+       id="@Id"
+       placeholder="@Placeholder"
+       value="@CurrentValueAsString"
+       @oninput="OnInput"
+       @onfocus="OnFocus"
+       @onblur="OnBlur"
+       disabled="@Disabled"
+       aria-label="@AriaLabel"
+       aria-describedby="@(Id)-validation" />
+
+@if (IsInvalid && !string.IsNullOrEmpty(ValidationMessage))
+{
+    <div id="@(Id)-validation" class="invalid-feedback">
+        @ValidationMessage
+    </div>
+}
+
+@code {
+    [Parameter] public string? Placeholder { get; set; }
+    [Parameter] public string CssClass { get; set; } = "";
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? AriaLabel { get; set; }
+    [Parameter] public bool PositiveOnly { get; set; }
+
+    private bool isEditing = false;
+    private string editValue = "";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (string.IsNullOrEmpty(Id))
+        {
+            Id = $"currency-{Guid.NewGuid():N}";
+        }
+    }
+
+    protected override bool TryParseValueFromString(string? value, out decimal result, out string? validationErrorMessage)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            result = 0;
+            validationErrorMessage = null;
+            return true;
+        }
+
+        // Remove currency symbols and formatting
+        var cleanValue = value.Replace("$", "").Replace(",", "").Trim();
+
+        if (decimal.TryParse(cleanValue, out result))
+        {
+            // Validate positive-only constraint
+            if (PositiveOnly && result < 0)
+            {
+                validationErrorMessage = "Amount must be positive";
+                return false;
+            }
+
+            validationErrorMessage = null;
+            return true;
+        }
+
+        validationErrorMessage = "Invalid currency amount";
+        return false;
+    }
+
+    protected override string FormatValueAsString(decimal value)
+    {
+        if (isEditing)
+        {
+            // During editing, show the raw number without formatting
+            return editValue;
+        }
+
+        // When not editing, format as currency
+        return value.ToString("C2");
+    }
+
+    private void OnInput(ChangeEventArgs e)
+    {
+        editValue = e.Value?.ToString() ?? "";
+        CurrentValueAsString = editValue;
+    }
+
+    private void OnFocus(FocusEventArgs e)
+    {
+        isEditing = true;
+        editValue = Value.ToString("0.00");
+        if (editValue == "0.00")
+        {
+            editValue = "";
+        }
+        StateHasChanged();
+    }
+
+    private void OnBlur(FocusEventArgs e)
+    {
+        isEditing = false;
+        EditContext?.NotifyFieldChanged(FieldIdentifier);
+        StateHasChanged();
+    }
+
+    private bool IsInvalid => EditContext?.GetValidationMessages(FieldIdentifier).Any() ?? false;
+
+    private string? ValidationMessage => EditContext?.GetValidationMessages(FieldIdentifier).FirstOrDefault();
+}

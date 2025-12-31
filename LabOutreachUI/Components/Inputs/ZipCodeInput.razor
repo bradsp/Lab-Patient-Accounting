@@ -1,0 +1,131 @@
+@using Microsoft.AspNetCore.Components.Forms
+@inherits InputBase<string>
+
+<input type="text"
+       class="form-control @CssClass @(IsInvalid ? "is-invalid" : "")"
+       id="@Id"
+       placeholder="@Placeholder"
+       value="@displayValue"
+       @oninput="OnInput"
+       @onblur="OnBlur"
+       disabled="@Disabled"
+       maxlength="10"
+       aria-label="@AriaLabel"
+       aria-describedby="@(Id)-validation" />
+
+@if (IsInvalid && !string.IsNullOrEmpty(ValidationMessage))
+{
+    <div id="@(Id)-validation" class="invalid-feedback">
+        @ValidationMessage
+    </div>
+}
+
+@code {
+    [Parameter] public string? Placeholder { get; set; } = "12345 or 12345-6789";
+    [Parameter] public string CssClass { get; set; } = "";
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? AriaLabel { get; set; }
+
+    private string displayValue = "";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (string.IsNullOrEmpty(Id))
+        {
+            Id = $"zip-{Guid.NewGuid():N}";
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        displayValue = FormatZipCode(Value);
+    }
+
+    protected override bool TryParseValueFromString(string? value, out string? result, out string? validationErrorMessage)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            result = null;
+            validationErrorMessage = null;
+            return true;
+        }
+
+        // Strip all non-digit characters for storage
+        var digitsOnly = new string(value.Where(char.IsDigit).ToArray());
+
+        if (digitsOnly.Length == 5 || digitsOnly.Length == 9)
+        {
+            result = digitsOnly;
+            validationErrorMessage = null;
+            return true;
+        }
+
+        if (digitsOnly.Length == 0)
+        {
+            result = null;
+            validationErrorMessage = null;
+            return true;
+        }
+
+        result = digitsOnly;
+        validationErrorMessage = "ZIP code must be 5 or 9 digits";
+        return false;
+    }
+
+    protected override string FormatValueAsString(string? value)
+    {
+        return FormatZipCode(value);
+    }
+
+    private string FormatZipCode(string? zip)
+    {
+        if (string.IsNullOrWhiteSpace(zip))
+        {
+            return "";
+        }
+
+        // Extract only digits
+        var digitsOnly = new string(zip.Where(char.IsDigit).ToArray());
+
+        if (digitsOnly.Length == 0)
+        {
+            return "";
+        }
+
+        // Format as ##### or #####-####
+        if (digitsOnly.Length <= 5)
+        {
+            return digitsOnly;
+        }
+        else if (digitsOnly.Length <= 9)
+        {
+            return $"{digitsOnly.Substring(0, 5)}-{digitsOnly.Substring(5)}";
+        }
+        else
+        {
+            // Limit to 9 digits
+            return $"{digitsOnly.Substring(0, 5)}-{digitsOnly.Substring(5, 4)}";
+        }
+    }
+
+    private void OnInput(ChangeEventArgs e)
+    {
+        var inputValue = e.Value?.ToString() ?? "";
+        displayValue = FormatZipCode(inputValue);
+        CurrentValueAsString = inputValue;
+    }
+
+    private void OnBlur(FocusEventArgs e)
+    {
+        displayValue = FormatZipCode(Value);
+        EditContext?.NotifyFieldChanged(FieldIdentifier);
+        StateHasChanged();
+    }
+
+    private bool IsInvalid => EditContext?.GetValidationMessages(FieldIdentifier).Any() ?? false;
+
+    private string? ValidationMessage => EditContext?.GetValidationMessages(FieldIdentifier).FirstOrDefault();
+}

@@ -1,0 +1,97 @@
+@using Microsoft.AspNetCore.Components.Forms
+@inherits InputBase<DateTime?>
+
+<input type="date"
+       class="form-control @CssClass @(IsInvalid ? "is-invalid" : "")"
+       id="@Id"
+       placeholder="@Placeholder"
+       value="@CurrentValueAsString"
+       @onchange="OnChange"
+       min="@(MinDate?.ToString("yyyy-MM-dd"))"
+       max="@(MaxDate?.ToString("yyyy-MM-dd"))"
+       disabled="@Disabled"
+       aria-label="@AriaLabel"
+       aria-describedby="@(Id)-validation" />
+
+@if (IsInvalid && !string.IsNullOrEmpty(ValidationMessage))
+{
+    <div id="@(Id)-validation" class="invalid-feedback">
+        @ValidationMessage
+    </div>
+}
+
+@code {
+    [Parameter] public string? Placeholder { get; set; }
+    [Parameter] public string CssClass { get; set; } = "";
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? AriaLabel { get; set; }
+    [Parameter] public DateTime? MinDate { get; set; }
+    [Parameter] public DateTime? MaxDate { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (string.IsNullOrEmpty(Id))
+        {
+            Id = $"date-{Guid.NewGuid():N}";
+        }
+    }
+
+    protected override bool TryParseValueFromString(string? value, out DateTime? result, out string? validationErrorMessage)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            result = null;
+            validationErrorMessage = null;
+            return true;
+        }
+
+        if (DateTime.TryParse(value, out var parsedDate))
+        {
+            // Validate min/max date range
+            if (MinDate.HasValue && parsedDate < MinDate.Value)
+            {
+                result = null;
+                validationErrorMessage = $"Date must be on or after {MinDate.Value:MM/dd/yyyy}";
+                return false;
+            }
+
+            if (MaxDate.HasValue && parsedDate > MaxDate.Value)
+            {
+                result = null;
+                validationErrorMessage = $"Date must be on or before {MaxDate.Value:MM/dd/yyyy}";
+                return false;
+            }
+
+            result = parsedDate;
+            validationErrorMessage = null;
+            return true;
+        }
+
+        result = null;
+        validationErrorMessage = "Invalid date format";
+        return false;
+    }
+
+    protected override string? FormatValueAsString(DateTime? value)
+    {
+        if (value.HasValue)
+        {
+            // HTML5 date input expects yyyy-MM-dd format
+            return value.Value.ToString("yyyy-MM-dd");
+        }
+
+        return null;
+    }
+
+    private void OnChange(ChangeEventArgs e)
+    {
+        CurrentValueAsString = e.Value?.ToString();
+        EditContext?.NotifyFieldChanged(FieldIdentifier);
+    }
+
+    private bool IsInvalid => EditContext?.GetValidationMessages(FieldIdentifier).Any() ?? false;
+
+    private string? ValidationMessage => EditContext?.GetValidationMessages(FieldIdentifier).FirstOrDefault();
+}

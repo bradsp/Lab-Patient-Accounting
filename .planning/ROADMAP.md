@@ -401,7 +401,7 @@ End-to-end testing and final polish.
 
 | Phase | Status | Plans Complete |
 |-------|--------|----------------|
-| 01 Foundation | In Progress | 1/5 |
+| 01 Foundation | In Progress | 2/5 |
 | 02 Account Core | Not Started | 0/3 |
 | 03 Diagnosis/Insurance | Not Started | 0/3 |
 | 04 Charges/Payments | Not Started | 0/4 |
