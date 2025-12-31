@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(taches-cc-resources:create-plans)"
+    ]
+  }
+}
