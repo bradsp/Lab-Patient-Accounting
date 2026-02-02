@@ -117,10 +117,19 @@ namespace LabBilling.Core.DataAccess
         /// Appends an optional WHERE condition that produces consistent SQL text regardless of
         /// whether the value is null. When value is null, the condition short-circuits via
         /// @0 IS NULL. This prevents plan cache pollution from dynamic WHERE clause assembly.
+        /// Uses @0 and @1 with separate parameter instances to avoid the ADO.NET error
+        /// "The SqlParameter is already contained by another SqlParameterCollection" that
+        /// occurs when PetaPoco references the same SqlParameter instance for multiple
+        /// positional parameters.
         /// </summary>
         protected PetaPoco.Sql WhereOptional(PetaPoco.Sql sql, string column, object value)
         {
-            return sql.Where($"(@0 IS NULL OR {column} = @0)", value);
+            // Create a second instance if value is a SqlParameter, since ADO.NET does not
+            // allow the same SqlParameter instance to belong to multiple parameter slots.
+            object value2 = value is SqlParameter sp
+                ? new SqlParameter() { SqlDbType = sp.SqlDbType, Value = sp.Value }
+                : value;
+            return sql.Where($"(@0 IS NULL OR {column} = @1)", value, value2);
         }
 
     }

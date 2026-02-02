@@ -75,7 +75,10 @@ public class RandomDrugScreenPersonRepository : RepositoryBase<RandomDrugScreenP
             .Where("deleted = 0")
             .Where("shift IS NOT NULL")
             .Where("shift <> ''")
-            .Where("(@0 IS NULL OR cli_mnem = @0)",
+            .Where("(@0 IS NULL OR cli_mnem = @1)",
+                string.IsNullOrEmpty(clientMnem)
+                    ? (object)DBNull.Value
+                    : new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem },
                 string.IsNullOrEmpty(clientMnem)
                     ? (object)DBNull.Value
                     : new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
@@ -94,7 +97,10 @@ public class RandomDrugScreenPersonRepository : RepositoryBase<RandomDrugScreenP
             .Select("COUNT(*)")
             .From(_tableName)
             .Where("cli_mnem = @0", clientMnem)
-            .Where("(@0 IS NULL OR shift = @0)",
+            .Where("(@0 IS NULL OR shift = @1)",
+                string.IsNullOrEmpty(shift)
+                    ? (object)DBNull.Value
+                    : new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = shift },
                 string.IsNullOrEmpty(shift)
                     ? (object)DBNull.Value
                     : new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = shift })
