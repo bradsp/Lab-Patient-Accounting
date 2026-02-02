@@ -1,7 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Skill(taches-cc-resources:create-plans)"
+      "Skill(taches-cc-resources:create-plans)",
+      "Skill(run-prompt)",
+      "Bash(dotnet build:*)",
+      "Bash(where:*)",
+      "Bash(dir \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\*\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\")",
+      "Bash(dir \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\2022\\\\*\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\")",
+      "Bash(dir \"C:\\\\Program Files\\\\Microsoft Visual Studio\" /b)",
+      "Bash(dir \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\" /b)",
+      "Bash(dir:*)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" \"C:\\\\Users\\\\bpowers\\\\source\\\\repos\\\\Lab-Patient-Accounting\\\\LabBilling Library\\\\LabBilling Core.csproj\" -p:Platform=x64 -verbosity:minimal)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet vstest:*)",
+      "Bash(findstr:*)"
     ]
   }
 }
