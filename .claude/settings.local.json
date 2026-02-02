@@ -13,7 +13,9 @@
       "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" \"C:\\\\Users\\\\bpowers\\\\source\\\\repos\\\\Lab-Patient-Accounting\\\\LabBilling Library\\\\LabBilling Core.csproj\" -p:Platform=x64 -verbosity:minimal)",
       "Bash(dotnet test:*)",
       "Bash(dotnet vstest:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "WebFetch(domain:github.com)",
+      "WebSearch"
     ]
   }
 }
