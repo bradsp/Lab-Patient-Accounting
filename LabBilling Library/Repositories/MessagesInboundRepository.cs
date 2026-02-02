@@ -22,7 +22,8 @@ namespace LabBilling.Core.DataAccess
             var sql = Sql.Builder
                 .Select($"left({GetRealColumn(nameof(MessageInbound.MessageType))}, 3) as 'MessageType', count(*) as 'QueueCount'")
                 .From(_tableName)
-                .Where($"{GetRealColumn(nameof(MessageInbound.ProcessFlag))} = 'N'")
+                .Where($"{GetRealColumn(nameof(MessageInbound.ProcessFlag))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "N" })
                 .GroupBy($"left({GetRealColumn(nameof(MessageInbound.MessageType))}, 3)")
                 .OrderBy($"left({GetRealColumn(nameof(MessageInbound.MessageType))}, 3)");
 
@@ -36,7 +37,8 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering");
             
             var command = PetaPoco.Sql.Builder;
-            command.Where($"{GetRealColumn(nameof(MessageInbound.ProcessFlag))} = 'N'");
+            command.Where($"{GetRealColumn(nameof(MessageInbound.ProcessFlag))} = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "N" });
             command.OrderBy($"{GetRealColumn(nameof(MessageInbound.MessageDate))}");
 
             var records = Context.Fetch<MessageInbound>(command);

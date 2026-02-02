@@ -619,7 +619,10 @@ public sealed class AccountService : IAccountService
             .Select(selectCols)
             .From(accTableName)
             .InnerJoin(insTableName)
-            .On($"{insTableName}.{uow.InsRepository.GetRealColumn(nameof(Ins.Account))} = {accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} and {uow.InsRepository.GetRealColumn(nameof(Ins.Coverage))} = '{InsCoverage.Primary}'");
+            .On($"{insTableName}.{uow.InsRepository.GetRealColumn(nameof(Ins.Account))} = {accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))}");
+
+        command.Where($"{uow.InsRepository.GetRealColumn(nameof(Ins.Coverage))} = @0",
+            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = InsCoverage.Primary });
 
         try
         {

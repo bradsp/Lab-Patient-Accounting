@@ -32,12 +32,10 @@ public sealed class UserProfileRepository : RepositoryBase<UserProfile>
 
     public IEnumerable<UserProfile> GetRecentAccount(string user, int numEntries = 10)
     {
-        string select = "TOP " + numEntries + " *";
         string sortColumn = this.GetRealColumn(typeof(UserProfile), nameof(UserProfile.ModDate));
 
         var command = PetaPoco.Sql.Builder
-            .Select(select)
-            .From(_tableName)
+            .Append($"SELECT TOP (@0) * FROM {_tableName}", numEntries)
             .Where("UserName = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = user })
             .Where("Parameter = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "RecentAccount" })
             .OrderBy($"{sortColumn} desc");

@@ -34,12 +34,10 @@ public class SanctionedProviderRepository : RepositoryBase<SanctionedProvider>, 
         if (!string.IsNullOrEmpty(lastName) || !string.IsNullOrEmpty(firstName))
         {
             var command = PetaPoco.Sql.Builder
-                .From(_tableName)
-                .Where($"{this.GetRealColumn(nameof(SanctionedProvider.LastName))} like @0+'%'",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = lastName })
-                .Where($"{this.GetRealColumn(nameof(SanctionedProvider.FirstName))} like @0+'%'",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = firstName })
-                .OrderBy($"{this.GetRealColumn(nameof(SanctionedProvider.LastName))}, {this.GetRealColumn(nameof(SanctionedProvider.FirstName))}");
+                .From(_tableName);
+            WhereLike(command, this.GetRealColumn(nameof(SanctionedProvider.LastName)), lastName);
+            WhereLike(command, this.GetRealColumn(nameof(SanctionedProvider.FirstName)), firstName);
+            command.OrderBy($"{this.GetRealColumn(nameof(SanctionedProvider.LastName))}, {this.GetRealColumn(nameof(SanctionedProvider.FirstName))}");
 
             phy = Context.Fetch<SanctionedProvider>(command);
 
