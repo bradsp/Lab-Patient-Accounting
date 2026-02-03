@@ -61,21 +61,17 @@ public sealed class ChrgRepository : RepositoryBase<Chrg>
         var sql = PetaPoco.Sql.Builder
             .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
-        if (asOfDate != null)
-        {
-            sql.Where($"{_tableName}.{GetRealColumn(nameof(Chrg.UpdatedDate))} > @0",
-                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = asOfDate });
-        }
+        sql.Where($"(@0 IS NULL OR {_tableName}.{GetRealColumn(nameof(Chrg.UpdatedDate))} > @0)", asOfDate);
 
-        if (!showCredited)
-            sql.Where($"{GetRealColumn(nameof(Chrg.IsCredited))} = 0");
+        sql.Where($"(@0 = 1 OR {GetRealColumn(nameof(Chrg.IsCredited))} = 0)",
+            new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = showCredited });
 
-        if (!includeInvoiced)
-            sql.Where($"{GetRealColumn(nameof(Chrg.Invoice))} is null or {GetRealColumn(nameof(Chrg.Invoice))} = ''");
+        sql.Where($"(@0 = 1 OR {GetRealColumn(nameof(Chrg.Invoice))} is null OR {GetRealColumn(nameof(Chrg.Invoice))} = '')",
+            new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = includeInvoiced });
 
-        if (excludeCBill)
-            sql.Where($"{GetRealColumn(nameof(Chrg.CDMCode))} <> @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AppEnvironment.ApplicationParameters.ClientInvoiceCdm });
+        sql.Where($"(@0 = 0 OR {GetRealColumn(nameof(Chrg.CDMCode))} <> @1)",
+            new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = excludeCBill },
+            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AppEnvironment.ApplicationParameters.ClientInvoiceCdm });
 
         sql.OrderBy($"{_tableName}.{GetRealColumn(nameof(Chrg.ChrgId))}");
 

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using System.Reflection;
+using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System.Linq.Expressions;
 using Utilities;
@@ -240,7 +242,9 @@ namespace LabBilling.Core.DataAccess
 
 
             // Query the database to get the field lengths
-            var maxLengths = Context.Fetch<ColumnInfo>($"SELECT COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{_tableName}'")
+            var maxLengths = Context.Fetch<ColumnInfo>(
+                "SELECT COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _tableName })
                                     .ToDictionary(x => x.COLUMN_NAME, x => x.CHARACTER_MAXIMUM_LENGTH);
 
             List<string> longFields = new();

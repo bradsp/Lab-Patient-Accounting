@@ -40,9 +40,9 @@ public sealed class InsCompanyRepository : RepositoryBase<InsCompany>
         Log.Instance.Debug($"Entering");
 
         var sql = Sql.Builder;
-        if(excludeDeleted)
-            sql.Where($"{GetRealColumn(nameof(InsCompany.IsDeleted))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = false } );
+        sql.Where($"(@0 = 0 OR {GetRealColumn(nameof(InsCompany.IsDeleted))} = @1)",
+            new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = excludeDeleted },
+            new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = false });
 
         var queryResult = Context.Fetch<InsCompany>(sql);
 

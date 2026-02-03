@@ -29,22 +29,19 @@ namespace LabBilling.Core.DataAccess
                 .From(_tableName)
                 .LeftJoin("client").On($"{_tableName}.cl_mnem = client.cli_mnem");
 
-            if(clientMnem != null)
-            {
-                sql.Where($"cl_mnem = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
-            }
+            sql.Where($"(@0 IS NULL OR cl_mnem = @1)",
+                string.IsNullOrEmpty(clientMnem) ? (object)DBNull.Value : new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem },
+                string.IsNullOrEmpty(clientMnem) ? (object)DBNull.Value : new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
 
-            if (fromDate != null || throughDate != null)
-            {
-                if (fromDate != null && throughDate != null)
-                    sql.Where($"{_tableName}.mod_date between @0 and @1",
-                        new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate},
-                        new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate});
-            }
-            if(!string.IsNullOrEmpty(invoice))
-            {
-                sql.Where($"{GetRealColumn(nameof(InvoiceHistory.InvoiceNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoice });
-            }
+            sql.Where($"(@0 IS NULL OR @1 IS NULL OR {_tableName}.mod_date between @2 and @3)",
+                fromDate.HasValue ? (object)new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate.Value } : DBNull.Value,
+                throughDate.HasValue ? (object)new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate.Value } : DBNull.Value,
+                fromDate.HasValue ? (object)new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate.Value } : DBNull.Value,
+                throughDate.HasValue ? (object)new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate.Value } : DBNull.Value);
+
+            sql.Where($"(@0 IS NULL OR {GetRealColumn(nameof(InvoiceHistory.InvoiceNo))} = @1)",
+                string.IsNullOrEmpty(invoice) ? (object)DBNull.Value : new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoice },
+                string.IsNullOrEmpty(invoice) ? (object)DBNull.Value : new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoice });
             sql.OrderBy($"{_tableName}.mod_date DESC");
             Log.Instance.Debug(sql);
             return Context.Fetch<InvoiceHistory>(sql);

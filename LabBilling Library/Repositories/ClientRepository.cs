@@ -119,10 +119,15 @@ public sealed class ClientRepository : RepositoryBase<Client>
             .From(chrgTableName)
             .InnerJoin(accTableName)
             .On($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.AccountNo))} = {accTableName}.{GetRealColumn(typeof(Account), nameof(Account.AccountNo))}")
-            .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Status))} not in ('CBILL','N/A')")
-            .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Invoice))} is null or {chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Invoice))} = ''")
-            .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.FinancialType))} =  'C'")
-            .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.Status))} not like '%HOLD%'")
+            .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Status))} not in (@0, @1)",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "CBILL" },
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "N/A" })
+            .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Invoice))} is null or {chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Invoice))} = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "" })
+            .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.FinancialType))} = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "C" })
+            .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.Status))} not like @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "%HOLD%" })
             .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.TransactionDate))} <= @0 ",
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate })
             .GroupBy(new[]

@@ -13,7 +13,11 @@ public sealed class AuditReportRepository : RepositoryBase<AuditReport>
 
     public List<string> GetMenus()
     {
-        var list = Context.Fetch<string>($"SELECT DISTINCT {GetRealColumn(nameof(AuditReport.Button))} FROM {TableName}");
+        var sql = PetaPoco.Sql.Builder
+            .Select($"DISTINCT {GetRealColumn(nameof(AuditReport.Button))}")
+            .From(TableName);
+
+        var list = Context.Fetch<string>(sql);
 
         return list;
     }

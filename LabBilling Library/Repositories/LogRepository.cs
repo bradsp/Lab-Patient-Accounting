@@ -32,6 +32,11 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
             _tableInfo = GetTableInfo(typeof(Logs));
             _tableName = _tableInfo.TableName;
+            // LogRepository connects to a separate NLog logging database (not the main LabBilling database).
+            // It intentionally uses SqlServerMsDataDatabaseProvider instead of CustomSqlMsDatabaseProvider
+            // because the CustomSqlMsDatabaseProvider workaround for SQL Error 334 is only needed for
+            // the main application tables. MyMapper is also not required since Logs columns map directly
+            // without custom attribute resolution.
             dbConnection = new PetaPoco.Database(connectionString, new SqlServerMsDataDatabaseProvider());
             Log.Instance.Debug(dbConnection.ConnectionString);
         }

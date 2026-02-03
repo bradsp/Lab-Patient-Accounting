@@ -45,12 +45,10 @@ namespace LabBilling.Core.DataAccess
             if(!string.IsNullOrEmpty(lastName) || !string.IsNullOrEmpty(firstName))
             {
                 var command = PetaPoco.Sql.Builder
-                    .From(_tableName)
-                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.LastName))} like @0+'%'",
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = lastName })
-                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName))} like @0+'%'",
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = firstName })
-                    .OrderBy($"{this.GetRealColumn(typeof(Phy), nameof(Phy.LastName))}, {this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName))}");
+                    .From(_tableName);
+                WhereLike(command, this.GetRealColumn(typeof(Phy), nameof(Phy.LastName)), lastName);
+                WhereLike(command, this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName)), firstName);
+                command.OrderBy($"{this.GetRealColumn(typeof(Phy), nameof(Phy.LastName))}, {this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName))}");
 
                 phy = Context.Fetch<Phy>(command);
 
@@ -64,7 +62,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            string sql = $"SELECT * FROM {_tableName} where deleted = 0";
+            var sql = PetaPoco.Sql.Builder
+                .Where($"{GetRealColumn(nameof(Phy.IsDeleted))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = false });
 
             var queryResult = Context.Fetch<Phy>(sql);
 

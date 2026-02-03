@@ -19,8 +19,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            string sql = null;
-            sql = $"select DISTINCT {GetRealColumn(nameof(Mapping.SystemType))} from {_tableName}";
+            var sql = PetaPoco.Sql.Builder
+                .Select($"DISTINCT {GetRealColumn(nameof(Mapping.SystemType))}")
+                .From(_tableName);
 
             var queryResult = Context.Fetch<string>(sql);
 
@@ -31,13 +32,13 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            string sql = null;
-            sql = $"select DISTINCT {GetRealColumn(nameof(Mapping.InterfaceName))} from {_tableName}";
+            var sql = PetaPoco.Sql.Builder
+                .Select($"DISTINCT {GetRealColumn(nameof(Mapping.InterfaceName))}")
+                .From(_tableName);
 
             var queryResult = Context.Fetch<string>(sql);
 
             return queryResult;
-
         }
 
         public IEnumerable<Mapping> GetMappings(string codeSet, string sendingSystem)

@@ -62,7 +62,9 @@ namespace LabBilling.Core.DataAccess
 
             sql.Where($"{GetRealColumn(nameof(PatientStatement.BatchId))} = @0", 
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch});
-            sql.Where($"{GetRealColumn(nameof(PatientStatement.StatementSubmittedDateTime))} is null or {GetRealColumn(nameof(PatientStatement.StatementSubmittedDateTime))} = '01/01/1900'");
+            sql.Where($"{GetRealColumn(nameof(PatientStatement.StatementSubmittedDateTime))} is null or " +
+                $"{GetRealColumn(nameof(PatientStatement.StatementSubmittedDateTime))} = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = new DateTime(1900, 1, 1) });
 
             var results = Context.Fetch<PatientStatement>(sql);
 

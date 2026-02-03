@@ -1,6 +1,8 @@
 ﻿using LabBilling.Core.UnitOfWork;
 using PetaPoco;
 using System;
+using System.Data;
+using Microsoft.Data.SqlClient;
 using LabBilling.Logging;
 using System.Reflection;
 using System.ComponentModel;
@@ -98,6 +100,36 @@ namespace LabBilling.Core.DataAccess
             }
 
             return propertyName;
+        }
+
+        /// <summary>
+        /// Appends a parameterized LIKE clause with trailing wildcard. Appends '%' to the value
+        /// in C# rather than using SQL concatenation (@0+'%'), which allows SQL Server to use
+        /// index seeks and avoids plan cache pollution.
+        /// </summary>
+        protected PetaPoco.Sql WhereLike(PetaPoco.Sql sql, string column, string value)
+        {
+            return sql.Where($"{column} like @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = value + "%" });
+        }
+
+        /// <summary>
+        /// Appends an optional WHERE condition that produces consistent SQL text regardless of
+        /// whether the value is null. When value is null, the condition short-circuits via
+        /// @0 IS NULL. This prevents plan cache pollution from dynamic WHERE clause assembly.
+        /// Uses @0 and @1 with separate parameter instances to avoid the ADO.NET error
+        /// "The SqlParameter is already contained by another SqlParameterCollection" that
+        /// occurs when PetaPoco references the same SqlParameter instance for multiple
+        /// positional parameters.
+        /// </summary>
+        protected PetaPoco.Sql WhereOptional(PetaPoco.Sql sql, string column, object value)
+        {
+            // Create a second instance if value is a SqlParameter, since ADO.NET does not
+            // allow the same SqlParameter instance to belong to multiple parameter slots.
+            object value2 = value is SqlParameter sp
+                ? new SqlParameter() { SqlDbType = sp.SqlDbType, Value = sp.Value }
+                : value;
+            return sql.Where($"(@0 IS NULL OR {column} = @1)", value, value2);
         }
 
     }
