@@ -57,13 +57,13 @@
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>2025.2.2.2</Version>
-    <Copyright>2023-2025</Copyright>
+    <Version>2025.2.2.3</Version>
+    <Copyright>2023-2026</Copyright>
     <RepositoryUrl>https://github.com/bradsp/Lab-Patient-Accounting</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>2025.2.2.2</AssemblyVersion>
-    <FileVersion>2025.2.2.2</FileVersion>
+    <AssemblyVersion>2025.2.2.3</AssemblyVersion>
+    <FileVersion>2025.2.2.3</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
