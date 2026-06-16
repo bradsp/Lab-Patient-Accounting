@@ -383,14 +383,156 @@ End-to-end testing and final polish.
 
 ---
 
+## Milestone: v1.1 - Platform Modernization (PostgreSQL + Redis)
+
+Replace Microsoft SQL Server with PostgreSQL and introduce Redis caching for the
+hotspots identified in `analyses/dbms-modernization-and-redis-hotspots.md`. This
+milestone is **independent of the v1.0 Blazor UI work** and can proceed in parallel;
+it touches `LabBilling Library` (data access), the database projects, the Quartz
+scheduler, and `LabOutreachUI` (caching/auth state).
+
+Source of truth for all decisions: `analyses/dbms-modernization-and-redis-hotspots.md`.
+
+---
+
+### Phase 21: De-Risking Spikes
+**Status:** Not Started
+**Directory:** `.planning/phases/21-derisking-spikes/`
+**Depends on:** none (gates everything below)
+
+Resolve the open questions from §6 of the analysis before committing migration effort.
+These are time-boxed investigations that produce decisions + effort sizing, not production code.
+
+**Deliverables:**
+- Runtime DB-object surface trace (Extended Events) → confirmed thin runtime proc/UDF/view set
+- MARS-dependency audit (Npgsql has no MARS) → list of nested-reader code paths to refactor
+- XML-shredding approach bake-off: `xmltable()` PL/pgSQL vs. C# (j4jayant parser) on a sample message
+- Managed-PostgreSQL BAA + at-rest + TLS + `pgaudit` SKU validation (e.g. AWS RDS)
+- Exact repository T-SQL porting backlog (scripted scan of `Sql.Builder` usages)
+- FINDINGS.md sizing Phases 22-25
+
+**Plans:**
+- 21-01: Static-analysis spikes — repository T-SQL backlog + MARS-dependency audit (autonomous)
+- 21-02: Runtime DB-object surface trace (live SQL Server env)
+- 21-03: XML-shredding approach bake-off + decision (`xmltable()` vs. C#)
+- 21-04: Managed-PostgreSQL HIPAA SKU validation + decision, consolidate FINDINGS
+
+---
+
+### Phase 22: PostgreSQL Schema & Data-Access Foundation
+**Status:** Not Started
+**Directory:** `.planning/phases/22-postgres-foundation/`
+**Depends on:** Phase 21
+
+Stand up the PostgreSQL schema and repoint the .NET data-access layer, without porting
+in-database procedural logic yet (Phase 23).
+
+**Deliverables:**
+- PostgreSQL schema: ~500 tables, IDENTITY→`GENERATED ... AS IDENTITY`, computed columns→`GENERATED ALWAYS AS ... STORED`, 7 schemas, ~209 views (bracket→double-quote)
+- PetaPoco swapped to built-in `PostgreSQLDatabaseProvider`; `CustomSqlDatabaseProvider` deleted (native `RETURNING`)
+- `Microsoft.Data.SqlClient` → `Npgsql`; `AppEnvironment` connection construction rebuilt
+- **TLS-in-transit enabled** (`SSL Mode=Require`) — closes the `Encrypt=false` HIPAA gap
+- Both UoW construction sites (`UnitOfWorkMain`, `UnitOfWorkSystem`) repointed
+
+**Plans:**
+- 22-01: Schema generation & type/identity/computed-column mapping
+- 22-02: Provider swap, Npgsql, connection rebuild + TLS
+- 22-03: Auto-CRUD repository smoke verification
+
+---
+
+### Phase 23: In-Database Logic & Repository Port
+**Status:** Not Started
+**Directory:** `.planning/phases/23-logic-repo-port/`
+**Depends on:** Phase 22
+
+Port the procedural surface the runtime actually uses, plus the repositories carrying
+hand-written T-SQL. Batch/reporting procs not on the runtime path are deferred to incremental follow-up.
+
+**Deliverables:**
+- Runtime UDFs ported to PL/pgSQL: `GetAccBalance`/`GetAccBalByDate`/`GetAccClientBalance`, `GetNextNumber`
+- `usp_cerner_chrg_reprocess` and XML-shredding import procs ported (per Phase 21 decision)
+- Repository T-SQL rewritten: `[brackets]`→`"quotes"`, `TOP`→`LIMIT`, inline UDF/proc call sites
+- Inline scalar-UDF call sites updated (`ClientRepository.cs:85,97,117`, `NumberRepository.cs:28`, `MessagesInboundRepository.cs:90`)
+
+**Plans:**
+- 23-01: Runtime scalar UDFs + GetNextNumber port
+- 23-02: XML-shredding / cerner import procs port
+- 23-03: Repository T-SQL rewrite backlog
+- 23-04: View definitions port
+
+---
+
+### Phase 24: Background Jobs → Quartz.NET
+**Status:** Not Started
+**Directory:** `.planning/phases/24-jobs-to-quartz/`
+**Depends on:** Phase 23
+
+Consolidate SQL Server Agent jobs into the existing Quartz.NET scheduler and remove
+the `sp_send_dbmail` / Windows-path dependencies.
+
+**Deliverables:**
+- 4 SQL Agent jobs (Accounts Aging Payout, BadDebt Writeoff, Daily AM Run, nLog Purge) as Quartz jobs
+- `sp_send_dbmail` replaced by app-layer SMTP email service
+- `H:\sqlText` output coupling retired
+
+**Plans:**
+- 24-01: Quartz job scaffolding + SMTP email service
+- 24-02: Port aging/writeoff/purge jobs
+- 24-03: Port Daily AM Run (multi-step reconciliation)
+
+---
+
+### Phase 25: Data Migration & Cutover
+**Status:** Not Started
+**Directory:** `.planning/phases/25-data-cutover/`
+**Depends on:** Phase 24
+
+Move data to PostgreSQL and validate parity before cutover.
+
+**Deliverables:**
+- Bulk data load (pgloader / AWS DMS) with FK/index integrity
+- Row-count + checksum parity validation vs. SQL Server
+- Dual-run / shadow verification of critical workflows
+- Cutover runbook
+
+**Plans:**
+- 25-01: Bulk load tooling + run
+- 25-02: Parity validation harness
+- 25-03: Cutover runbook + dry run
+
+---
+
+### Phase 26: Redis Caching
+**Status:** Not Started
+**Directory:** `.planning/phases/26-redis-caching/`
+**Depends on:** Phase 22 (stable data layer); ideally after Phase 25 cutover
+
+Introduce Redis for the §5 hotspots. Explicitly skips the §5.3 tempting-but-bad targets
+(live balances, full account aggregate, transactional writes, raw PHI).
+
+**Deliverables:**
+- Redis infrastructure + `StackExchange.Redis` / `IDistributedCache` DI wiring
+- Reference-data cache for `DictionaryService` (CPT/dx/CDM/revenue/fin codes, client/insurance/mapping)
+- Distributed auth/identity cache (replaces process-local `UserCircuitHandler` dictionary)
+- HL7 idempotency guard (recently-processed control-IDs) + distributed number/lock coordination
+
+**Plans:**
+- 26-01: Redis infra + DI wiring + health check
+- 26-02: DictionaryService reference-data cache
+- 26-03: Distributed auth/identity cache
+- 26-04: HL7 idempotency + distributed coordination
+
+---
+
 ## Future Milestones
 
-### v1.1 - Reports Integration
+### v1.2 - Reports Integration
 - SQL Reporting Services integration
 - Report viewer component
 - Standard report access
 
-### v1.2 - Advanced Features
+### v1.3 - Advanced Features
 - Mobile-responsive optimizations
 - Advanced search capabilities
 - Batch operations enhancements
@@ -421,3 +563,10 @@ End-to-end testing and final polish.
 | 18 Admin-System | Not Started | 0/3 |
 | 19 Dashboard | Not Started | 0/2 |
 | 20 Integration | Not Started | 0/2 |
+| **v1.1 Platform Modernization** | | |
+| 21 De-Risking Spikes | Not Started | 0/4 |
+| 22 Postgres Foundation | Not Started | 0/3 |
+| 23 Logic & Repo Port | Not Started | 0/4 |
+| 24 Jobs → Quartz | Not Started | 0/3 |
+| 25 Data Cutover | Not Started | 0/3 |
+| 26 Redis Caching | Not Started | 0/4 |
