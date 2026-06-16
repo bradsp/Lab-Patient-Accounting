@@ -82,10 +82,10 @@ public class Field
 
                     for (int index = 0; index < InduvidualFields.Count; index++)
                     {
-                        Field field = new Field();
-                        field.FieldDelimiters = new Char[3] { FieldDelimiters[0], FieldDelimiters[1], FieldDelimiters[2] };
-                        field.Value = InduvidualFields[index];
-                        _RepetitionList.Add(field);
+                        Field newField = new Field();
+                        newField.FieldDelimiters = new Char[3] { FieldDelimiters[0], FieldDelimiters[1], FieldDelimiters[2] };
+                        newField.Value = InduvidualFields[index];
+                        _RepetitionList.Add(newField);
                     }
                 }
                 else

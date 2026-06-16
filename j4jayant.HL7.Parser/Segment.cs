@@ -85,18 +85,18 @@ public class Segment
 
                     foreach (String strField in AllFields)
                     {
-                        Field field = new Field();
-                        field.FieldDelimiters = new Char[3] { FieldDelimiters[1], FieldDelimiters[2], FieldDelimiters[3] };
-                        field.Value = strField;
-                        FieldList.Add(field);
+                        Field newField = new Field();
+                        newField.FieldDelimiters = new Char[3] { FieldDelimiters[1], FieldDelimiters[2], FieldDelimiters[3] };
+                        newField.Value = strField;
+                        FieldList.Add(newField);
                     }
                 }
                 else
                 {
-                    Field field = new Field();
-                    field.FieldDelimiters = new Char[3] { FieldDelimiters[1], FieldDelimiters[2], FieldDelimiters[3] };
-                    field.Value = _Value;
-                    FieldList.Add(field);
+                    Field newField = new Field();
+                    newField.FieldDelimiters = new Char[3] { FieldDelimiters[1], FieldDelimiters[2], FieldDelimiters[3] };
+                    newField.Value = _Value;
+                    FieldList.Add(newField);
                 }
             }
         }
