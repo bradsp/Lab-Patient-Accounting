@@ -277,3 +277,18 @@ ALTER TABLE infce."messages_inbound_webconnect"  ALTER COLUMN "processFlag" SET 
 -- ============================================================================
 CREATE INDEX IF NOT EXISTS "idx_patient_demographics_xmlContents"
   ON infce."patient_demographics" (((("xmlContents")::text)));
+
+-- ============================================================================
+-- 5. Model<->schema reconciliation + search_path (folded in from the 22-05 smoke test)
+--    The canonical DB-project schema is drifted vs the current .NET models; these
+--    columns are mapped by the models (UserAccount, SysParameter) but were absent
+--    from the translated schema. Add them so the data layer binds. (Phase 23 should
+--    reconcile the broader model<->schema drift; see FINDINGS R3.)
+-- ============================================================================
+ALTER TABLE dbo."emp"    ADD COLUMN IF NOT EXISTS access_random_drug_screen boolean NOT NULL DEFAULT false;
+ALTER TABLE dbo."system" ADD COLUMN IF NOT EXISTS "KeyName" varchar(50);
+
+-- Models use unqualified table names, but tables live across 7 schemas. Set a
+-- database-level search_path so unqualified resolution works. (Alternative for
+-- Phase 23: set "Search Path" in the Npgsql connection string in AppEnvironment.)
+ALTER DATABASE labbilling SET search_path = dbo, dictionary, dict, infce, audit, tst, zzz, public;

@@ -22,7 +22,7 @@ services:
     environment:
       POSTGRES_DB: labbilling
       POSTGRES_USER: labpa
-      POSTGRES_PASSWORD: "LabPA!Dev0rd"   # Local dev password only
+      POSTGRES_PASSWORD: "labpa_dev"   # Local dev password only (Npgsql SCRAM requires a non-empty password)
     volumes:
       - pgdata:/var/lib/postgresql/data    # Persistent database storage
 

@@ -420,7 +420,7 @@ These are time-boxed investigations that produce decisions + effort sizing, not 
 ---
 
 ### Phase 22: PostgreSQL Schema & Data-Access Foundation
-**Status:** Not Started
+**Status:** Complete
 **Directory:** `.planning/phases/22-postgres-foundation/`
 **Depends on:** Phase 21
 
@@ -567,7 +567,7 @@ Introduce Redis for the §5 hotspots. Explicitly skips the §5.3 tempting-but-ba
 | 20 Integration | Not Started | 0/2 |
 | **v1.1 Platform Modernization** | | |
 | 21 De-Risking Spikes | Complete | 4/4 |
-| 22 Postgres Foundation | In Progress | 4/5 |
+| 22 Postgres Foundation | Complete | 5/5 |
 | 23 Logic & Repo Port | Not Started | 0/4 |
 | 24 Jobs → Quartz | Not Started | 0/3 |
 | 25 Data Cutover | Not Started | 0/3 |
