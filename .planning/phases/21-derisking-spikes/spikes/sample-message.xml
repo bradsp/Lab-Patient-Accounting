@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SANITIZED HL7-as-XML sample message for the XML-shredding bake-off (Phase 21-03).
+
+  PHI-FREE / SYNTHETIC DATA ONLY.
+    - Patient name, MRN, account number, provider, CDM codes are all invented.
+    - Account "9000001234" / MRN "MRN0000001" / name "TESTPATIENT, ALPHA" are fictional.
+    - CDM codes (8000010, 8000020, 8000099) are synthetic; 8000099 is intentionally a
+      code that will NOT exist in the dictionary (exercises the "Not in Billing" path).
+    - Client code "CLNT01" maps through CLIENT->CERNER mapping in the real proc; here it is
+      a stand-in. NO real org, person, SSN, or DOB appears anywhere.
+
+  This is the encoding the SQL Agent "CERNER DAILY CDM NOT IN LEGACY BILLING" step shreds:
+  Cerner DFT-P03 charge messages are stored in infce.messages_inbound.msgContent as an XML
+  envelope (<HL7Message>) whose element names are the dotted HL7 field/component paths
+  (PV1.3.4, PID.18.1, FT1.1.1, FT1.7.1, FT1.7.2, FT1.10.1, ...). The SAME logical message is
+  also persisted pipe-delimited in the HL7Message column, which the C# HL7ProcessorService
+  parses with the j4jayant parser (GetValue("PV1.3.4"), Segments("FT1"), Fields(7).Components(1)).
+  The pipe-delimited equivalent of this message is in ShredPrototypeCSharp.cs.
+
+  Element set exercised (matches xml-case-source-tsql.sql reference):
+    //PV1.3.4   -> CLIENT  (client/facility code; real proc COALESCEs PV1.3.x / PV1.6.x)
+    //PID.18.1  -> ACCOUNT (prefixed with 'L' by both the proc and the app)
+    //FT1 (repeating, 3 here):
+        FT1.1/FT1.1.1    -> SET ID            (int)
+        FT1.7/FT1.7.1    -> CDM               (varchar)
+        FT1.7/FT1.7.2    -> CERNER DESCRIPTION (varchar)
+        FT1.10/FT1.10.1  -> CDM QTY           (int)
+-->
+<HL7Message>
+  <MSH>
+    <MSH.9>
+      <MSH.9.1>DFT</MSH.9.1>
+      <MSH.9.2>P03</MSH.9.2>
+    </MSH.9>
+    <MSH.10>SYNTHETIC-CTRL-0001</MSH.10>
+  </MSH>
+  <PID>
+    <PID.3>
+      <PID.3.1>MRN0000001</PID.3.1>
+    </PID.3>
+    <PID.5>
+      <PID.5.1>TESTPATIENT</PID.5.1>
+      <PID.5.2>ALPHA</PID.5.2>
+    </PID.5>
+    <PID.18>
+      <PID.18.1>9000001234</PID.18.1>
+    </PID.18>
+  </PID>
+  <PV1>
+    <PV1.3>
+      <PV1.3.1>CLNT01</PV1.3.1>
+      <PV1.3.4>CLNT01</PV1.3.4>
+      <PV1.3.7>CLNT01</PV1.3.7>
+    </PV1.3>
+    <PV1.6>
+      <PV1.6.1>CLNT01</PV1.6.1>
+      <PV1.6.4>CLNT01</PV1.6.4>
+      <PV1.6.7>CLNT01</PV1.6.7>
+    </PV1.6>
+  </PV1>
+  <FT1>
+    <FT1.1>
+      <FT1.1.1>1</FT1.1.1>
+    </FT1.1>
+    <FT1.7>
+      <FT1.7.1>8000010</FT1.7.1>
+      <FT1.7.2>SYNTHETIC PANEL A</FT1.7.2>
+    </FT1.7>
+    <FT1.10>
+      <FT1.10.1>1</FT1.10.1>
+    </FT1.10>
+  </FT1>
+  <FT1>
+    <FT1.1>
+      <FT1.1.1>2</FT1.1.1>
+    </FT1.1>
+    <FT1.7>
+      <FT1.7.1>8000020</FT1.7.1>
+      <FT1.7.2>SYNTHETIC TEST B</FT1.7.2>
+    </FT1.7>
+    <FT1.10>
+      <FT1.10.1>2</FT1.10.1>
+    </FT1.10>
+  </FT1>
+  <FT1>
+    <FT1.1>
+      <FT1.1.1>3</FT1.1.1>
+    </FT1.1>
+    <FT1.7>
+      <FT1.7.1>8000099</FT1.7.1>
+      <FT1.7.2>SYNTHETIC UNMAPPED C</FT1.7.2>
+    </FT1.7>
+    <FT1.10>
+      <FT1.10.1>1</FT1.10.1>
+    </FT1.10>
+  </FT1>
+</HL7Message>
