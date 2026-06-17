@@ -28,7 +28,7 @@ public class AuthenticationService
         _db = DatabaseConfiguration
             .Build()
             .UsingConnectionString(connectionString)
-            .UsingProvider<CustomSqlMsDatabaseProvider>(new CustomSqlMsDatabaseProvider())
+            .UsingProvider<PetaPoco.Providers.PostgreSQLDatabaseProvider>(new PetaPoco.Providers.PostgreSQLDatabaseProvider())
             .UsingCommandTimeout(180)
             .WithAutoSelect()
             .UsingDefaultMapper<MyMapper>(new MyMapper())

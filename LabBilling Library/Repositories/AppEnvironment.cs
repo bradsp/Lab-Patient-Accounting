@@ -1,6 +1,6 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using System;
 using System.Drawing;
 using System.IO;
@@ -35,12 +35,80 @@ public class AppEnvironment : IAppEnvironment
 
     public string TempFilePath => Path.GetTempPath() + @"LABPA\";
 
-    private const bool _dbEncrypt = false;
-    private const bool _dbTrustServerCert = true;
+    // Default PostgreSQL port for local docker dev (Phase 22 container maps 5434).
+    private const int _defaultPostgresPort = 5434;
+
+    /// <summary>
+    /// TLS policy for the PostgreSQL connection. Defaults to a dev-safe value for the
+    /// local docker instance. The managed/prod target (AWS RDS) must override this to
+    /// <see cref="SslMode.VerifyFull"/> (with a <see cref="RootCertificate"/>) to close the
+    /// HIPAA in-transit gap (FINDINGS R6). Set from config; a code default is fine for now.
+    /// </summary>
+    public SslMode SslMode { get; set; } = SslMode.Prefer;
+
+    /// <summary>
+    /// Path to the CA root certificate bundle used when <see cref="SslMode"/> is
+    /// <see cref="SslMode.VerifyCA"/>/<see cref="SslMode.VerifyFull"/> (e.g. the RDS CA bundle).
+    /// </summary>
+    public string RootCertificate { get; set; }
 
     public AppEnvironment()
     {
         // Initialize any necessary properties or fields here
+    }
+
+    /// <summary>
+    /// Splits a configured server value into host + port. Accepts a bare host, or
+    /// "host:port" / "host,port" (legacy SQL Server style). Falls back to the local
+    /// PostgreSQL dev port when none is supplied.
+    /// </summary>
+    private (string Host, int Port) ResolveHostAndPort()
+    {
+        string raw = ServerName?.Trim() ?? string.Empty;
+        char[] separators = { ',', ':' };
+        int idx = raw.IndexOfAny(separators);
+
+        if (idx >= 0 && int.TryParse(raw[(idx + 1)..].Trim(), out int parsedPort))
+        {
+            return (raw[..idx].Trim(), parsedPort);
+        }
+
+        return (raw, _defaultPostgresPort);
+    }
+
+    private NpgsqlConnectionStringBuilder BuildConnection(string database)
+    {
+        (string host, int port) = ResolveHostAndPort();
+
+        NpgsqlConnectionStringBuilder builder = new()
+        {
+            Host = host,
+            Port = port,
+            Database = database,
+            ApplicationName = Utilities.OS.GetAppName(),
+            SslMode = SslMode,
+            Timeout = 30,
+            MinPoolSize = 10,
+            MaxPoolSize = 200,
+            Pooling = true,
+        };
+
+        if (!string.IsNullOrEmpty(RootCertificate))
+        {
+            builder.RootCertificate = RootCertificate;
+        }
+
+        // Npgsql has no MARS and (as of v10) no builder-level IntegratedSecurity flag.
+        // For SQL-auth dev we supply Username/Password. Kerberos/integrated security against a
+        // Windows-hosted PostgreSQL would be plumbed via the "Integrated Security=true" keyword
+        // later; not needed for the local docker dev target.
+        if (!IntegratedAuthentication)
+        {
+            builder.Username = UserName;
+            builder.Password = Password;
+        }
+
+        return builder;
     }
 
     public bool EnvironmentValid
@@ -72,28 +140,7 @@ public class AppEnvironment : IAppEnvironment
 
             try
             {
-                SqlConnectionStringBuilder myBuilder = new()
-                {
-                    InitialCatalog = DatabaseName,
-                    DataSource = ServerName,
-                    IntegratedSecurity = IntegratedAuthentication,
-                    ApplicationName = Utilities.OS.GetAppName(),
-                    Encrypt = _dbEncrypt,
-                    TrustServerCertificate = _dbTrustServerCert,
-                    MultipleActiveResultSets = true,
-                    MinPoolSize = 10,
-                    MaxPoolSize = 200,
-                    Pooling = true,
-                    ConnectTimeout = 30
-                };
-
-                if (!IntegratedAuthentication)
-                {
-                    myBuilder.UserID = UserName;
-                    myBuilder.Password = Password;
-                }
-
-                return myBuilder.ConnectionString;
+                return BuildConnection(DatabaseName).ConnectionString;
             }
             catch (Exception ex)
             {
@@ -121,29 +168,7 @@ public class AppEnvironment : IAppEnvironment
 
             try
             {
-                SqlConnectionStringBuilder myBuilder = new()
-                {
-                    InitialCatalog = LogDatabaseName,
-                    DataSource = ServerName,
-                    IntegratedSecurity = IntegratedAuthentication,
-                    ApplicationName = Utilities.OS.GetAppName(),
-                    ConnectTimeout = 30,
-                    Encrypt = _dbEncrypt,
-                    MultipleActiveResultSets = true,
-                    MinPoolSize = 10,
-                    MaxPoolSize = 200,
-                    Pooling = true,
-                    TrustServerCertificate = _dbTrustServerCert,
-                };
-
-
-                if (!IntegratedAuthentication)
-                {
-                    myBuilder.UserID = UserName;
-                    myBuilder.Password = Password;
-                }
-
-                return myBuilder.ConnectionString;
+                return BuildConnection(LogDatabaseName).ConnectionString;
             }
             catch (Exception ex)
             {
