@@ -1,5 +1,4 @@
 ﻿using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System;
 using System.Collections.Generic;
@@ -53,7 +52,7 @@ public sealed class AccountRepository : RepositoryBase<Account>, IRepositoryBase
         PetaPoco.Sql sql = PetaPoco.Sql.Builder
             .Select(GetRealColumn(nameof(Account.AccountNo)))
             .From(_tableName)
-            .Where($"{GetRealColumn(nameof(Account.Status))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status })
+            .Where($"{GetRealColumn(nameof(Account.Status))} = @0", status)
             .OrderBy(GetRealColumn(nameof(Account.AccountNo)));
 
         var results = Context.Fetch<string>(sql);
@@ -119,12 +118,12 @@ public sealed class AccountRepository : RepositoryBase<Account>, IRepositoryBase
         var result = Context.Update<Account>($"set {GetRealColumn(nameof(Account.Status))} = @0, {GetRealColumn(nameof(Account.UpdatedDate))} = @1, " +
             $"{GetRealColumn(nameof(Account.UpdatedUser))} = @2, {GetRealColumn(nameof(Account.UpdatedApp))} = @3, {GetRealColumn(nameof(Account.UpdatedHost))} = @4 " +
             $"where {GetRealColumn(nameof(Account.AccountNo))} = @5",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status },
-            new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.UserName.ToString() },
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Utilities.OS.GetAppName() },
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.MachineName },
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
+            status,
+            DateTime.Now,
+            Environment.UserName.ToString(),
+            Utilities.OS.GetAppName(),
+            Environment.MachineName,
+            accountNo);
 
         return result;
 

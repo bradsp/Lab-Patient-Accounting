@@ -1,6 +1,5 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,9 +16,9 @@ public sealed class AnnouncementRepository : RepositoryBase<Announcement>
 
         var sql = PetaPoco.Sql.Builder
             .Where($"{GetRealColumn(nameof(Announcement.StartDate))} <= @0",
-                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now })
+                DateTime.Now)
             .Where($"({GetRealColumn(nameof(Announcement.EndDate))} >= @0 or {GetRealColumn(nameof(Announcement.EndDate))} is null)",
-                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now });
+                DateTime.Now);
 
         var results = Context.Fetch<Announcement>(sql);
 

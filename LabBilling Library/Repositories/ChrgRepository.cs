@@ -1,6 +1,5 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,7 +32,7 @@ public sealed class ChrgRepository : RepositoryBase<Chrg>
 
         var sql = PetaPoco.Sql.Builder
             .From("vw_chrg_bill")
-            .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+            .Where("account = @0", account);
 
         var results = Context.Fetch<ClaimChargeView>(sql);
 
@@ -59,12 +58,12 @@ public sealed class ChrgRepository : RepositoryBase<Chrg>
             throw new ArgumentNullException(nameof(account));
 
         var sql = PetaPoco.Sql.Builder
-            .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+            .Where("account = @0", account);
 
         if (asOfDate != null)
         {
             sql.Where($"{_tableName}.{GetRealColumn(nameof(Chrg.UpdatedDate))} > @0",
-                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = asOfDate });
+                asOfDate);
         }
 
         if (!showCredited)
@@ -75,7 +74,7 @@ public sealed class ChrgRepository : RepositoryBase<Chrg>
 
         if (excludeCBill)
             sql.Where($"{GetRealColumn(nameof(Chrg.CDMCode))} <> @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AppEnvironment.ApplicationParameters.ClientInvoiceCdm });
+                AppEnvironment.ApplicationParameters.ClientInvoiceCdm);
 
         sql.OrderBy($"{_tableName}.{GetRealColumn(nameof(Chrg.ChrgId))}");
 
@@ -94,9 +93,9 @@ public sealed class ChrgRepository : RepositoryBase<Chrg>
             throw new ArgumentNullException(nameof(cdm));
 
         var sql = PetaPoco.Sql.Builder
-            .Where($"{GetRealColumn(nameof(Chrg.LISReqNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = refNumber })
-            .Where($"{GetRealColumn(nameof(Chrg.Cdm))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm })
-            .Where($"{GetRealColumn(nameof(Chrg.IsCredited))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = false });
+            .Where($"{GetRealColumn(nameof(Chrg.LISReqNo))} = @0", refNumber)
+            .Where($"{GetRealColumn(nameof(Chrg.Cdm))} = @0", cdm)
+            .Where($"{GetRealColumn(nameof(Chrg.IsCredited))} = @0", false);
 
         return Context.Fetch<Chrg>(sql);
     }
@@ -144,13 +143,13 @@ public sealed class ChrgRepository : RepositoryBase<Chrg>
         var sql = PetaPoco.Sql.Builder
             .From("InvoiceChargeView")
             .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.AccountNo))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
+                account)
             .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.ChargeItemId))} <> @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AppEnvironment.ApplicationParameters.ClientInvoiceCdm })
+                AppEnvironment.ApplicationParameters.ClientInvoiceCdm)
             .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.ClientMnem))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
+                clientMnem)
             .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.FinancialType))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "C" });
+                "C");
 
         List<InvoiceChargeView> results = Context.Fetch<InvoiceChargeView>(sql);
         Log.Instance.Debug($"{Context.LastSQL} {Context.GetArgs()}");

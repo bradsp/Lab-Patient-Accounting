@@ -3,7 +3,6 @@ using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
@@ -17,7 +16,7 @@ namespace LabBilling.Core.DataAccess
         public InvoiceHistory GetByInvoice(string invoiceNo)
         {
             return Context.SingleOrDefault<InvoiceHistory>($"where {GetRealColumn(nameof(InvoiceHistory.InvoiceNo))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoiceNo });
+                invoiceNo);
         }
 
         public IEnumerable<InvoiceHistory> GetWithSort(string clientMnem = null, DateTime? fromDate = null, DateTime? throughDate = null, string invoice = null)
@@ -31,19 +30,19 @@ namespace LabBilling.Core.DataAccess
 
             if(clientMnem != null)
             {
-                sql.Where($"cl_mnem = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
+                sql.Where($"cl_mnem = @0", clientMnem);
             }
 
             if (fromDate != null || throughDate != null)
             {
                 if (fromDate != null && throughDate != null)
                     sql.Where($"{_tableName}.mod_date between @0 and @1",
-                        new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate},
-                        new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate});
+                        fromDate,
+                        throughDate);
             }
             if(!string.IsNullOrEmpty(invoice))
             {
-                sql.Where($"{GetRealColumn(nameof(InvoiceHistory.InvoiceNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoice });
+                sql.Where($"{GetRealColumn(nameof(InvoiceHistory.InvoiceNo))} = @0", invoice);
             }
             sql.OrderBy($"{_tableName}.mod_date DESC");
             Log.Instance.Debug(sql);

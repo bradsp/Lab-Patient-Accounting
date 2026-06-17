@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Linq;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
@@ -22,12 +21,12 @@ public sealed class ClientDiscountRepository : RepositoryBase<ClientDiscount>
         if (!includeDeleted)
         {
             results = Context.Fetch<ClientDiscount>($"where {this.GetRealColumn(nameof(ClientDiscount.ClientMnem))} = @0 and {this.GetRealColumn(nameof(ClientDiscount.IsDeleted))} = 0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
+                clientMnem);
         }
         else
         {
             results = Context.Fetch<ClientDiscount>($"where {this.GetRealColumn(nameof(ClientDiscount.ClientMnem))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
+                clientMnem);
         }
 
         return results;
@@ -39,10 +38,10 @@ public sealed class ClientDiscountRepository : RepositoryBase<ClientDiscount>
 
         var command = PetaPoco.Sql.Builder;
 
-        command.Where($"{GetRealColumn(nameof(ClientDiscount.ClientMnem))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
+        command.Where($"{GetRealColumn(nameof(ClientDiscount.ClientMnem))} = @0", clientMnem);
         command.Where($"{GetRealColumn(nameof(ClientDiscount.IsDeleted))} = 0");
         command.Where($"{GetRealColumn(nameof(ClientDiscount.Cdm))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm });
+            cdm);
 
         return Context.SingleOrDefault<ClientDiscount>(command);
     }
@@ -78,7 +77,7 @@ public sealed class ClientDiscountRepository : RepositoryBase<ClientDiscount>
         }
 
         Context.Delete<ClientDiscount>($"where {GetRealColumn(nameof(ClientDiscount.ClientMnem))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
+            clientMnem);
 
 
         return true;

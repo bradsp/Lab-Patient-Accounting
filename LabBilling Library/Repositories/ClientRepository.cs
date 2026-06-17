@@ -1,7 +1,6 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System;
 using System.Collections.Generic;
@@ -50,7 +49,7 @@ public sealed class ClientRepository : RepositoryBase<Client>
         ArgumentNullException.ThrowIfNull(clientMnem);
 
         var record = Context.SingleOrDefault<Client>($"where {GetRealColumn(nameof(Client.ClientMnem))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
+            clientMnem);
         Log.Instance.Debug(Context.LastSQL);
 
         return record;
@@ -83,7 +82,7 @@ public sealed class ClientRepository : RepositoryBase<Client>
             throw new ArgumentNullException(nameof(clientMnem));
 
         var balanceReturn = Context.ExecuteScalar<double>("select dbo.GetAccBalance(@0)",
-           new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
+           clientMnem);
 
         return balanceReturn;
 
@@ -95,8 +94,8 @@ public sealed class ClientRepository : RepositoryBase<Client>
         ArgumentOutOfRangeException.ThrowIfGreaterThan(asOfDate, DateTime.Now);
 
         var balance = Context.ExecuteScalar<double>("select dbo.GetAccBalByDate(@0, @1)",
-            new SqlParameter() { ParameterName = "@account", SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem },
-            new SqlParameter() { ParameterName = "@effDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = asOfDate });
+            clientMnem,
+            asOfDate);
 
         return balance;
     }
@@ -124,7 +123,7 @@ public sealed class ClientRepository : RepositoryBase<Client>
             .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.FinancialType))} =  'C'")
             .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.Status))} not like '%HOLD%'")
             .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.TransactionDate))} <= @0 ",
-                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate })
+                thruDate)
             .GroupBy(new[]
             {
                 chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.AccountNo)),

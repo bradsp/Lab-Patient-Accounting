@@ -1,5 +1,4 @@
 ﻿using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace LabBilling.Core.DataAccess;
@@ -31,7 +30,7 @@ public sealed class AccountLmrpErrorRepository : RepositoryBase<AccountLmrpError
     public AccountLmrpError GetByAccount(string accountNo)
     {
         var record = Context.SingleOrDefault<AccountLmrpError>($"where {this.GetRealColumn(typeof(AccountLmrpError), nameof(AccountLmrpError.AccountNo))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
+            accountNo);
 
         return record;
     }

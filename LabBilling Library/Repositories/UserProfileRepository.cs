@@ -1,5 +1,4 @@
 ﻿using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
 using System.Data;
 
@@ -18,9 +17,9 @@ public sealed class UserProfileRepository : RepositoryBase<UserProfile>
         UserProfile userProfile = new UserProfile();
 
         Context.Delete<UserProfile>($"where {this.GetRealColumn(typeof(UserProfile), nameof(UserProfile.UserName))} = @0 and Parameter = @1 and ParameterData = @2",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = user },
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "RecentAccount" },
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+            user,
+            "RecentAccount",
+            account);
 
 
         userProfile.UserName = user;
@@ -38,8 +37,8 @@ public sealed class UserProfileRepository : RepositoryBase<UserProfile>
         var command = PetaPoco.Sql.Builder
             .Select(select)
             .From(_tableName)
-            .Where("UserName = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = user })
-            .Where("Parameter = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "RecentAccount" })
+            .Where("UserName = @0 ", user)
+            .Where("Parameter = @0", "RecentAccount")
             .OrderBy($"{sortColumn} desc");
 
         return Context.Fetch<UserProfile>(command);

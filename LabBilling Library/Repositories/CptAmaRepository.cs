@@ -1,5 +1,4 @@
 ﻿using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System.Data;
 
@@ -18,7 +17,7 @@ public class CptAmaRepository : RepositoryBase<CptAma>
             return new CptAma();
 
         var sql = Sql.Builder
-            .Where($"{GetRealColumn(nameof(CptAma.Cpt))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt });
+            .Where($"{GetRealColumn(nameof(CptAma.Cpt))} = @0", cpt);
 
         return Context.SingleOrDefault<CptAma>(sql);
     }

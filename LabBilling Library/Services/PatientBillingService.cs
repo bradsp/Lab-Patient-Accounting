@@ -1,7 +1,7 @@
 ﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -372,7 +372,7 @@ public sealed class PatientBillingService
             string sql = $"update dbo.patbill_acc SET date_sent = convert(varchar(10),getdate(),101) " +
             "WHERE nullif(date_sent,'') IS null AND batch_id = @0";
 
-            uow.Context.Execute(sql, new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = batchNo });
+            uow.Context.Execute(sql, batchNo);
 
             sql = $"update dbo.patbill_stmt SET statement_submitted_dt_tm = pa.processed_date " +
             "from patbill_stmt ps inner join patbill_acc pa on pa.statement_number = ps.statement_number " +
@@ -743,12 +743,12 @@ public sealed class PatientBillingService
             //run exec usp_prg_pat_bill_update_flags '<last day of prev month>'
             //step 1 - exec_prg_pat_bill_update_flags '{thrudate}'
             uow.Context.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags",
-                new SqlParameter() { ParameterName = "@thrudate", SqlDbType = SqlDbType.DateTime, Value = endDate });
+                new NpgsqlParameter() { ParameterName = "@thrudate", NpgsqlDbType = NpgsqlTypes.NpgsqlDbType.Timestamp, Value = endDate });
 
             //run exec usp_prg_pat_bill_compile @batchNo = '<batchNo>', @endDate = '<last day of prev month>'
             uow.Context.ExecuteNonQueryProc("usp_prg_pat_bill_compile",
-                new SqlParameter() { ParameterName = "@batchNo", SqlDbType = SqlDbType.VarChar, Value = batchNo },
-                new SqlParameter() { ParameterName = "@endDate", SqlDbType = SqlDbType.DateTime, Value = endDate });
+                new NpgsqlParameter() { ParameterName = "@batchNo", NpgsqlDbType = NpgsqlTypes.NpgsqlDbType.Varchar, Value = batchNo },
+                new NpgsqlParameter() { ParameterName = "@endDate", NpgsqlDbType = NpgsqlTypes.NpgsqlDbType.Timestamp, Value = endDate });
 
             uow.Commit();
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
@@ -23,7 +22,7 @@ namespace LabBilling.Core.DataAccess
 
             if (!string.IsNullOrEmpty(npi))
                 phy = Context.SingleOrDefault<Phy>($"where {GetRealColumn(nameof(Phy.NpiId))} = @0",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = npi });
+                    npi);
             if (phy != null)
             {
                 if (!string.IsNullOrEmpty(phy.PathologistCode))
@@ -47,9 +46,9 @@ namespace LabBilling.Core.DataAccess
                 var command = PetaPoco.Sql.Builder
                     .From(_tableName)
                     .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.LastName))} like @0+'%'",
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = lastName })
+                        lastName)
                     .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName))} like @0+'%'",
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = firstName })
+                        firstName)
                     .OrderBy($"{this.GetRealColumn(typeof(Phy), nameof(Phy.LastName))}, {this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName))}");
 
                 phy = Context.Fetch<Phy>(command);

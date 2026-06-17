@@ -1,6 +1,5 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System;
 using System.Data;
@@ -18,7 +17,7 @@ public class AccountLockRepository : RepositoryBase<AccountLock>
         Log.Instance.Trace("Entering");
 
         var sql = Sql.Builder
-            .Where($"{GetRealColumn(nameof(AccountLock.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
+            .Where($"{GetRealColumn(nameof(AccountLock.AccountNo))} = @0", accountNo);
 
         return Context.SingleOrDefault<AccountLock>(sql);
     }
@@ -56,8 +55,8 @@ public class AccountLockRepository : RepositoryBase<AccountLock>
     public bool DeleteByUserHost(string username, string hostname)
     {
         var sql = Sql.Builder
-            .Where($"{GetRealColumn(nameof(AccountLock.UpdatedUser))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = username })
-            .Where($"{GetRealColumn(nameof(AccountLock.UpdatedHost))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = hostname });
+            .Where($"{GetRealColumn(nameof(AccountLock.UpdatedUser))} = @0", username)
+            .Where($"{GetRealColumn(nameof(AccountLock.UpdatedHost))} = @0", hostname);
         try
         {
             var retval = Context.Delete<AccountLock>(sql);

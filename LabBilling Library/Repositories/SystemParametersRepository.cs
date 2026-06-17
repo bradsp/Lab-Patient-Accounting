@@ -1,7 +1,6 @@
 ﻿using System;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Reflection;
 using LabBilling.Core.Services;
@@ -31,7 +30,7 @@ namespace LabBilling.Core.DataAccess
             SysParameter record;
 
             record = Context.SingleOrDefault<SysParameter>($"where {GetRealColumn(nameof(SysParameter.key_name))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = key });
+                key);
   
             if(string.IsNullOrEmpty(record.Value))
                 throw new InvalidParameterValueException("Parameter not defined", key);
@@ -46,7 +45,7 @@ namespace LabBilling.Core.DataAccess
             SysParameter record;
 
             record = Context.SingleOrDefault<SysParameter>($"where {GetRealColumn(nameof(SysParameter.KeyName))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = keyName });
+                keyName);
 
             if (record == null)
                 return "";
@@ -64,7 +63,7 @@ namespace LabBilling.Core.DataAccess
             SysParameter record;
 
             record = Context.SingleOrDefault<SysParameter>($"where {GetRealColumn(nameof(SysParameter.KeyName))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = keyName });
+                keyName);
 
             return record;
         }

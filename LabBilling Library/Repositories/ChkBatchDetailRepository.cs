@@ -1,6 +1,5 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -26,7 +25,7 @@ public sealed class ChkBatchDetailRepository : RepositoryBase<ChkBatchDetail>
         Log.Instance.Trace("Entering");
 
         var sql = PetaPoco.Sql.Builder
-            .Where($"{GetRealColumn(nameof(ChkBatchDetail.Batch))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Int, Value = batch })
+            .Where($"{GetRealColumn(nameof(ChkBatchDetail.Batch))} = @0", batch)
             .OrderBy($"{GetRealColumn(nameof(ChkBatchDetail.Id))}");
 
         var details = Context.Fetch<ChkBatchDetail>(sql);
@@ -38,7 +37,7 @@ public sealed class ChkBatchDetailRepository : RepositoryBase<ChkBatchDetail>
     {
         var sql = PetaPoco.Sql.Builder
             .Where($"{GetRealColumn(nameof(ChkBatchDetail.Batch))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.Int, Value = batch });
+            batch);
 
         return Context.Delete<ChkBatchDetail>(sql);
     }

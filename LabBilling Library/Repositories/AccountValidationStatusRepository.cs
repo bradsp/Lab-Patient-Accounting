@@ -1,5 +1,4 @@
 ﻿using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System.Data;
 
@@ -15,7 +14,7 @@ public sealed class AccountValidationStatusRepository : RepositoryBase<AccountVa
     public AccountValidationStatus GetByAccount(string account)
     {
         var record = Context.SingleOrDefault<AccountValidationStatus>($"where {GetRealColumn(nameof(AccountValidationStatus.Account))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account }) ?? new AccountValidationStatus();
+            account) ?? new AccountValidationStatus();
         return record;
     }
 

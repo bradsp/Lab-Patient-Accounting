@@ -1,5 +1,4 @@
 ﻿using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ public class ChrgDiagnosisPointerRepository : RepositoryBase<ChrgDiagnosisPointe
     {
         var cmd = Sql.Builder
             .Where($"{GetRealColumn(nameof(ChrgDiagnosisPointer.AccountNo))} = @0",
-            new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = accountNo });
+            accountNo);
 
         return Context.Fetch<ChrgDiagnosisPointer>(cmd);
     }

@@ -1,6 +1,5 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,8 +24,8 @@ public sealed class ChkBatchRepository : RepositoryBase<ChkBatch>
         Log.Instance.Trace("Entering");
 
         return Context.Update<ChkBatch>($"set {GetRealColumn(nameof(ChkBatch.PostedDate))} = @0 where {GetRealColumn(nameof(ChkBatch.BatchNo))} = @1",
-            new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = postedDate },
-            new SqlParameter() { SqlDbType = SqlDbType.Int, Value = id });
+            postedDate,
+            id);
 
     }
 

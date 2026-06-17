@@ -1,6 +1,5 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System.Collections.Generic;
 using System.Data;
@@ -26,7 +25,7 @@ public sealed class CdmRepository : RepositoryBase<Cdm>
 
         if (includeDeleted == false)
             sql.Where($"{this.GetRealColumn(nameof(Cdm.IsDeleted))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = 0 });
+                0);
 
         sql.Append($"order by {_tableName}.{this.GetRealColumn(nameof(Cdm.Description))}");
 
@@ -54,7 +53,7 @@ public sealed class CdmRepository : RepositoryBase<Cdm>
         string isDeletedRealName = this.GetRealColumn(nameof(Cdm.IsDeleted));
 
         var cmd = PetaPoco.Sql.Builder;
-        cmd.Where($"{cdmRealName} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm });
+        cmd.Where($"{cdmRealName} = @0", cdm);
 
         if (!includeDeleted)
             cmd.Where($"{isDeletedRealName} = 0");

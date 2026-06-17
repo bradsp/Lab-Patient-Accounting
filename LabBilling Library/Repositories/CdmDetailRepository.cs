@@ -1,6 +1,5 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,7 +19,7 @@ public sealed class CdmDetailRepository : RepositoryBase<CdmDetail>
         List<CdmDetail> cdmDetails = new List<CdmDetail>();
 
         cdmDetails = Context.Fetch<CdmDetail>($"where {GetRealColumn(nameof(CdmDetail.ChargeItemId))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm });
+            cdm);
 
         return cdmDetails;
     }
@@ -31,8 +30,8 @@ public sealed class CdmDetailRepository : RepositoryBase<CdmDetail>
         List<CdmDetail> cdmDetails;
 
         cdmDetails = Context.Fetch<CdmDetail>($"where {GetRealColumn(nameof(CdmDetail.ChargeItemId))} = @0 and {GetRealColumn(nameof(CdmDetail.FeeSchedule))} = @1",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm },
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = feeSched });
+            cdm,
+            feeSched);
 
         return cdmDetails;
     }
@@ -43,7 +42,7 @@ public sealed class CdmDetailRepository : RepositoryBase<CdmDetail>
         List<CdmDetail> cdmDetails;
 
         cdmDetails = Context.Fetch<CdmDetail>($"where {GetRealColumn(nameof(CdmDetail.Cpt4))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt });
+            cpt);
 
         return cdmDetails;
     }
@@ -55,7 +54,7 @@ public sealed class CdmDetailRepository : RepositoryBase<CdmDetail>
         CdmDetail cdmDetail;
 
         cdmDetail = Context.FirstOrDefault<CdmDetail>($"where {GetRealColumn(nameof(CdmDetail.rowguid))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.UniqueIdentifier, Value = rowguid });
+            rowguid);
 
         return cdmDetail;
     }
@@ -70,7 +69,7 @@ public sealed class CdmDetailRepository : RepositoryBase<CdmDetail>
         try
         {
             var result = Context.Delete<CdmDetail>($"where {GetRealColumn(nameof(CdmDetail.ChargeItemId))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm });
+                cdm);
 
             return result;
         }

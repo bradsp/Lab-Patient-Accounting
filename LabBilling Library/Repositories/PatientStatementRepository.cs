@@ -4,7 +4,6 @@ using PetaPoco;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Linq;
 using LabBilling.Core.UnitOfWork;
 
@@ -23,7 +22,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
             var sql = Sql.Builder
                 .Where($"{GetRealColumn(nameof(PatientStatement.StatementNumber))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.BigInt, Value = statementNo });
+                statementNo);
 
             var result = Context.SingleOrDefault<PatientStatement>(sql);
             return result;
@@ -47,7 +46,7 @@ namespace LabBilling.Core.DataAccess
                 .Select("count(*) as 'Cnt'")
                 .From("dbo.patbill_stmt")
                 .Where($"{GetRealColumn(nameof(PatientStatement.BatchId))} = @0",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = batch });
+                    batch);
 
             int cnt = Context.ExecuteScalar<int>(sql);
 
@@ -60,8 +59,8 @@ namespace LabBilling.Core.DataAccess
 
             var sql = Sql.Builder;
 
-            sql.Where($"{GetRealColumn(nameof(PatientStatement.BatchId))} = @0", 
-                new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch});
+            sql.Where($"{GetRealColumn(nameof(PatientStatement.BatchId))} = @0",
+                batch);
             sql.Where($"{GetRealColumn(nameof(PatientStatement.StatementSubmittedDateTime))} is null or {GetRealColumn(nameof(PatientStatement.StatementSubmittedDateTime))} = '01/01/1900'");
 
             var results = Context.Fetch<PatientStatement>(sql);

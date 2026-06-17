@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Npgsql;
 
 namespace Utilities;
 
@@ -8,7 +8,7 @@ namespace Utilities;
 public sealed class ConnectionString
 {
     private readonly string _value;
-    private SqlConnectionStringBuilder dbConnectionStringBuilder;
+    private NpgsqlConnectionStringBuilder dbConnectionStringBuilder;
 
     /// <summary>
     /// Returns the extracted database name from the connection string.
@@ -17,7 +17,7 @@ public sealed class ConnectionString
     {
         get
         {
-            return dbConnectionStringBuilder.InitialCatalog;
+            return dbConnectionStringBuilder.Database;
         }
     }
 
@@ -28,18 +28,18 @@ public sealed class ConnectionString
     {
         get
         {
-            return dbConnectionStringBuilder.DataSource;
+            return dbConnectionStringBuilder.Host;
         }
     }
     /// <summary>
-    /// Constructs the connection string. 
+    /// Constructs the connection string.
     /// </summary>
     /// <param name="connectionString"></param>
     public ConnectionString(string connectionString)
     {
         _value = connectionString;
 
-        dbConnectionStringBuilder = new SqlConnectionStringBuilder();
+        dbConnectionStringBuilder = new NpgsqlConnectionStringBuilder();
         dbConnectionStringBuilder.ConnectionString = _value;
     }
 

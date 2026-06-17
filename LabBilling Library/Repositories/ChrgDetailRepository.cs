@@ -1,6 +1,5 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,7 +19,7 @@ public sealed class ChrgDetailRepository : RepositoryBase<ChrgDetail>
 
         var sql = PetaPoco.Sql.Builder
             .From($"{_tableName}")
-            .Where($"{this.GetRealColumn(nameof(ChrgDetail.Id))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = uri });
+            .Where($"{this.GetRealColumn(nameof(ChrgDetail.Id))} = @0", uri);
 
         var result = Context.SingleOrDefault<ChrgDetail>(sql);
 
@@ -42,7 +41,7 @@ public sealed class ChrgDetailRepository : RepositoryBase<ChrgDetail>
         Log.Instance.Trace($"Entering chrgId = {chrgId}");
 
         var sql = PetaPoco.Sql.Builder
-            .Where($"{GetRealColumn(nameof(ChrgDetail.ChrgNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = chrgId });
+            .Where($"{GetRealColumn(nameof(ChrgDetail.ChrgNo))} = @0", chrgId);
 
         return Context.Fetch<ChrgDetail>(sql);
 

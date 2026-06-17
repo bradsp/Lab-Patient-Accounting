@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
-using Microsoft.IdentityModel.Tokens;
 
 namespace LabBilling.Core.DataAccess
 {

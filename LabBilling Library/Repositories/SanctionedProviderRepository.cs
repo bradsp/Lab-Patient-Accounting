@@ -1,6 +1,5 @@
 ﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System.Data;
 using System;
@@ -21,7 +20,7 @@ public class SanctionedProviderRepository : RepositoryBase<SanctionedProvider>, 
 
         if (!string.IsNullOrEmpty(npi))
             phy = Context.SingleOrDefault<SanctionedProvider>($"where {GetRealColumn(nameof(SanctionedProvider.NPI))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = npi });
+                npi);
 
         return phy;
     }
@@ -36,9 +35,9 @@ public class SanctionedProviderRepository : RepositoryBase<SanctionedProvider>, 
             var command = PetaPoco.Sql.Builder
                 .From(_tableName)
                 .Where($"{this.GetRealColumn(nameof(SanctionedProvider.LastName))} like @0+'%'",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = lastName })
+                    lastName)
                 .Where($"{this.GetRealColumn(nameof(SanctionedProvider.FirstName))} like @0+'%'",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = firstName })
+                    firstName)
                 .OrderBy($"{this.GetRealColumn(nameof(SanctionedProvider.LastName))}, {this.GetRealColumn(nameof(SanctionedProvider.FirstName))}");
 
             phy = Context.Fetch<SanctionedProvider>(command);

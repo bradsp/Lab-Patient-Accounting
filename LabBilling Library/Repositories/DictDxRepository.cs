@@ -2,7 +2,6 @@
 using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Linq;
 using LabBilling.Core.UnitOfWork;
@@ -29,9 +28,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering");
 
-            var record = Context.SingleOrDefault<DictDx>($"where {GetRealColumn(nameof(DictDx.DxCode))} = @0 and {GetRealColumn(nameof(DictDx.AmaYear))} = @1", 
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = dxCode },
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AMA_year });
+            var record = Context.SingleOrDefault<DictDx>($"where {GetRealColumn(nameof(DictDx.DxCode))} = @0 and {GetRealColumn(nameof(DictDx.AmaYear))} = @1",
+                dxCode,
+                AMA_year);
 
             return record;
         }
@@ -46,7 +45,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             var records = Context.Exists<DictDx>($"where {GetRealColumn(nameof(DictDx.AmaYear))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = year });
+                year);
 
             return records;
         }
@@ -63,9 +62,9 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering - searchtext {searchText} date {transDate}");
 
             var sql = PetaPoco.Sql.Builder
-                .Append($"WHERE ({GetRealColumn(nameof(DictDx.DxCode))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = searchText })
-                .Append($"OR {GetRealColumn(nameof(DictDx.Description))} like @0)", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "%" + searchText + "%" })
-                .Append($"AND {GetRealColumn(nameof(DictDx.AmaYear))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = FunctionRepository.GetAMAYear(transDate) });
+                .Append($"WHERE ({GetRealColumn(nameof(DictDx.DxCode))} = @0", searchText)
+                .Append($"OR {GetRealColumn(nameof(DictDx.Description))} like @0)", "%" + searchText + "%")
+                .Append($"AND {GetRealColumn(nameof(DictDx.AmaYear))} = @0", FunctionRepository.GetAMAYear(transDate));
 
             List<DictDx> records = Context.Fetch<DictDx>(sql);
             Log.Instance.Debug(Context.LastSQL);

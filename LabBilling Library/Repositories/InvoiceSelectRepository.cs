@@ -1,5 +1,4 @@
 ﻿using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System;
 using System.Collections.Generic;
@@ -41,17 +40,17 @@ public class InvoiceSelectRepository : RepositoryBase<InvoiceSelect>
             .InnerJoin(Account.TableName)
             .On($"{Chrg.TableName}.{Chrg.ColumnName(nameof(Chrg.AccountNo))} = {Account.TableName}.{Account.ColumnName(nameof(Account.AccountNo))}")
             .Where($"{Chrg.TableName}.{Chrg.ColumnName(nameof(Chrg.ClientMnem))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
+            clientMnem)
             .Where($"{Account.TableName}.{Account.ColumnName(nameof(Account.TransactionDate))} <= @0",
-            new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate })
+            throughDate)
             .Where($"{Chrg.TableName}.{Chrg.ColumnName(nameof(Chrg.Status))} NOT IN (@0,@1)",
-             new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AppEnvironment.ApplicationParameters.ChargeInvoiceStatus },
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AppEnvironment.ApplicationParameters.NotApplicableChargeStatus })
+             AppEnvironment.ApplicationParameters.ChargeInvoiceStatus,
+                AppEnvironment.ApplicationParameters.NotApplicableChargeStatus)
             .Where($"{Chrg.TableName}.{Chrg.ColumnName(nameof(Chrg.Invoice))} IS NULL or  {Chrg.TableName}.{Chrg.ColumnName(nameof(Chrg.Invoice))} = ''")
             .Where($"{Chrg.TableName}.{Chrg.ColumnName(nameof(Chrg.FinancialType))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AppEnvironment.ApplicationParameters.ClientFinancialTypeCode })
+                AppEnvironment.ApplicationParameters.ClientFinancialTypeCode)
             .Where($"{Account.TableName}.{Account.ColumnName(nameof(Account.Status))} NOT LIKE @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = $"%{AccountStatus.Hold}%" })
+                $"%{AccountStatus.Hold}%")
             .GroupBy(selectColumns);
 
         return Context.Fetch<InvoiceSelect>(sql);

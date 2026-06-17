@@ -1,7 +1,6 @@
 ﻿using LabBilling.Logging;
 using LabBilling.Core.Models;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Linq;
 using PetaPoco;
@@ -25,7 +24,7 @@ public sealed class InsCompanyRepository : RepositoryBase<InsCompany>
             Log.Instance.Error("Null value passed to InsCompanyRepository GetByCode.");
             return new InsCompany();
         }
-        var record = Context.SingleOrDefault<InsCompany>("where code = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = code });
+        var record = Context.SingleOrDefault<InsCompany>("where code = @0", code);
 
         return record;
     }
@@ -42,7 +41,7 @@ public sealed class InsCompanyRepository : RepositoryBase<InsCompany>
         var sql = Sql.Builder;
         if(excludeDeleted)
             sql.Where($"{GetRealColumn(nameof(InsCompany.IsDeleted))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = false } );
+                false );
 
         var queryResult = Context.Fetch<InsCompany>(sql);
 

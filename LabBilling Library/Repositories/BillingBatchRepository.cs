@@ -1,5 +1,4 @@
 ﻿using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 
 namespace LabBilling.Core.DataAccess;
 
@@ -13,10 +12,10 @@ public sealed class BillingBatchRepository : RepositoryBase<BillingBatch>
     public BillingBatch GetBatch(double batch)
     {
         var data = Context.SingleOrDefault<BillingBatch>($"where {GetRealColumn(nameof(BillingBatch.Batch))} = @0",
-            new SqlParameter() { SqlDbType = System.Data.SqlDbType.Decimal, Value = batch });
+            batch);
 
         data.BillingActivities = Context.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.Batch))} = @0",
-            new SqlParameter() { SqlDbType = System.Data.SqlDbType.Decimal, Value = batch });
+            batch);
 
         return data;
     }

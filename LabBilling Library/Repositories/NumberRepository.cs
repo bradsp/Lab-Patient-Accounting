@@ -2,7 +2,8 @@
 using LabBilling.Core.Models;
 using PetaPoco;
 using System;
-using Microsoft.Data.SqlClient;
+using Npgsql;
+using NpgsqlTypes;
 using System.Data;
 using LabBilling.Core.UnitOfWork;
 
@@ -20,13 +21,13 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             //string sql = "exec GetNextNumber @key";
-            //var param = new Microsoft.Data.SqlClient.SqlParameter("keyfield", keyfield);
-            var number = new SqlParameter("@NextSequence", System.Data.SqlDbType.Int)
+            // NOTE Phase 23-03: ";EXEC ... @1 OUTPUT" is T-SQL stored-proc syntax; PG uses a function call. Rewrite the SQL text + output-param mechanics there.
+            var number = new NpgsqlParameter("@NextSequence", NpgsqlDbType.Integer)
             {
                 Direction = System.Data.ParameterDirection.Output
             };
-            var s = Sql.Builder.Append(";EXEC GetNextNumber @0, @1 OUTPUT", 
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = key }, 
+            var s = Sql.Builder.Append(";EXEC GetNextNumber @0, @1 OUTPUT",
+                key,
                 number);
 
             var result = Context.Execute(s);

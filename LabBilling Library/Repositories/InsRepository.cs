@@ -4,7 +4,6 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using Utilities;
 using System.Linq;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using PetaPoco;
 
@@ -22,7 +21,7 @@ public sealed class InsRepository : RepositoryBase<Ins>
     {
         Log.Instance.Debug($"Entering - account {account}");
         var sql = Sql.Builder
-            .Where($"{GetRealColumn(nameof(Ins.Account))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
+            .Where($"{GetRealColumn(nameof(Ins.Account))} = @0", account)
             .OrderBy($"{GetRealColumn(nameof(Ins.Coverage))}");
 
         var records = Context.Fetch<Ins>(sql);
@@ -123,6 +122,6 @@ public sealed class InsRepository : RepositoryBase<Ins>
 
         string sql = $"where {GetRealColumn(nameof(Ins.Account))} = @0";
 
-        return Context.Delete<Ins>(sql, new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+        return Context.Delete<Ins>(sql, account);
     }
 }

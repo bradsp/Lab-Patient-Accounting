@@ -1,5 +1,4 @@
 ﻿using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System.Collections.Generic;
 using System.Data;
@@ -18,7 +17,7 @@ public sealed class AccountNoteRepository : RepositoryBase<AccountNote>
     {
         var sql = PetaPoco.Sql.Builder
             .From(_tableName)
-            .Where($"{GetRealColumn(nameof(AccountNote.Account))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
+            .Where($"{GetRealColumn(nameof(AccountNote.Account))} = @0", account)
             .OrderBy($"{GetRealColumn(nameof(AccountNote.UpdatedDate))} DESC");
 
         var records = Context.Fetch<AccountNote>(sql);

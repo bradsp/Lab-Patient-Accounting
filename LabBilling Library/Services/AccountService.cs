@@ -1,7 +1,6 @@
 ﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using System;
 using System.Collections.Generic;
@@ -493,15 +492,15 @@ public sealed class AccountService : IAccountService
                 .From(chrgTableName)
                 .InnerJoin(accTableName)
                 .On($"{accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} = {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo))}")
-                .Where($"{chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo })
+                .Where($"{chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo))} = @0", accountNo)
                 .Where($"(({accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.FinCode))} = @0 and {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.Status))} <> @1)",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.ChargeInvoiceStatus })
+                    _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode,
+                    _appEnvironment.ApplicationParameters.ChargeInvoiceStatus)
                 .Append($"or ({accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.FinCode))} <> @0 and {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.Status))} not in (@1, @2, @3)))",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.ChargeInvoiceStatus },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.CapitatedChargeStatus },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.NotApplicableChargeStatus })
+                    _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode,
+                    _appEnvironment.ApplicationParameters.ChargeInvoiceStatus,
+                    _appEnvironment.ApplicationParameters.CapitatedChargeStatus,
+                    _appEnvironment.ApplicationParameters.NotApplicableChargeStatus)
                 .GroupBy(chrgTableName + "." + uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo)));
 
             double charges = uow.Context.SingleOrDefault<double>(sql);
@@ -513,7 +512,7 @@ public sealed class AccountService : IAccountService
                 })
                 .From(uow.ChkRepository.TableInfo.TableName)
                 .Where($"{chkTableName}.{uow.ChkRepository.GetRealColumn(nameof(Chk.AccountNo))} = @0",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo })
+                    accountNo)
                 .GroupBy(uow.ChkRepository.GetRealColumn(nameof(Chk.AccountNo)));
 
             double adj = (double)uow.Context.SingleOrDefault<double>(sql);
@@ -626,10 +625,10 @@ public sealed class AccountService : IAccountService
             switch (claimType)
             {
                 case ClaimType.Institutional:
-                    command.Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AccountStatus.Institutional });
+                    command.Where("status = @0", AccountStatus.Institutional);
                     break;
                 case ClaimType.Professional:
-                    command.Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AccountStatus.Professional });
+                    command.Where("status = @0", AccountStatus.Professional);
                     break;
                 default:
                     command = PetaPoco.Sql.Builder;

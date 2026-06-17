@@ -1,5 +1,4 @@
 ﻿using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,7 +19,7 @@ public sealed class BadDebtRepository : RepositoryBase<BadDebt>
 
         _ = Guid.TryParse(rowguid, out Guid gRowGuid);
 
-        badDebt = Context.SingleOrDefault<BadDebt>($"where {GetRealColumn(nameof(BadDebt.rowguid))} = @0", new SqlParameter() { SqlDbType = SqlDbType.UniqueIdentifier, Value = gRowGuid });
+        badDebt = Context.SingleOrDefault<BadDebt>($"where {GetRealColumn(nameof(BadDebt.rowguid))} = @0", gRowGuid);
 
         if (!string.IsNullOrWhiteSpace(badDebt.StateZip) && badDebt.StateZip.Length >= 7)
         {
@@ -72,8 +71,8 @@ public sealed class BadDebtRepository : RepositoryBase<BadDebt>
 
         var sql = PetaPoco.Sql.Builder;
         sql.Where($"{GetRealColumn(nameof(BadDebt.DateSent))} between @0 and @1",
-            new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = date.BeginningOfTheDay() },
-            new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = date.EndOfTheDay() });
+            date.BeginningOfTheDay(),
+            date.EndOfTheDay());
 
         records = Context.Fetch<BadDebt>(sql);
 

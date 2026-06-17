@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -28,8 +27,8 @@ namespace LabBilling.Core.DataAccess
                 Log.Instance.Error("Null value passed to WriteOffCodeRepository GetByCode.");
                 return new WriteOffCode();
             }
-            var record = Context.SingleOrDefault<WriteOffCode>($"where {GetRealColumn(nameof(WriteOffCode.Code))} = @0", 
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = code });
+            var record = Context.SingleOrDefault<WriteOffCode>($"where {GetRealColumn(nameof(WriteOffCode.Code))} = @0",
+                code);
 
             if (record != null)
             {

@@ -5,7 +5,6 @@ using PetaPoco;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,9 +23,9 @@ namespace LabBilling.Core.DataAccess
 
             var sql = PetaPoco.Sql.Builder
                 .Where($"{GetRealColumn(nameof(GlobalBillingCdm.Cdm))} = @0",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm })
+                    cdm)
                 .Where($"{GetRealColumn(nameof(GlobalBillingCdm.ExpirationDate))} > @0 or {GetRealColumn(nameof(GlobalBillingCdm.ExpirationDate))} is null",
-                    new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = serviceDate });
+                    serviceDate);
 
             return Context.SingleOrDefault<GlobalBillingCdm>(sql);
         }

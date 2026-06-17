@@ -12,7 +12,6 @@ using PetaPoco;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
 using System.Data;
-using Microsoft.Data.SqlClient;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -57,8 +56,8 @@ namespace LabBilling.Core.DataAccess
             var sql = Sql.Builder
                 .From(_tableName)
                 .Where($"{nameof(Logs.CreatedOn)} between @0 and @1",
-                    new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate },
-                    new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
+                    fromDate,
+                    thruDate);
 
             var queryResult = dbConnection.Fetch<Logs>(sql);
 

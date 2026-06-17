@@ -3,7 +3,6 @@ using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using PetaPoco;
 using Spectre.Console;
 using System;
@@ -153,9 +152,9 @@ public sealed class Utilities : MenuBase
         //get list of accounts
         var sql = Sql.Builder;
         sql.From("chrg");
-        sql.Where("cdm = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "5362506" });
-        sql.Where("account in (select account from acc where acc.trans_date > @0)", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = new DateTime(2023, 3, 1) });
-        sql.Where("mod_date >= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = new DateTime(2023, 3, 1) });
+        sql.Where("cdm = @0", "5362506");
+        sql.Where("account in (select account from acc where acc.trans_date > @0)", new DateTime(2023, 3, 1));
+        sql.Where("mod_date >= @0", new DateTime(2023, 3, 1));
         sql.Where("credited = 0");
 
         var charges = _uow.Context.Fetch<Chrg>(sql);

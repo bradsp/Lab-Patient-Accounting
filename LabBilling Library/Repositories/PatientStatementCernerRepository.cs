@@ -2,7 +2,6 @@
 using LabBilling.Logging;
 using PetaPoco;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
@@ -18,7 +17,7 @@ namespace LabBilling.Core.DataAccess
             var sql = Sql.Builder;
 
             sql.Where($"{GetRealColumn(nameof(PatientStatementCerner.BatchId))} = @0",
-                new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch });
+                batch);
 
             var results = Context.Fetch<PatientStatementCerner>(sql);
             Log.Instance.Debug(Context.LastSQL);

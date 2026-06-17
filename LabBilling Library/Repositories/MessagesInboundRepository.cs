@@ -2,7 +2,6 @@
 using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using LabBilling.Core.UnitOfWork;
 using PetaPoco;
@@ -59,8 +58,8 @@ namespace LabBilling.Core.DataAccess
             var cmd = PetaPoco.Sql.Builder;
 
             cmd.Where($"msgDate between @0 and @1",
-                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate.ToString("yyyy-MM-dd HH:mm:ss") },
-                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate.ToString("yyyy-MM-dd HH:mm:ss") });
+                fromDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                throughDate.ToString("yyyy-MM-dd HH:mm:ss"));
 
             var record = Context.Fetch<MessageInbound>(cmd);
 
@@ -72,9 +71,9 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             var record = Context.Fetch<MessageInbound>("where msgType like @0 and msgDate between @1 and @2 order by msgDate DESC",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = type + "%" }, 
-                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate.ToString("yyyy-MM-dd HH:mm:ss") }, 
-                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate.ToString("yyyy-MM-dd HH:mm:ss") });
+                type + "%",
+                fromDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                throughDate.ToString("yyyy-MM-dd HH:mm:ss"));
 
             return (record);
 

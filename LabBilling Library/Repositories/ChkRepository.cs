@@ -1,6 +1,5 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,7 +18,7 @@ public sealed class ChkRepository : RepositoryBase<Chk>
         Log.Instance.Trace($"Entering - id {id}");
         var sql = PetaPoco.Sql.Builder
             .From(_tableName)
-            .Where($"{GetRealColumn(nameof(Chk.PaymentNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = id });
+            .Where($"{GetRealColumn(nameof(Chk.PaymentNo))} = @0", id);
 
         var result = Context.SingleOrDefault<Chk>(sql);
 
@@ -32,7 +31,7 @@ public sealed class ChkRepository : RepositoryBase<Chk>
 
         var sql = PetaPoco.Sql.Builder
             .From(_tableName)
-            .Where($"{GetRealColumn(nameof(Chk.CheckNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = checkno });
+            .Where($"{GetRealColumn(nameof(Chk.CheckNo))} = @0", checkno);
 
         var result = Context.Fetch<Chk>(sql);
 
@@ -45,11 +44,11 @@ public sealed class ChkRepository : RepositoryBase<Chk>
 
         var sql = PetaPoco.Sql.Builder
             .From(_tableName)
-            .Where("account = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+            .Where("account = @0 ", account);
 
         if (asOfDate != null)
             sql.Where($"{GetRealColumn(nameof(Chk.UpdatedDate))} > @0",
-                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = asOfDate });
+                asOfDate);
 
         sql.OrderBy("pay_no");
 
@@ -69,7 +68,7 @@ public sealed class ChkRepository : RepositoryBase<Chk>
         {
             var sql = PetaPoco.Sql.Builder
                 .From(_tableName)
-                .Where("account = @0 and invoice IS NULL", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                .Where("account = @0 and invoice IS NULL", account);
 
             sql.OrderBy("pay_no");
 

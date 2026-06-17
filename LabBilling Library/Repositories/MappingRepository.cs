@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using LabBilling.Core.UnitOfWork;
 
@@ -45,10 +44,10 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             var sql = PetaPoco.Sql.Builder
-                .Where($"{GetRealColumn(nameof(Mapping.SystemType))} = @0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
-                .Where($"{GetRealColumn(nameof(Mapping.InterfaceName))} = @0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem });
+                .Where($"{GetRealColumn(nameof(Mapping.SystemType))} = @0",
+                    codeSet)
+                .Where($"{GetRealColumn(nameof(Mapping.InterfaceName))} = @0",
+                    sendingSystem);
 
             var records = Context.Fetch<Mapping>(sql);
 
@@ -60,10 +59,10 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             var sql = PetaPoco.Sql.Builder
-                .Where($"{GetRealColumn(nameof(Mapping.SystemType))} = @0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
-                .Where($"{GetRealColumn(nameof(Mapping.SystemKey))} = @0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingValue });
+                .Where($"{GetRealColumn(nameof(Mapping.SystemType))} = @0",
+                    codeSet)
+                .Where($"{GetRealColumn(nameof(Mapping.SystemKey))} = @0",
+                    sendingValue);
 
             var records = Context.Fetch<Mapping>(sql);
 
@@ -89,12 +88,12 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentOutOfRangeException(sendingValue);
 
             var sql = PetaPoco.Sql.Builder
-                .Where($"{GetRealColumn(nameof(Mapping.SystemType))} = @0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
-                .Where($"{GetRealColumn(nameof(Mapping.InterfaceName))} = @0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem })
-                .Where($"{GetRealColumn(nameof(Mapping.InterfaceAlias))} = @0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingValue });
+                .Where($"{GetRealColumn(nameof(Mapping.SystemType))} = @0",
+                    codeSet)
+                .Where($"{GetRealColumn(nameof(Mapping.InterfaceName))} = @0",
+                    sendingSystem)
+                .Where($"{GetRealColumn(nameof(Mapping.InterfaceAlias))} = @0",
+                    sendingValue);
 
             var record = Context.FirstOrDefault<Mapping>(sql);
 

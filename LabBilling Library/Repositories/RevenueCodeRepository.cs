@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
@@ -26,7 +25,7 @@ namespace LabBilling.Core.DataAccess
             }
 
             return Context.SingleOrDefault<RevenueCode>($"where {colName} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = revenueCode });
+                revenueCode);
         }
 
     }

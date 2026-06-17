@@ -1,5 +1,5 @@
 ﻿using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,15 +17,16 @@ public sealed class ReportingRepository
 
     public DataTable GetARByFinCode()
     {
+        // TODO Phase 23-03: SQL text is T-SQL (DATEADD/DATEDIFF/GetDate, quoted aliases). Rewrite to PG dialect.
         string sql = @"select fin_code as 'Financial Class', sum(ah.balance) as 'Balance'
                     from aging_history ah
-                    where ah.datestamp = DATEADD(Day, -1, DATEDIFF(Day, 0, GetDate())) 
+                    where ah.datestamp = DATEADD(Day, -1, DATEDIFF(Day, 0, GetDate()))
                     group by fin_code";
 
-        using (SqlConnection conn = new SqlConnection(_appEnvironment.ConnectionString))
+        using (NpgsqlConnection conn = new NpgsqlConnection(_appEnvironment.ConnectionString))
         {
-            SqlCommand cmd = new(sql, conn);
-            SqlDataAdapter da = new()
+            NpgsqlCommand cmd = new(sql, conn);
+            NpgsqlDataAdapter da = new()
             {
                 SelectCommand = cmd
             };
@@ -38,15 +39,16 @@ public sealed class ReportingRepository
 
     public List<(string FinancialClass, double Balance)> GetARByFinCodeList()
     {
+        // TODO Phase 23-03: SQL text is T-SQL (DATEADD/DATEDIFF/GetDate, quoted aliases). Rewrite to PG dialect.
         string sql = @"select fin_code as 'Financial Class', sum(ah.balance) as 'Balance'
                     from aging_history ah
-                    where ah.datestamp = DATEADD(Day, -1, DATEDIFF(Day, 0, GetDate())) 
+                    where ah.datestamp = DATEADD(Day, -1, DATEDIFF(Day, 0, GetDate()))
                     group by fin_code
                     order by fin_code";
 
-        using SqlConnection conn = new(_appEnvironment.ConnectionString);
-        SqlCommand cmd = new(sql, conn);
-        SqlDataAdapter da = new();
+        using NpgsqlConnection conn = new(_appEnvironment.ConnectionString);
+        NpgsqlCommand cmd = new(sql, conn);
+        NpgsqlDataAdapter da = new();
         da.SelectCommand = cmd;
         conn.Open();
         DataTable dt = new();

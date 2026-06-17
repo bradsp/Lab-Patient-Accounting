@@ -2,7 +2,6 @@
 using LabBilling.Logging;
 using PetaPoco;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using System;
 using LabBilling.Core.UnitOfWork;
 
@@ -19,10 +18,10 @@ namespace LabBilling.Core.DataAccess
             var sql = Sql.Builder;
 
             sql.Where($"{GetRealColumn(nameof(PatientStatementEncounterActivity.BatchId))} = @0",
-                new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch });
+                batch);
             sql.Where($"{GetRealColumn(nameof(PatientStatementEncounterActivity.StatementNumber))} IN (select statement_number from dbo.patbill_acc where batch_id = @0 " +
                 "and nullif(date_sent,'') is null)",
-                new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch });
+                batch);
 
 
             var results = Context.Fetch<PatientStatementEncounterActivity>(sql);
@@ -38,7 +37,7 @@ namespace LabBilling.Core.DataAccess
             var sql = Sql.Builder;
 
             sql.Where($"{GetRealColumn(nameof(PatientStatementEncounterActivity.StatementNumber))} = @0",
-                new SqlParameter() { SqlDbType = System.Data.SqlDbType.Int, Value = statementNo });
+                statementNo);
 
             var results = Context.Fetch<PatientStatementEncounterActivity>(sql);
             Log.Instance.Debug(Context.LastSQL);

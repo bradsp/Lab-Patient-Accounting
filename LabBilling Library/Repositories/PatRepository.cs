@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using Utilities;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Linq;
 using LabBilling.Core.Services;
@@ -24,7 +23,7 @@ public sealed class PatRepository : RepositoryBase<Pat>
     public bool RecordExists(string accountNo)
     {
         var pat = Context.SingleOrDefault<Pat>($"where account = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
+            accountNo);
 
         if (pat == null)
             return false;
@@ -37,7 +36,7 @@ public sealed class PatRepository : RepositoryBase<Pat>
         Log.Instance.Trace($"Entering - account {account}");
 
         var record = Context.SingleOrDefault<Pat>("where account = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account.AccountNo });
+            account.AccountNo);
 
         if (record == null)
         {
@@ -51,7 +50,7 @@ public sealed class PatRepository : RepositoryBase<Pat>
             Add(record);
 
             record = Context.SingleOrDefault<Pat>("where account = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account.AccountNo });
+                account.AccountNo);
 
             if (record == null)
                 return null;
@@ -244,9 +243,9 @@ public sealed class PatRepository : RepositoryBase<Pat>
         var sql = PetaPoco.Sql.Builder;
 
         sql.Set($"{GetRealColumn(nameof(Pat.StatementFlag))}=@0",
-            new SqlParameter() { DbType = DbType.String, Value = flag });
+            flag);
         sql.Where($"{GetRealColumn(nameof(Pat.AccountNo))}=@0",
-            new SqlParameter() { DbType = DbType.String, Value = account });
+            account);
         try
         {
             var result = Context.Update<Pat>(sql);

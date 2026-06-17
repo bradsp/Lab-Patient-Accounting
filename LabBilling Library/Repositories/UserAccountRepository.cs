@@ -1,7 +1,6 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using LabBilling.Core.UnitOfWork;
 
@@ -20,7 +19,7 @@ namespace LabBilling.Core.DataAccess
 
             var sqlCmd = new PetaPoco.Sql();
             sqlCmd.Where($"{GetRealColumn(nameof(UserAccount.Access))} <> @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = UserStatus.None });
+                UserStatus.None);
             sqlCmd.OrderBy(GetRealColumn(nameof(UserAccount.FullName)));
 
             var emps = Context.Fetch<UserAccount>(sqlCmd);
@@ -46,14 +45,14 @@ namespace LabBilling.Core.DataAccess
 
             // Try exact match first (for compatibility with existing data)
             emp = Context.SingleOrDefault<UserAccount>("where name = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = username });
+                username);
 
             // If not found, try with just the username portion
             if (emp == null && username != usernameOnly)
             {
                 Log.Instance.Debug($"Exact match not found, trying username portion: '{usernameOnly}'");
                 emp = Context.SingleOrDefault<UserAccount>("where name = @0",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = usernameOnly });
+                    usernameOnly);
             }
 
             return emp;

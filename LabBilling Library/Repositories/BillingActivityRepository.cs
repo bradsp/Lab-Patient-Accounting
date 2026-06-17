@@ -1,6 +1,5 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,7 +17,7 @@ public sealed class BillingActivityRepository : RepositoryBase<BillingActivity>
         Log.Instance.Debug($"Entering");
 
         var record = Context.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.AccountNo))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+            account);
 
         return record;
     }
@@ -37,8 +36,8 @@ public sealed class BillingActivityRepository : RepositoryBase<BillingActivity>
         }
 
         return Context.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.RunDate))} between @0 and @1",
-            new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate },
-            new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
+            fromDate,
+            thruDate);
 
     }
 
@@ -46,7 +45,7 @@ public sealed class BillingActivityRepository : RepositoryBase<BillingActivity>
     {
         Log.Instance.Debug("Entering");
         var records = Context.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.Batch))} = @0",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = batch });
+            batch);
 
         return records;
     }
@@ -55,8 +54,8 @@ public sealed class BillingActivityRepository : RepositoryBase<BillingActivity>
     {
         Log.Instance.Debug($"Entering");
         var record = Context.SingleOrDefault<BillingActivity>("where account=@0 and run_date = @1",
-            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = table.AccountNo },
-            new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = table.RunDate });
+            table.AccountNo,
+            table.RunDate);
 
         if (record == null)
         {
