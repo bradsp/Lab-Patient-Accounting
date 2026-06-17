@@ -435,9 +435,11 @@ in-database procedural logic yet (Phase 23).
 - Both UoW construction sites (`UnitOfWorkMain`, `UnitOfWorkSystem`) repointed
 
 **Plans:**
-- 22-01: Schema generation & type/identity/computed-column mapping
-- 22-02: Provider swap, Npgsql, connection rebuild + TLS
-- 22-03: Auto-CRUD repository smoke verification
+- 22-01: Local PostgreSQL container + canonical SQL Server schema load
+- 22-02: Table-schema translation + fix-ups (pgloader; tables only — views/procs deferred to Phase 23)
+- 22-03: Provider + connection swap (Npgsql, built-in PetaPoco PG provider, delete CustomSqlDatabaseProvider, AppEnvironment/TLS/MARS, 2 UoW sites)
+- 22-04: Replace Microsoft.Data.SqlClient API usages across the data layer (build green; 51 files)
+- 22-05: Smoke verification against PostgreSQL (seed, boot, login, auto-CRUD)
 
 ---
 
@@ -565,7 +567,7 @@ Introduce Redis for the §5 hotspots. Explicitly skips the §5.3 tempting-but-ba
 | 20 Integration | Not Started | 0/2 |
 | **v1.1 Platform Modernization** | | |
 | 21 De-Risking Spikes | Complete | 4/4 |
-| 22 Postgres Foundation | Not Started | 0/3 |
+| 22 Postgres Foundation | Not Started | 0/5 |
 | 23 Logic & Repo Port | Not Started | 0/4 |
 | 24 Jobs → Quartz | Not Started | 0/3 |
 | 25 Data Cutover | Not Started | 0/3 |
