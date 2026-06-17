@@ -19,9 +19,28 @@ dotnet test "Lab Billing.sln"
 
 # Run specific test project
 dotnet test "LabBillingCore.UnitTests/LabBillingCore.UnitTests.csproj"
+
+# Run a single test by name (substring match)
+dotnet test --filter "FullyQualifiedName~AccountServiceTests.MethodName"
 ```
 
 **Platform target:** x64 is the default/enforced platform for the solution.
+
+## Run Commands
+
+```bash
+# Blazor web UI (new billing UI target)
+dotnet run --project "LabOutreachUI/LabOutreachUI.csproj"
+
+# Console batch tool
+dotnet run --project "LabBillingConsole/LabBillingConsole.csproj"
+```
+
+The WinForms client (`Lab PA WinForms UI`) and Windows service (`LabBillingService`) are launched from Visual Studio or their installed binaries — they are not `dotnet run` targets in normal use.
+
+## Active Migration
+
+Current branch `billing-ui-to-blazor` is an in-progress port of the billing UI from WinForms (`Lab PA WinForms UI`) to Blazor (`LabOutreachUI`). New billing UI work should target Blazor unless explicitly told otherwise. The legacy `MCL` data access layer has been deprecated — do not add to it; use `LabBilling Library` repositories instead. Blazor migration notes live alongside the deprecation commit and in `LabOutreachUI/IMPLEMENTATION_PLAN.md`.
 
 ## Architecture Overview
 
@@ -64,7 +83,7 @@ Database        → SQL Server (PetaPoco ORM)
 
 - **ORM:** PetaPoco (lightweight micro-ORM with attribute-based mapping)
 - **Repositories:** `LabBilling Library/Repositories/` - one per entity type
-- **UnitOfWork:** `UnitOfWorkMain` (main DB), `UnitOfWorkSystem` (system DB)
+- **UnitOfWork:** two separate units of work bound to different databases — `UnitOfWorkMain` for billing/transactional data (accounts, charges, claims, HL7 inbound), and `UnitOfWorkSystem` for application config and users (system parameters, `Emp` users, auth/authorization). Repositories must be constructed against the correct UoW; mixing them silently writes to the wrong database.
 - **Models:** 96+ entity classes in `LabBilling Library/Models/`
 
 ### Healthcare Integration
@@ -99,5 +118,13 @@ Database        → SQL Server (PetaPoco ORM)
 - ASP.NET Core Blazor Server on .NET 8.0
 - Windows Authentication in production, development auth in debug
 - Policy-based authorization (DatabaseUser, RandomDrugScreen)
-- Modules: Random Drug Screen, Client Viewer
 - Configuration in `appsettings.json` and `launchSettings.json`
+- **Module host pattern:** `LabOutreachUI` is not a single app but a host for multiple modules, each scoped to its own route namespace:
+  - `/rds/*` — Random Drug Screen (active)
+  - `/clients/*` — Client Viewer
+  - New billing UI work (the `billing-ui-to-blazor` migration) lands here as additional modules
+  - See `LabOutreachUI/MODULAR_ARCHITECTURE.md` for the navigation/module pattern before adding a new module.
+
+## Repository-Level Documentation
+
+`README.md` is partially stale (says .NET 6 / C# 7.3 — actual targets are .NET 8.0 / .NET Framework 4.8 as listed above). `REPOSITORY_INVENTORY.md` duplicates the project table in this file; treat this CLAUDE.md as the source of truth for project layout. Per-module/feature docs live under `LabOutreachUI/*.md` and `LabOutreachUI/Docs/`, and admin/user guides under `Docs/`.
