@@ -396,7 +396,7 @@ Source of truth for all decisions: `analyses/dbms-modernization-and-redis-hotspo
 ---
 
 ### Phase 21: De-Risking Spikes
-**Status:** Not Started
+**Status:** Complete
 **Directory:** `.planning/phases/21-derisking-spikes/`
 **Depends on:** none (gates everything below)
 
@@ -564,7 +564,7 @@ Introduce Redis for the §5 hotspots. Explicitly skips the §5.3 tempting-but-ba
 | 19 Dashboard | Not Started | 0/2 |
 | 20 Integration | Not Started | 0/2 |
 | **v1.1 Platform Modernization** | | |
-| 21 De-Risking Spikes | In Progress | 3/4 |
+| 21 De-Risking Spikes | Complete | 4/4 |
 | 22 Postgres Foundation | Not Started | 0/3 |
 | 23 Logic & Repo Port | Not Started | 0/4 |
 | 24 Jobs → Quartz | Not Started | 0/3 |
