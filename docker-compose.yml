@@ -1,0 +1,31 @@
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_server
+    restart: unless-stopped
+    ports:
+      - "1433:1433" # Host:Container port mapping
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd" # Must meet SQL Server password policy
+      ACCEPT_EULA: "Y"                   # Required to accept license
+      MSSQL_PID: "Developer"              # Edition: Developer, Express, Standard, Enterprise
+    volumes:
+      - mssql_data:/var/opt/mssql         # Persistent database storage
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro # Optional init scripts
+
+  postgres:
+    image: postgres:17
+    container_name: labpa_postgres
+    restart: unless-stopped
+    ports:
+      - "5434:5432" # Host:Container (5433 is used by another project's Postgres)
+    environment:
+      POSTGRES_DB: labbilling
+      POSTGRES_USER: labpa
+      POSTGRES_PASSWORD: "LabPA!Dev0rd"   # Local dev password only
+    volumes:
+      - pgdata:/var/lib/postgresql/data    # Persistent database storage
+
+volumes:
+  mssql_data:
+  pgdata:
