@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- Pin C# 13: this vendored HL7 parser uses 'field' as an identifier inside
+         property accessors, which became a contextual keyword in C# 14 (the net10 default). -->
+    <LangVersion>13.0</LangVersion>
     <OutputType>Library</OutputType>
     <AssemblyVersion>2024.1.2.4</AssemblyVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
