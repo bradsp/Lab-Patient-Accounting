@@ -1,0 +1,360 @@
+@page "/dictionary/clients/{Mnem}"
+@attribute [Authorize(Policy = "EditDictionary")]
+@inject DictionaryService DictionaryService
+@inject LabBilling.Core.UnitOfWork.IUnitOfWork UnitOfWork
+@inject NavigationManager NavigationManager
+
+<PageTitle>Client Edit</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="dictionary/clients">Client Maintenance</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@(IsNew ? "New Client" : Mnem)</li>
+    </ol>
+</nav>
+
+@if (isLoading)
+{
+    <div class="text-center py-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else if (client == null)
+{
+    <div class="alert alert-danger">
+        <span class="oi oi-warning"></span> Client "@Mnem" was not found.
+        <a href="dictionary/clients" class="alert-link">Back to Client Maintenance</a>.
+    </div>
+}
+else
+{
+    <EditForm Model="client" OnValidSubmit="SaveAsync">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">
+                @(IsNew ? "New Client" : client.Name)
+                @if (!IsNew)
+                {
+                    <span class="badge bg-primary ms-2">@client.ClientMnem</span>
+                }
+            </h4>
+            <div>
+                <button type="button" class="btn btn-outline-secondary" @onclick="Cancel" disabled="@isSaving">Cancel</button>
+                <button type="submit" class="btn btn-primary" disabled="@isSaving">
+                    @if (isSaving)
+                    {
+                        <span class="spinner-border spinner-border-sm me-1"></span>
+                    }
+                    Save
+                </button>
+            </div>
+        </div>
+
+        @if (errorMessage != null)
+        {
+            <div class="alert alert-danger py-2"><span class="oi oi-warning"></span> @errorMessage</div>
+        }
+        @if (fieldErrors.Any())
+        {
+            <div class="alert alert-warning py-2">
+                <span class="oi oi-warning"></span> Please correct the highlighted fields before saving.
+            </div>
+        }
+
+        <div class="row g-3">
+            <!-- Identity -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white py-2"><h6 class="mb-0">Identity</h6></div>
+                    <div class="card-body py-2">
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Client Mnemonic <span class="text-danger">*</span></label>
+                            <InputText @bind-Value="client.ClientMnem" class="@($"form-control form-control-sm {Invalid("ClientMnem")}")" disabled="@(!IsNew)" />
+                            @FieldError("ClientMnem")
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Client Name</label>
+                            <InputText @bind-Value="client.Name" class="form-control form-control-sm" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Facility No</label>
+                            <InputText @bind-Value="client.FacilityNo" class="form-control form-control-sm" />
+                        </div>
+                        <div class="form-check">
+                            <InputCheckbox @bind-Value="IsActive" class="form-check-input" id="activeCheck" />
+                            <label class="form-check-label small" for="activeCheck">Active</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-info text-white py-2"><h6 class="mb-0">Address</h6></div>
+                    <div class="card-body py-2">
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Address 1</label>
+                            <InputText @bind-Value="client.StreetAddress1" class="form-control form-control-sm" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Address 2</label>
+                            <InputText @bind-Value="client.StreetAddress2" class="form-control form-control-sm" />
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6 mb-2">
+                                <label class="form-label small mb-1">City</label>
+                                <InputText @bind-Value="client.City" class="form-control form-control-sm" />
+                            </div>
+                            <div class="col-3 mb-2">
+                                <label class="form-label small mb-1">State</label>
+                                <InputSelect @bind-Value="client.State" class="form-select form-select-sm">
+                                    @foreach (var kvp in Dictionaries.StateSource)
+                                    {
+                                        <option value="@kvp.Key">@kvp.Value</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                            <div class="col-3 mb-2">
+                                <label class="form-label small mb-1">Zip</label>
+                                <InputText @bind-Value="client.ZipCode" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">County</label>
+                            <InputSelect @bind-Value="client.County" class="form-select form-select-sm">
+                                @foreach (var kvp in Dictionaries.Counties)
+                                {
+                                    <option value="@kvp.Key">@kvp.Value</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-secondary text-white py-2"><h6 class="mb-0">Contact</h6></div>
+                    <div class="card-body py-2">
+                        <div class="row g-2">
+                            <div class="col-6 mb-2">
+                                <label class="form-label small mb-1">Phone</label>
+                                <InputText @bind-Value="client.Phone" class="form-control form-control-sm" />
+                            </div>
+                            <div class="col-6 mb-2">
+                                <label class="form-label small mb-1">Fax</label>
+                                <InputText @bind-Value="client.Fax" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Email</label>
+                            <InputText @bind-Value="client.ContactEmail" class="form-control form-control-sm" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Contact</label>
+                            <InputTextArea @bind-Value="client.Contact" class="form-control form-control-sm" rows="3" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Business Classification -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white py-2"><h6 class="mb-0">Business Classification</h6></div>
+                    <div class="card-body py-2">
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Client Type <span class="text-danger">*</span></label>
+                            <InputSelect @bind-Value="client.Type" class="@($"form-select form-select-sm {Invalid("Type")}")">
+                                <option value="-1">--Select--</option>
+                                @foreach (var kvp in Dictionaries.ClientType)
+                                {
+                                    <option value="@kvp.Key">@kvp.Value</option>
+                                }
+                            </InputSelect>
+                            @FieldError("Type")
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Fee Schedule <span class="text-danger">*</span></label>
+                            <InputSelect @bind-Value="client.FeeSchedule" class="@($"form-select form-select-sm {Invalid("FeeSchedule")}")">
+                                <option value="">--Select--</option>
+                                @foreach (var kvp in Dictionaries.FeeSchedule)
+                                {
+                                    <option value="@kvp.Key">@kvp.Value</option>
+                                }
+                            </InputSelect>
+                            @FieldError("FeeSchedule")
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">EMR Type</label>
+                            <InputSelect @bind-Value="client.ElectronicBillingType" class="form-select form-select-sm">
+                                <option value="">--Select--</option>
+                                @foreach (var kvp in Dictionaries.EmrType)
+                                {
+                                    <option value="@kvp.Key">@kvp.Value</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Cost Center <span class="text-danger">*</span></label>
+                            <InputSelect @bind-Value="client.GlCode" class="@($"form-select form-select-sm {Invalid("GlCode")}")">
+                                <option value="">--Select--</option>
+                                @foreach (var gl in glCodes)
+                                {
+                                    <option value="@gl.level_1">@gl.level_1@(string.IsNullOrWhiteSpace(gl.description) ? "" : $" - {gl.description}")</option>
+                                }
+                            </InputSelect>
+                            @FieldError("GlCode")
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Bill Method <span class="text-danger">*</span></label>
+                            <InputSelect @bind-Value="client.BillMethod" class="@($"form-select form-select-sm {Invalid("BillMethod")}")">
+                                <option value="">--Select--</option>
+                                @foreach (var method in billMethods)
+                                {
+                                    <option value="@method">@method</option>
+                                }
+                            </InputSelect>
+                            @FieldError("BillMethod")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+
+<style>
+    .card-header h6 { font-size: 0.95rem; }
+    .is-invalid-field { border-color: #dc3545; }
+</style>
+
+@code {
+    [Parameter] public string Mnem { get; set; } = "";
+
+    private LabBilling.Core.Models.Client? client;
+    private List<LabBilling.Core.Models.GLCode> glCodes = new();
+    private readonly string[] billMethods = new[] { "INVOICE", "PATIENT", "PER ACCOUNT" };
+    private readonly Dictionary<string, string> fieldErrors = new();
+    private bool isLoading = true;
+    private bool isSaving;
+    private string? errorMessage;
+
+    private bool IsNew => client is not null && client.Id == 0;
+
+    // Active checkbox is the inverse of the soft-delete flag (checked = active = not deleted).
+    private bool IsActive
+    {
+        get => client is not null && !client.IsDeleted;
+        set { if (client is not null) client.IsDeleted = !value; }
+    }
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            glCodes = DictionaryService.GetGLCodes(UnitOfWork);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading cost centers: {ex.Message}";
+            Console.WriteLine(ex.ToString());
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = null;
+
+            if (string.Equals(Mnem, "new", StringComparison.OrdinalIgnoreCase))
+            {
+                // New client: Type = -1 forces an explicit "--Select--" so the required
+                // client-type validation is meaningful (0 is a valid existing type).
+                // Full new-client flow (duplicate-mnem check) is completed in plan 13-04.
+                client = new LabBilling.Core.Models.Client { Type = -1 };
+            }
+            else
+            {
+                client = DictionaryService.GetClient(Mnem, UnitOfWork);
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading client: {ex.Message}";
+            Console.WriteLine(ex.ToString());
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void Validate()
+    {
+        fieldErrors.Clear();
+        if (client is null) return;
+
+        if (string.IsNullOrWhiteSpace(client.ClientMnem))
+            fieldErrors["ClientMnem"] = "Client mnemonic is required.";
+        if (client.Type < 0)
+            fieldErrors["Type"] = "Client type is required.";
+        if (string.IsNullOrWhiteSpace(client.FeeSchedule))
+            fieldErrors["FeeSchedule"] = "Fee schedule is required.";
+        if (string.IsNullOrWhiteSpace(client.GlCode))
+            fieldErrors["GlCode"] = "Cost center is required.";
+        if (string.IsNullOrWhiteSpace(client.BillMethod))
+            fieldErrors["BillMethod"] = "Bill method is required.";
+    }
+
+    private async Task SaveAsync()
+    {
+        if (client is null) return;
+
+        Validate();
+        if (fieldErrors.Any())
+        {
+            StateHasChanged();
+            return;
+        }
+
+        try
+        {
+            isSaving = true;
+            errorMessage = null;
+            DictionaryService.SaveClient(client, UnitOfWork);
+            NavigationManager.NavigateTo("dictionary/clients");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error saving client: {ex.Message}";
+            Console.WriteLine(ex.ToString());
+        }
+        finally
+        {
+            isSaving = false;
+        }
+
+        await Task.CompletedTask;
+    }
+
+    private void Cancel() => NavigationManager.NavigateTo("dictionary/clients");
+
+    private string Invalid(string field) => fieldErrors.ContainsKey(field) ? "is-invalid-field" : "";
+
+    private RenderFragment? FieldError(string field) => fieldErrors.TryGetValue(field, out var msg)
+        ? (builder =>
+        {
+            builder.OpenElement(0, "div");
+            builder.AddAttribute(1, "class", "text-danger small mt-1");
+            builder.AddContent(2, msg);
+            builder.CloseElement();
+        })
+        : null;
+}
