@@ -56,6 +56,22 @@
             </NavLink>
         </div>
 
+        <!-- Dictionary Module - Only show if user has "Can Edit Dictionary" access -->
+        <AuthorizeView Policy="EditDictionary">
+            <Authorized>
+                <div class="nav-item px-3 mt-3">
+                    <div class="text-muted small px-3 py-2">
+                        <strong>DICTIONARY</strong>
+                    </div>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="dictionary/clients">
+                        <span class="oi oi-briefcase" aria-hidden="true"></span> Clients
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
         <!-- Help & Support -->
         <div class="nav-item px-3 mt-3">
             <div class="text-muted small px-3 py-2">

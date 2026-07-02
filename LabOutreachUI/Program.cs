@@ -71,6 +71,10 @@ try
         options.AddPolicy("RandomDrugScreen", policy =>
            policy.Requirements.Add(new RandomDrugScreenRequirement()));
 
+        // Add Dictionary edit policy ("Can Edit Dictionary" access)
+        options.AddPolicy("EditDictionary", policy =>
+           policy.Requirements.Add(new EditDictionaryRequirement()));
+
         // Set as fallback policy - all pages require DatabaseUser by default
         options.FallbackPolicy = new AuthorizationPolicyBuilder()
          .RequireAuthenticatedUser()
@@ -81,6 +85,7 @@ try
     // Register the authorization handlers
     builder.Services.AddScoped<IAuthorizationHandler, DatabaseUserAuthorizationHandler>();
     builder.Services.AddScoped<IAuthorizationHandler, RandomDrugScreenAuthorizationHandler>();
+    builder.Services.AddScoped<IAuthorizationHandler, EditDictionaryAuthorizationHandler>();
 
     logger.Info("Adding Razor Pages and Blazor services");
 

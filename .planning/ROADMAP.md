@@ -242,19 +242,27 @@ Implement Charge Master (CDM) maintenance.
 ---
 
 ## Phase 13: Dictionary - Clients (Extended)
-**Status:** Not Started
+**Status:** In Progress (13-01 complete)
 **Directory:** `.planning/phases/13-dict-clients/`
 
-Extend existing Client Viewer with full maintenance capabilities.
+Add the "Dictionary" section (gated by "Can Edit Dictionary" access) and full Client maintenance,
+patterned after the legacy `ClientMaintenanceForm` / `ClientMaintenanceEditForm`. Built self-contained
+(does not depend on the unbuilt Phase 01 foundation); reuses existing LabOutreachUI patterns
+(`DictionaryService`, `AutocompleteInput`, Bootstrap cards). No DB/Core changes required — the
+`EditDictionary` permission claim already flows from `emp.access_edit_dictionary`.
 
 **Deliverables:**
-- Extend ClientList with edit capability
-- Client edit form (full detail)
-- Add new client functionality
+- `EditDictionary` authorization policy + handler; Dictionary nav section with Clients link
+- Client Maintenance list page (search/filter, include-deleted, add/edit navigation)
+- Client edit page (dedicated route): core fields + dropdowns + required-field validation + save + soft-delete
+- Preferences/MRO/Comments sections + new-client flow with mnemonic duplicate check
 
 **Plans:**
-- 13-01: Client edit form
-- 13-02: Add new client
+- 13-01: Dictionary authorization policy + navigation
+- 13-02: Client list/search page
+- 13-03: Client edit form — core fields, validation, save, soft-delete
+- 13-04: Edit form preferences/MRO/comments + new-client flow
+- 13-05: (deferred → ISSUES.md ISS-001) Discounts + Interface Mappings child grids
 
 ---
 
@@ -413,7 +421,7 @@ End-to-end testing and final polish.
 | 10 Invoices | Not Started | 0/1 |
 | 11 Collections | Not Started | 0/1 |
 | 12 Dict-CDM | Not Started | 0/2 |
-| 13 Dict-Clients | Not Started | 0/2 |
+| 13 Dict-Clients | In Progress | 1/4 (13-05 deferred) |
 | 14 Dict-Insurance | Not Started | 0/2 |
 | 15 Dict-Physicians | Not Started | 0/2 |
 | 16 Dict-Audit | Not Started | 0/1 |
