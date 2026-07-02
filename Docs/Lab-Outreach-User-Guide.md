@@ -5,17 +5,19 @@
 2. [Getting Started](#getting-started)
 3. [Random Drug Screen Module](#random-drug-screen-module)
 4. [Client Viewer Module](#client-viewer-module)
-5. [User Permissions](#user-permissions)
-6. [Troubleshooting](#troubleshooting)
+5. [Dictionary Maintenance Module](#dictionary-maintenance-module)
+6. [User Permissions](#user-permissions)
+7. [Troubleshooting](#troubleshooting)
 
 ---
 
 ## Introduction
 
-The **Lab Outreach Application** is a web-based management system designed to streamline laboratory outreach operations. The application provides two main modules:
+The **Lab Outreach Application** is a web-based management system designed to streamline laboratory outreach operations. The application provides these main modules:
 
 - **Random Drug Screen (RDS) Module** - Comprehensive management of random drug screening programs
 - **Client Viewer Module** - Quick access to client information and contacts
+- **Dictionary Maintenance Module** - Edit the reference tables that drive billing, starting with client records (requires the "Can Edit Dictionary" permission)
 
 ### System Requirements
 
@@ -336,6 +338,101 @@ The Client Viewer module provides quick access to client information and contact
 
 ---
 
+## Dictionary Maintenance Module
+
+The Dictionary Maintenance module lets authorized users edit the reference ("dictionary") tables that drive billing. The first area available is **Client Maintenance**, where you can add, edit, and deactivate client records.
+
+> **Note:** The Dictionary section is only visible to users with the **"Can Edit Dictionary"** permission or Administrator rights. If you do not see it in the navigation menu, see [User Permissions](#user-permissions). The Client Viewer module (read-only) remains available to all users; Client Maintenance is where changes are actually made.
+
+### Client Maintenance
+
+**Location:** Navigation menu → **Dictionary** → **Clients**
+
+The Client Maintenance page opens with a list of all clients.
+
+#### Finding a Client
+
+1. **Filter box** - Type in the **Filter by Name or Mnemonic** box at the top of the list:
+   - Entering part of a **name** narrows the list to clients whose name contains what you typed.
+   - Entering an exact **mnemonic** shows that specific client.
+   - The list updates a moment after you stop typing.
+2. **Include inactive** - Check this box to also show deactivated (inactive) clients. They appear greyed out. Leave it unchecked to see active clients only.
+3. A running count of the clients currently shown is displayed below the list.
+
+#### The Client List
+
+The list shows, for each client: **Mnem** (mnemonic code), **Name**, **Address**, **City**, **State**, **Zip**, **Facility No**, **Type**, and **Bill Method**. Inactive clients are shown greyed out.
+
+- Click the **pencil (Edit)** button on a row to open that client for editing.
+- Click **New Client** (top right) to create a new client record.
+
+### Editing a Client
+
+Click the **Edit** (pencil) button on any row to open the client edit page. Fields are grouped into cards:
+
+#### Identity
+- **Client Mnemonic** *(required)* - The client's short code. This **cannot be changed** once a client exists (it is read-only when editing an existing client).
+- **Client Name** - The client's full name.
+- **Facility No** - The facility number.
+- **Active** - When checked, the client is active. Unchecking it deactivates the client (see [Deactivating a Client](#deactivating-and-reactivating-a-client)).
+
+#### Address
+- **Address 1**, **Address 2**, **City**, **State** (dropdown), **Zip**, and **County** (dropdown).
+
+#### Contact
+- **Phone**, **Fax**, **Email**, and a free-text **Contact** field.
+
+#### Business Classification
+These fields control how the client is billed. Several are required:
+- **Client Type** *(required)* - Select the client category (for example, Affiliate Hospital, Owned Clinic Lab, Nursing Home).
+- **Fee Schedule** *(required)* - The fee schedule applied to the client's charges.
+- **EMR Type** - The client's integrated EMR system, if any.
+- **Cost Center** *(required)* - The GL cost center the client rolls up to.
+- **Bill Method** *(required)* - How the client is billed: **INVOICE**, **PATIENT**, or **PER ACCOUNT**.
+
+#### Billing & Printing Preferences
+- **Print Bills in Date Order** - Sort invoice lines by date.
+- **Include on Charge Code Report** - Include this client on the charge code report.
+- **Bill at Discount** - Show discounted amounts on the bill.
+- **Do NOT Bill this Client** - Suppress billing for this client.
+- **Print CPT on Invoice** - Include CPT codes on the client's invoices.
+- **Default Discount %** - The default percentage discount applied to the client.
+
+#### Medical Review Officer (MRO)
+- **Name**, **Address 1**, **Address 2**, **City**, **State** (dropdown), and **Zip** for the client's Medical Review Officer.
+
+#### Comments
+- A free-text **Comments** field for notes about the client.
+
+#### Saving Changes
+
+1. Make your edits across the cards.
+2. Click **Save**.
+3. If any **required** field (Client Mnemonic, Client Type, Fee Schedule, Cost Center, Bill Method) is missing, the page highlights the field and shows a message; correct it and click Save again.
+4. On a successful save, you are returned to the client list.
+5. Click **Cancel** at any time to discard your changes and return to the list.
+
+### Adding a New Client
+
+1. On the Client Maintenance list, click **New Client**.
+2. Enter the **Client Mnemonic** for the new client.
+   - When you move out of the mnemonic field, the system checks whether that mnemonic already exists.
+   - If it does, a warning appears with an **"Edit that client instead"** link so you don't accidentally create a duplicate. Click the link to open the existing client, or choose a different mnemonic.
+3. Fill in the remaining fields, making sure the required ones are set: **Client Type**, **Fee Schedule**, **Cost Center**, and **Bill Method**.
+4. Click **Save**. The new client is created and appears in the list.
+
+> **Tip:** The mnemonic is permanent once the client is saved, so choose it carefully.
+
+### Deactivating and Reactivating a Client
+
+Clients are never permanently deleted; they are **deactivated** (a "soft delete") so historical records are preserved.
+
+- **To deactivate:** Open the client, uncheck **Active**, and click **Save**. The client no longer appears in the default list.
+- **To find deactivated clients:** On the list, check **Include inactive**. Inactive clients appear greyed out.
+- **To reactivate:** Open a deactivated client (with **Include inactive** checked), re-check **Active**, and click **Save**.
+
+---
+
 ## User Permissions
 
 Access to features in the Lab Outreach Application is controlled by user permissions configured by system administrators.
@@ -356,9 +453,17 @@ Access to features in the Lab Outreach Application is controlled by user permiss
   - Perform random selections
   - Generate reports
 
+#### Dictionary Editor ("Can Edit Dictionary")
+- All Standard User permissions
+- Access to the **Dictionary** section of the navigation menu
+- Access to **Client Maintenance**:
+  - Add new clients
+  - Edit client details, billing settings, preferences, MRO, and comments
+  - Deactivate and reactivate clients
+
 #### Administrator
 - Full access to all modules and features
-- Access to RDS module regardless of specific RDS permission
+- Access to the RDS and Dictionary modules regardless of the specific RDS or "Can Edit Dictionary" permission
 - Can access administrative functions (if available)
 
 ### Requesting Access
@@ -406,6 +511,21 @@ This page shows:
    - Close ALL browser windows
    - Restart your browser
    - Log in again
+
+### I can't see the Dictionary section
+
+**Cause:** The Dictionary section (Client Maintenance) requires the "Can Edit Dictionary" permission or Administrator rights.
+
+**Solutions:**
+1. Ask your administrator to grant the "Can Edit Dictionary" permission
+2. Navigate to `/auth-diagnostics` to confirm your current permissions
+3. If the permission was just granted, close all browser windows, restart your browser, and log in again
+
+### I can't change a client's mnemonic
+
+**Cause:** The Client Mnemonic is permanent once a client exists, so the field is read-only when editing.
+
+**Solution:** If a client truly needs a different mnemonic, create a new client with the correct mnemonic and deactivate the old one. Contact your administrator if records need to be reassigned.
 
 ### Import fails with "Client not found"
 
@@ -526,12 +646,18 @@ This page shows:
 
 ### Glossary
 
+- **Bill Method** - How a client is billed: INVOICE, PATIENT, or PER ACCOUNT
 - **Candidate** - Individual eligible for random drug screening
 - **Client** - Organization or facility using drug screening services
+- **Client Type** - Category of a client (e.g., Affiliate Hospital, Nursing Home)
+- **Cost Center** - The GL (general ledger) code a client's charges roll up to
+- **Dictionary** - The reference tables (clients, fee schedules, etc.) that drive billing
+- **Fee Schedule** - The pricing schedule applied to a client's charges
+- **MRO (Medical Review Officer)** - The reviewing officer whose contact details are stored on a client record
 - **Mnemonic** - Short code identifying a client (e.g., "CLIENTA")
 - **Selection** - Process of randomly choosing candidates for testing
 - **Shift** - Work schedule assignment (Day, Night, Evening, etc.)
-- **Soft Delete** - Marking record as deleted without removing from database
+- **Soft Delete** - Marking record as deleted (deactivated) without removing from database
 - **Windows Authentication** - Automatic login using your domain credentials
 
 ### Keyboard Shortcuts
@@ -556,7 +682,7 @@ CLIENTCODE,Third Person,Evening,2024-02-15
 ### Version Information
 
 **Current Version:** 1.0.0  
-**Last Updated:** December 2024  
+**Last Updated:** July 2026  
 **Platform:** ASP.NET Core 8.0 Blazor Server
 
 ---
@@ -565,7 +691,7 @@ CLIENTCODE,Third Person,Evening,2024-02-15
 
 **Document Title:** Lab Outreach Application - User Guide  
 **Version:** 1.0  
-**Last Updated:** December 2024  
+**Last Updated:** July 2026  
 **Intended Audience:** End Users, Supervisors, Administrators  
 **Distribution:** Internal Use Only
 
