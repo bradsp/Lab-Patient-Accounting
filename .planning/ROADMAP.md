@@ -242,7 +242,7 @@ Implement Charge Master (CDM) maintenance.
 ---
 
 ## Phase 13: Dictionary - Clients (Extended)
-**Status:** In Progress (13-01, 13-02, 13-03 complete)
+**Status:** Complete (13-01..13-04; 13-05 deferred to ISSUES.md ISS-001)
 **Directory:** `.planning/phases/13-dict-clients/`
 
 Add the "Dictionary" section (gated by "Can Edit Dictionary" access) and full Client maintenance,
@@ -421,7 +421,7 @@ End-to-end testing and final polish.
 | 10 Invoices | Not Started | 0/1 |
 | 11 Collections | Not Started | 0/1 |
 | 12 Dict-CDM | Not Started | 0/2 |
-| 13 Dict-Clients | In Progress | 3/4 (13-05 deferred) |
+| 13 Dict-Clients | Complete | 4/4 (13-05 deferred) |
 | 14 Dict-Insurance | Not Started | 0/2 |
 | 15 Dict-Physicians | Not Started | 0/2 |
 | 16 Dict-Audit | Not Started | 0/1 |

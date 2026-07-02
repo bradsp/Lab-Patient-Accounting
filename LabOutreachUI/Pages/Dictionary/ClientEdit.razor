@@ -71,8 +71,15 @@ else
                     <div class="card-body py-2">
                         <div class="mb-2">
                             <label class="form-label small mb-1">Client Mnemonic <span class="text-danger">*</span></label>
-                            <InputText @bind-Value="client.ClientMnem" class="@($"form-control form-control-sm {Invalid("ClientMnem")}")" disabled="@(!IsNew)" />
+                            <InputText @bind-Value="client.ClientMnem" @onblur="OnMnemBlur" class="@($"form-control form-control-sm {Invalid("ClientMnem")}")" disabled="@(!IsNew)" />
                             @FieldError("ClientMnem")
+                            @if (duplicateMnem != null)
+                            {
+                                <div class="alert alert-warning py-1 px-2 mt-1 mb-0 small">
+                                    <span class="oi oi-warning"></span> Client "@duplicateMnem" already exists.
+                                    <button type="button" class="btn btn-link btn-sm p-0 align-baseline" @onclick="EditExisting">Edit that client instead</button>.
+                                </div>
+                            }
                         </div>
                         <div class="mb-2">
                             <label class="form-label small mb-1">Client Name</label>
@@ -224,6 +231,89 @@ else
                     </div>
                 </div>
             </div>
+
+            <!-- Preferences -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-warning text-dark py-2"><h6 class="mb-0">Billing &amp; Printing Preferences</h6></div>
+                    <div class="card-body py-2">
+                        <div class="form-check">
+                            <InputCheckbox @bind-Value="client.PrintInvoiceInDateOrder" class="form-check-input" id="prefDateOrder" />
+                            <label class="form-check-label small" for="prefDateOrder">Print Bills in Date Order</label>
+                        </div>
+                        <div class="form-check">
+                            <InputCheckbox @bind-Value="client.IncludeOnChargeCodeReport" class="form-check-input" id="prefCcReport" />
+                            <label class="form-check-label small" for="prefCcReport">Include on Charge Code Report</label>
+                        </div>
+                        <div class="form-check">
+                            <InputCheckbox @bind-Value="client.ShowDiscountedAmtOnBill" class="form-check-input" id="prefBillAtDisc" />
+                            <label class="form-check-label small" for="prefBillAtDisc">Bill at Discount</label>
+                        </div>
+                        <div class="form-check">
+                            <InputCheckbox @bind-Value="client.DoNotBill" class="form-check-input" id="prefDoNotBill" />
+                            <label class="form-check-label small" for="prefDoNotBill">Do NOT Bill this Client</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <InputCheckbox @bind-Value="client.PrintCptOnInvoice" class="form-check-input" id="prefPrintCpt" />
+                            <label class="form-check-label small" for="prefPrintCpt">Print CPT on Invoice</label>
+                        </div>
+                        <div class="mb-1" style="max-width: 12rem;">
+                            <label class="form-label small mb-1">Default Discount %</label>
+                            <InputNumber @bind-Value="client.DefaultDiscount" class="form-control form-control-sm" step="0.01" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medical Review Officer -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-dark text-white py-2"><h6 class="mb-0">Medical Review Officer</h6></div>
+                    <div class="card-body py-2">
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Name</label>
+                            <InputText @bind-Value="client.MroName" class="form-control form-control-sm" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Address 1</label>
+                            <InputText @bind-Value="client.MroStreetAddress1" class="form-control form-control-sm" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Address 2</label>
+                            <InputText @bind-Value="client.MroStreetAddress2" class="form-control form-control-sm" />
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6 mb-2">
+                                <label class="form-label small mb-1">City</label>
+                                <InputText @bind-Value="client.MroCity" class="form-control form-control-sm" />
+                            </div>
+                            <div class="col-3 mb-2">
+                                <label class="form-label small mb-1">State</label>
+                                <InputSelect @bind-Value="client.MroState" class="form-select form-select-sm">
+                                    @foreach (var kvp in Dictionaries.StateSource)
+                                    {
+                                        <option value="@kvp.Key">@kvp.Value</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                            <div class="col-3 mb-2">
+                                <label class="form-label small mb-1">Zip</label>
+                                <InputText @bind-Value="client.MroZipCode" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white py-2"><h6 class="mb-0">Comments</h6></div>
+                    <div class="card-body py-2">
+                        <InputTextArea @bind-Value="client.Comment" class="form-control form-control-sm" rows="3" />
+                    </div>
+                </div>
+            </div>
         </div>
     </EditForm>
 }
@@ -243,6 +333,7 @@ else
     private bool isLoading = true;
     private bool isSaving;
     private string? errorMessage;
+    private string? duplicateMnem;
 
     private bool IsNew => client is not null && client.Id == 0;
 
@@ -313,6 +404,32 @@ else
             fieldErrors["BillMethod"] = "Bill method is required.";
     }
 
+    // For a NEW client, warn as soon as the mnemonic is entered if it already exists,
+    // mirroring the legacy form's "edit this record instead?" behavior.
+    private void OnMnemBlur()
+    {
+        duplicateMnem = null;
+        if (client is null || !IsNew || string.IsNullOrWhiteSpace(client.ClientMnem))
+            return;
+
+        try
+        {
+            var existing = DictionaryService.GetClient(client.ClientMnem, UnitOfWork);
+            if (existing != null)
+                duplicateMnem = existing.ClientMnem;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+
+    private void EditExisting()
+    {
+        if (!string.IsNullOrWhiteSpace(duplicateMnem))
+            NavigationManager.NavigateTo($"dictionary/clients/{duplicateMnem}");
+    }
+
     private async Task SaveAsync()
     {
         if (client is null) return;
@@ -322,6 +439,19 @@ else
         {
             StateHasChanged();
             return;
+        }
+
+        // Block creating a new client over an existing mnemonic.
+        if (IsNew)
+        {
+            var existing = DictionaryService.GetClient(client.ClientMnem, UnitOfWork);
+            if (existing != null)
+            {
+                duplicateMnem = existing.ClientMnem;
+                fieldErrors["ClientMnem"] = "A client with this mnemonic already exists.";
+                StateHasChanged();
+                return;
+            }
         }
 
         try
