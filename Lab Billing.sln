@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32421.90
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11828.311 oobstable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{C33E528B-87FE-4032-B44C-CB7A3B9D76A2}"
 EndProject
@@ -21,8 +21,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsLibrary", "WinFormsLibrary\WinFormsLibrary.csproj", "{9FABCEDD-BF62-4769-A79E-72891CE3EF4A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LabBilling Winforms Library", "LabBilling Winforms Library\LabBilling Winforms Library.csproj", "{B25BC3DE-0F08-482F-BFC8-4E00A7FCBB02}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LabBillingCore.UnitTests", "LabBillingCore.UnitTests\LabBillingCore.UnitTests.csproj", "{CEFF2E7C-2987-420F-87E8-598195991933}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{B8CC4460-D627-4E78-9AFE-ED8C28E8A861}"
 EndProject
@@ -92,14 +90,6 @@ Global
 		{B25BC3DE-0F08-482F-BFC8-4E00A7FCBB02}.Release|Any CPU.Build.0 = Release|x64
 		{B25BC3DE-0F08-482F-BFC8-4E00A7FCBB02}.Release|x64.ActiveCfg = Release|x64
 		{B25BC3DE-0F08-482F-BFC8-4E00A7FCBB02}.Release|x64.Build.0 = Release|x64
-		{CEFF2E7C-2987-420F-87E8-598195991933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CEFF2E7C-2987-420F-87E8-598195991933}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CEFF2E7C-2987-420F-87E8-598195991933}.Debug|x64.ActiveCfg = Debug|x64
-		{CEFF2E7C-2987-420F-87E8-598195991933}.Debug|x64.Build.0 = Debug|x64
-		{CEFF2E7C-2987-420F-87E8-598195991933}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CEFF2E7C-2987-420F-87E8-598195991933}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CEFF2E7C-2987-420F-87E8-598195991933}.Release|x64.ActiveCfg = Release|x64
-		{CEFF2E7C-2987-420F-87E8-598195991933}.Release|x64.Build.0 = Release|x64
 		{B8CC4460-D627-4E78-9AFE-ED8C28E8A861}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{B8CC4460-D627-4E78-9AFE-ED8C28E8A861}.Debug|Any CPU.Build.0 = Debug|x64
 		{B8CC4460-D627-4E78-9AFE-ED8C28E8A861}.Debug|x64.ActiveCfg = Debug|x64

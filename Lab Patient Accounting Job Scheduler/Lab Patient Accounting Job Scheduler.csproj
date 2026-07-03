@@ -14,12 +14,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac.Extras.Quartz" Version="10.0.0" />
-    <PackageReference Include="log4net" Version="3.2.0" />
-    <PackageReference Include="Quartz" Version="3.15.0" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
+    <PackageReference Include="Autofac.Extras.Quartz" Version="11.0.0" />
+    <PackageReference Include="log4net" Version="3.3.2" />
+    <PackageReference Include="Quartz" Version="3.18.2" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.9" />
     <PackageReference Include="Topshelf.Log4Net" Version="4.3.1-develop.253" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
