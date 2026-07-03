@@ -8,34 +8,6 @@
     <RootNamespace>LabOutreachUI</RootNamespace>
   </PropertyGroup>
 
-  <!--
-    The net10 publish pipeline drops transitive package assemblies that reach this app ONLY
-    through the LabBilling Core project reference (PetaPoco, EdiTools, FluentValidation, NPOI,
-    Fonet, MathNet, BouncyCastle, NLog.Database, ...). They land in bin (copy-local) but are
-    omitted from the publish output, causing FileNotFoundException at runtime on the server.
-    This target force-includes every copy-local .dll that isn't already being published.
-  -->
-  <Target Name="IncludeTransitiveCopyLocalInPublish" AfterTargets="ComputeFilesToPublish">
-    <ItemGroup>
-      <!-- Filenames already scheduled for publish (so we don't add duplicates -> NETSDK1152). -->
-      <_AlreadyPublishedDll Include="@(ResolvedFileToPublish->'%(RelativePath)')"
-                            Condition="'%(Extension)' == '.dll'" />
-      <!-- Candidate copy-local assemblies, EXCLUDING RID-specific / native assets under
-           runtimes\...; those are resolved by the SDK's RID selection and would collide. -->
-      <_CandidateCopyLocal Include="@(ReferenceCopyLocalPaths)"
-          Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.dll' And !$([System.String]::Copy('%(ReferenceCopyLocalPaths.Identity)').Replace('/', '\').Contains('\runtimes\'))" />
-    </ItemGroup>
-    <PropertyGroup>
-      <_AlreadyPublishedDllList>;@(_AlreadyPublishedDll);</_AlreadyPublishedDllList>
-    </PropertyGroup>
-    <ItemGroup>
-      <ResolvedFileToPublish Include="@(_CandidateCopyLocal)"
-          Condition="!$(_AlreadyPublishedDllList.Contains(';%(_CandidateCopyLocal.FileName)%(_CandidateCopyLocal.Extension);'))">
-        <RelativePath>%(_CandidateCopyLocal.FileName)%(_CandidateCopyLocal.Extension)</RelativePath>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </ResolvedFileToPublish>
-    </ItemGroup>
-  </Target>
 
   <ItemGroup>
     <Content Remove="wwwroot\images\logoicon2.ico" />
@@ -53,6 +25,38 @@
     <PackageReference Include="MigraDocCore.Rendering" Version="1.3.67" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="6.1.3" />
     <PackageReference Include="PdfSharpCore" Version="1.3.67" />
+  </ItemGroup>
+
+  <!--
+    Mirror of LabBilling Core's package references. On .NET 10, transitive package dependencies
+    that reach this app ONLY through the LabBilling Core project reference are not emitted into the
+    published deps.json, so the runtime cannot resolve them (e.g. PetaPoco -> FileNotFoundException
+    on deploy, surfacing as a 403 in the auth middleware). Referencing them directly here puts them
+    in the app's runtime graph so they are published AND listed in deps.json.
+    KEEP VERSIONS IN SYNC with "LabBilling Library\LabBilling Core.csproj".
+  -->
+  <ItemGroup Label="Transitive deps of LabBilling Core (net10 deps.json workaround)">
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+    <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
+    <PackageReference Include="EdiTools" Version="1.0.6" />
+    <PackageReference Include="Enums.NET" Version="5.0.0" />
+    <PackageReference Include="FastExpressionCompiler" Version="5.4.1" />
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="Fonet.Standard" Version="1.0.5" />
+    <PackageReference Include="MathNet.Numerics.Signed" Version="5.0.0" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.2" />
+    <PackageReference Include="NLog.Database" Version="6.0.3" />
+    <PackageReference Include="NLog.WindowsEventLog" Version="6.1.3" />
+    <PackageReference Include="NPOI" Version="2.8.0" />
+    <PackageReference Include="PetaPoco.Compiled" Version="6.0.683" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="SixLabors.Fonts" Version="2.1.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.9" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup>
