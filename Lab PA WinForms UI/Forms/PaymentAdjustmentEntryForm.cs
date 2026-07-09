@@ -59,6 +59,20 @@ public partial class PaymentAdjustmentEntryForm : Form
             return;
         }
 
+        // payment amount may be left blank/zero only when a complete write-off amount has been entered
+        if (paymentAmtTextBox.DollarValue == 0 && writeOffAmtTextBox.DollarValue <= 0)
+        {
+            errorProvider1.SetError(paymentAmtTextBox, "Enter a payment amount or a complete write-off amount.");
+            _toolTip.SetToolTip(paymentAmtTextBox, "Please enter a positive amount");
+            paymentAmtTextBox.Focus();
+            return;
+        }
+        else
+        {
+            errorProvider1.SetError(paymentAmtTextBox, string.Empty);
+            _toolTip.SetToolTip(paymentAmtTextBox, string.Empty);
+        }
+
         try
         {
             chk.CheckNo = checkNoTextBox.Text;
@@ -153,27 +167,15 @@ public partial class PaymentAdjustmentEntryForm : Form
             // allow cancel to bypass validation
             return;
         }
-        // allow empty when payments are disabled; otherwise require a positive currency amount
-        if (!paymentAmtTextBox.Enabled)
-        {
-            errorProvider1.SetError(paymentAmtTextBox, string.Empty);
-            _toolTip.SetToolTip(paymentAmtTextBox, string.Empty);
-            return;
-        }
 
-        var text = paymentAmtTextBox.Text?.Trim();
-        if (string.IsNullOrEmpty(text))
-        {
-            errorProvider1.SetError(paymentAmtTextBox, "Enter a payment amount.");
-            _toolTip.SetToolTip(paymentAmtTextBox, "Please enter a positive amount");
-            e.Cancel = true;
-            return;
-        }
-
+        // only reject negative or non-numeric entries here; whether a zero payment
+        // is acceptable depends on the write-off amount, which is checked at submit
+        // time (postButton_Click) since the user may not have entered it yet while
+        // still tabbing through the form.
         try
         {
             var amount = Convert.ToDouble(paymentAmtTextBox.DollarValue);
-            if (amount <= 0)
+            if (amount < 0)
             {
                 errorProvider1.SetError(paymentAmtTextBox, "Amount must be a positive currency value.");
                 _toolTip.SetToolTip(paymentAmtTextBox, "Please enter a positive amount");
@@ -199,19 +201,13 @@ public partial class PaymentAdjustmentEntryForm : Form
         {
             return;
         }
-        var text = contractualAmtTextBox.Text?.Trim();
-        if (string.IsNullOrEmpty(text))
-        {
-            errorProvider1.SetError(contractualAmtTextBox, "Enter a contractual amount.");
-            _toolTip.SetToolTip(contractualAmtTextBox, "Please enter a positive amount");
-            e.Cancel = true;
-            return;
-        }
 
+        // a contractual amount is optional (e.g. a payment or a pure write-off may not have
+        // a contractual adjustment); only reject negative or non-numeric entries, zero/blank is fine
         try
         {
             var amount = Convert.ToDouble(contractualAmtTextBox.DollarValue);
-            if (amount <= 0)
+            if (amount < 0)
             {
                 errorProvider1.SetError(contractualAmtTextBox, "Amount must be a positive currency value.");
                 _toolTip.SetToolTip(contractualAmtTextBox, "Please enter a positive amount");
@@ -237,19 +233,13 @@ public partial class PaymentAdjustmentEntryForm : Form
         {
             return;
         }
-        var text = writeOffAmtTextBox.Text?.Trim();
-        if (string.IsNullOrEmpty(text))
-        {
-            errorProvider1.SetError(writeOffAmtTextBox, "Enter a write-off amount.");
-            _toolTip.SetToolTip(writeOffAmtTextBox, "Please enter a positive amount");
-            e.Cancel = true;
-            return;
-        }
 
+        // a write-off amount is optional (e.g. a payment-only entry may not have a write-off);
+        // only reject negative or non-numeric entries, zero/blank is fine
         try
         {
             var amount = Convert.ToDouble(writeOffAmtTextBox.DollarValue);
-            if (amount <= 0)
+            if (amount < 0)
             {
                 errorProvider1.SetError(writeOffAmtTextBox, "Amount must be a positive currency value.");
                 _toolTip.SetToolTip(writeOffAmtTextBox, "Please enter a positive amount");
