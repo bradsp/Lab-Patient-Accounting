@@ -39,6 +39,7 @@ public sealed class Utilities : MenuBase
         menuText.AppendLine("10) Swap Insurances");
         menuText.AppendLine("12) Regenerate Collections File");
         menuText.AppendLine("13) Run Claims Batch");
+        menuText.AppendLine("14) Write Off Remaining Balances");
         menuText.AppendLine("X) Exit");
 
         var panel = new Panel(menuText.ToString())
@@ -103,6 +104,10 @@ public sealed class Utilities : MenuBase
             case "13":
                 Console.Clear();
                 RunClaimsProcessing();
+                return true;
+            case "14":
+                Console.Clear();
+                RunWriteOffRemainingBalances();
                 return true;
             case "X":
                 return false;
@@ -268,6 +273,12 @@ public sealed class Utilities : MenuBase
             .Trim();
 
         return response;
+    }
+
+    public void RunWriteOffRemainingBalances()
+    {
+        var writeOffUtil = new WriteOffRemainingBalances(_appEnvironment);
+        writeOffUtil.Execute(executeImmediately: false);
     }
 
     public void RunClaimsProcessing()
