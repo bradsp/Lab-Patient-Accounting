@@ -1,4 +1,5 @@
 ﻿using LabBilling.Core.DataAccess;
+using LabBilling.Core.UnitOfWork;
 using Spectre.Console;
 using System;
 using System.Text;
@@ -23,6 +24,11 @@ public class MainMenu
         _appEnvironment.ServerName = servername;
         _appEnvironment.DatabaseName = databasename;
         _appEnvironment.LogDatabaseName = "Log";
+        _appEnvironment.IntegratedAuthentication = true;
+
+        // Load ApplicationParameters from the database to make the environment valid
+        using var uowSystem = new LabBilling.Core.UnitOfWork.UnitOfWorkSystem(_appEnvironment);
+        _appEnvironment.ApplicationParameters = uowSystem.SystemParametersRepository.LoadParameters();
     }
 
     public bool MainMenuPanel()

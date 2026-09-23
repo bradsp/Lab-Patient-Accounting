@@ -21,6 +21,10 @@ namespace LabBilling.Core.DataAccess
         }
         public Func<object, object> GetFromDbConverter(PropertyInfo TargetProperty, Type SourceType)
         {
+            if (TargetProperty == null)
+            {
+                return standardMapper.GetFromDbConverter(TargetProperty, SourceType);
+            }
             if (TargetProperty.PropertyType == typeof(string))
             {
                 return (x) => x.ToString();
@@ -29,6 +33,10 @@ namespace LabBilling.Core.DataAccess
         }
         public Func<object, object> GetToDbConverter(PropertyInfo SourceProperty)
         {
+            if (SourceProperty == null)
+            {
+                return standardMapper.GetToDbConverter(SourceProperty);
+            }
             if (SourceProperty.PropertyType == typeof(string))
             {
                 return (x) => x != null ? x.ToAnsiString() : "".ToAnsiString();

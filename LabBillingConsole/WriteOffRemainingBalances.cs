@@ -104,9 +104,11 @@ public sealed class WriteOffRemainingBalances : MenuBase
         {
             Console.WriteLine();
             AnsiConsole.MarkupLine("[yellow]DRY RUN MODE - No changes have been made.[/]");
+            AnsiConsole.MarkupLine($"[dim]Found {accountsWithBalance.Count} accounts totaling {accountsWithBalance.Sum(a => a.Balance):C}[/]");
+            AnsiConsole.MarkupLine("[dim]The first 5 accounts will be processed for validation before continuing.[/]");
             Console.WriteLine();
 
-            if (!AnsiConsole.Confirm($"Do you want to proceed with writing off {accountsWithBalance.Count} accounts for a total of {accountsWithBalance.Sum(a => a.Balance):C}?"))
+            if (!AnsiConsole.Confirm("Do you want to begin the write-off process?"))
             {
                 AnsiConsole.MarkupLine("[yellow]Operation cancelled by user.[/]");
                 Console.WriteLine("\nPress any key to continue...");
@@ -115,11 +117,62 @@ public sealed class WriteOffRemainingBalances : MenuBase
             }
         }
 
-        // Execute write-offs
-        var result = ExecuteWriteOffs(accountsWithBalance, selectedWriteOffCode);
+        // Validation step: Process first 5 accounts before processing all
+        const int validationCount = 5;
+        var validationAccounts = accountsWithBalance.Take(validationCount).ToList();
+        var remainingAccounts = accountsWithBalance.Skip(validationCount).ToList();
 
-        // Display summary
-        DisplaySummary(result);
+        Console.WriteLine();
+        AnsiConsole.MarkupLine($"[yellow]VALIDATION STEP: Processing first {validationAccounts.Count} accounts...[/]");
+        Console.WriteLine();
+
+        var validationResult = ExecuteWriteOffs(validationAccounts, selectedWriteOffCode);
+        DisplaySummary(validationResult);
+
+        if (validationResult.Errors.Count > 0)
+        {
+            AnsiConsole.MarkupLine("[red]Errors occurred during validation. Stopping process.[/]");
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+            return false;
+        }
+
+        // If there are remaining accounts, ask to continue
+        if (remainingAccounts.Count > 0)
+        {
+            Console.WriteLine();
+            AnsiConsole.MarkupLine($"[green]Validation successful![/] {validationAccounts.Count} accounts processed without errors.");
+            Console.WriteLine();
+
+            if (!AnsiConsole.Confirm($"Continue with remaining {remainingAccounts.Count} accounts for {remainingAccounts.Sum(a => a.Balance):C}?"))
+            {
+                AnsiConsole.MarkupLine("[yellow]Operation stopped after validation. Only the first 5 accounts were processed.[/]");
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+                return true; // Validation accounts were successful
+            }
+
+            // Process remaining accounts
+            Console.WriteLine();
+            AnsiConsole.MarkupLine($"[blue]Processing remaining {remainingAccounts.Count} accounts...[/]");
+            Console.WriteLine();
+
+            var remainingResult = ExecuteWriteOffs(remainingAccounts, selectedWriteOffCode);
+
+            // Combine results for final summary
+            foreach (var acc in remainingResult.ProcessedAccounts)
+                validationResult.ProcessedAccounts.Add(acc);
+            foreach (var err in remainingResult.Errors)
+                validationResult.Errors.Add(err);
+            validationResult.TotalWrittenOff += remainingResult.TotalWrittenOff;
+        }
+
+        // Display final summary
+        Console.WriteLine();
+        AnsiConsole.MarkupLine("[bold blue]===== FINAL SUMMARY =====[/]");
+        DisplaySummary(validationResult);
+
+        var result = validationResult;
 
         Console.WriteLine("\nPress any key to continue...");
         Console.ReadKey();
@@ -129,9 +182,9 @@ public sealed class WriteOffRemainingBalances : MenuBase
 
     /// <summary>
     /// Queries all accounts with a balance greater than zero.
-    /// Uses the same balance calculation logic as AccountService.GetBalance():
-    /// - Charges: SUM(qty * net_amt) where credited = 0 and status filtering based on fin_code
-    /// - Payments: SUM(amt_paid + contractual + write_off) from chk table
+    /// Uses the same balance calculation logic as the A/R views (vw_chrg_bal, vw_chk_bal):
+    /// - Charges: SUM(qty * amt.amount) from chrg JOIN amt, excluding status PAID/CBILL/CHRGCR/N/A
+    /// - Payments: SUM(amt_paid + contractual + write_off) from chk, excluding status CBILL
     /// - Balance = Charges - Payments
     /// Excludes accounts with status 'PAID_OUT' or 'CLOSED' as these are already settled.
     /// </summary>
@@ -144,8 +197,7 @@ public sealed class WriteOffRemainingBalances : MenuBase
             .Start("Querying accounts with positive balance...", ctx =>
             {
                 // Query to get accounts with calculated balance > 0
-                // Balance = Sum(charges using net_amt) - Sum(payments + contractual + write-offs)
-                // This matches the logic in AccountService.GetBalance()
+                // This matches the A/R reporting views: vw_chrg_bal and vw_chk_bal
                 var sql = Sql.Builder
                     .Select(new[]
                     {
@@ -155,18 +207,22 @@ public sealed class WriteOffRemainingBalances : MenuBase
                         "acc.fin_code",
                         "acc.trans_date",
                         "acc.status",
+                        // Charge balance: matches vw_chrg_bal exactly
+                        // Uses amt.amount (not chrg.net_amt) and excludes PAID/CBILL/CHRGCR/N/A
                         @"COALESCE((
-                            SELECT SUM(c.qty * c.net_amt)
+                            SELECT ROUND(SUM(c.qty * ROUND(a.amount, 3)), 2)
                             FROM chrg c
+                            INNER JOIN amt a ON c.chrg_num = a.chrg_num
                             WHERE c.account = acc.account
-                            AND c.credited = 0
-                            AND ((acc.fin_code = 'CLIENT' AND c.status <> 'CBILL')
-                                 OR (acc.fin_code <> 'CLIENT' AND c.status NOT IN ('CBILL', 'CAP', 'N/A')))
+                            AND (c.status NOT IN ('PAID', 'CBILL', 'CHRGCR', 'N/A') OR c.status IS NULL)
                         ), 0) -
+                        -- Payment balance: matches vw_chk_bal exactly
+                        -- Excludes payments with status = 'CBILL'
                         COALESCE((
-                            SELECT SUM(ch.amt_paid + ch.contractual + ch.write_off)
+                            SELECT SUM(ROUND(ch.amt_paid, 2) + ROUND(ch.write_off, 2) + ROUND(ch.contractual, 2))
                             FROM chk ch
                             WHERE ch.account = acc.account
+                            AND (ch.status <> 'CBILL' OR ch.status IS NULL)
                         ), 0) as balance"
                     })
                     .From("acc")

@@ -141,6 +141,10 @@ internal class Program
                 IntegratedAuthentication = true
             };
 
+            // Load ApplicationParameters from the database to make the environment valid
+            using var uowSystem = new LabBilling.Core.UnitOfWork.UnitOfWorkSystem(appEnvironment);
+            appEnvironment.ApplicationParameters = uowSystem.SystemParametersRepository.LoadParameters();
+
             var writeOffUtil = new WriteOffRemainingBalances(appEnvironment);
             return writeOffUtil.Execute(executeImmediately: execute, writeOffCode: writeOffCode);
         }
