@@ -24,8 +24,8 @@ public sealed class WriteOffRemainingBalances : MenuBase
     private readonly DictionaryService _dictionaryService;
 
     // Default write-off code for small balance write-offs
-    private const string DefaultWriteOffCode = "SB";
-    private const string DefaultWriteOffComment = "Small balance write-off - End of period cleanup";
+    private const string DefaultWriteOffCode = "1500";
+    private const string DefaultWriteOffComment = "Admin W/O – Legacy System Decommission";
 
     public WriteOffRemainingBalances(IAppEnvironment appEnvironment) : base(appEnvironment)
     {
@@ -129,6 +129,11 @@ public sealed class WriteOffRemainingBalances : MenuBase
 
     /// <summary>
     /// Queries all accounts with a balance greater than zero.
+    /// Uses the same balance calculation logic as AccountService.GetBalance():
+    /// - Charges: SUM(qty * net_amt) where credited = 0 and status filtering based on fin_code
+    /// - Payments: SUM(amt_paid + contractual + write_off) from chk table
+    /// - Balance = Charges - Payments
+    /// Excludes accounts with status 'PAID_OUT' or 'CLOSED' as these are already settled.
     /// </summary>
     private List<AccountBalanceInfo> GetAccountsWithPositiveBalance()
     {
@@ -139,7 +144,8 @@ public sealed class WriteOffRemainingBalances : MenuBase
             .Start("Querying accounts with positive balance...", ctx =>
             {
                 // Query to get accounts with calculated balance > 0
-                // Balance = Sum(charges) - Sum(payments + contractual + write-offs)
+                // Balance = Sum(charges using net_amt) - Sum(payments + contractual + write-offs)
+                // This matches the logic in AccountService.GetBalance()
                 var sql = Sql.Builder
                     .Select(new[]
                     {
@@ -150,7 +156,7 @@ public sealed class WriteOffRemainingBalances : MenuBase
                         "acc.trans_date",
                         "acc.status",
                         @"COALESCE((
-                            SELECT SUM(c.qty * c.retail)
+                            SELECT SUM(c.qty * c.net_amt)
                             FROM chrg c
                             WHERE c.account = acc.account
                             AND c.credited = 0
@@ -164,7 +170,8 @@ public sealed class WriteOffRemainingBalances : MenuBase
                         ), 0) as balance"
                     })
                     .From("acc")
-                    .Where("acc.deleted = 0");
+                    .Where("acc.deleted = 0")
+                    .Where("acc.status NOT IN ('PAID_OUT', 'CLOSED')");
 
                 // Execute the query
                 var rawResults = _uow.Context.Fetch<dynamic>(sql);
@@ -338,7 +345,7 @@ public sealed class WriteOffRemainingBalances : MenuBase
     private void DisplaySummary(WriteOffResult result)
     {
         Console.WriteLine();
-        AnsiConsole.Write(new Rule("[bold blue]Write-Off Summary[/]").RuleStyle("blue"));
+        AnsiConsole.Write(new Spectre.Console.Rule("[bold blue]Write-Off Summary[/]").RuleStyle("blue"));
         Console.WriteLine();
 
         var summaryTable = new Table();
