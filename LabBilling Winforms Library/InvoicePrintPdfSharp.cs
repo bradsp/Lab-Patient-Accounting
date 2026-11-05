@@ -164,7 +164,7 @@ public class InvoicePrintPdfSharp
         };
 
         pdfRenderer.RenderDocument();
-        string filename = $"{_filePath}\\Statement-{model.ClientMnem}-{DateTime.Today:yyyyMMdd}.pdf";
+        string filename = $"{_filePath}Statement-{model.ClientMnem}-{DateTime.Today:yyyyMMdd}.pdf";
         pdfRenderer.PdfDocument.Save(filename);
 
         return filename;
